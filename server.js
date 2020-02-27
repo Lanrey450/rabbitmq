@@ -1,6 +1,11 @@
 require('dotenv').config();
-const errorHandler = require('./lib/request_error_handler');
 const responseManager = require('./lib/response_manager_middleware');
+
+
+const routes = require('./routes/index');
+
+
+console.log(routes);
 
 
 const config = require('./config');
@@ -20,13 +25,10 @@ app.get('/', (req, res) => {
     res.status(200).send('Welcome to the Aggregator subscription and billing Engine')
 });
 
-require('./routes')(app);
 
-// require all the routes here
-require('./lib/9mobileApi/notifications')(app);
+// add routes here 
+app.use(require('./routes'));
 
-// must be the last middleware
-app.use(errorHandler);
 
 
 app.listen(config.port, () => {

@@ -4,7 +4,8 @@
   "description": "Aggregator subscription and billing Engine",
   "main": "server.js",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "model": "model"
   },
   "scripts": {
     "start": "node server.js",
