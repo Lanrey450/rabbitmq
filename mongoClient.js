@@ -30,7 +30,7 @@ db.on("connected", () => {
 });
 db.on('error', (error) => {
     console.error("An error occurred", JSON.stringify(error));
-    console.log(error.message, new Error(error.message), { defaultUrl }, true);
+    console.log(error.message, new Error(error.message), { connectionString }, true);
     process.exit(0);
 });
 

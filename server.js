@@ -27,8 +27,7 @@ app.get('/', (req, res) => {
 
 
 // add routes here 
-app.use(routes);
-
+require('./routes')(app);
 
 app.listen(config.port, () => {
     console.log(`${config.name} listening on port ${config.port}!`);

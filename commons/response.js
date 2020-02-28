@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
                               },
                           }) => {
         Object.entries(headers).forEach(([key, value]) => {
-            res.set(key, value);
+            res.set(key, ':', value);
         });
         res.status(statusCode).send({
             data,

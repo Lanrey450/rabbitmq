@@ -1,32 +1,25 @@
 const ResponseManager = require('../../commons/response');
-const NineMobileApi = new (require('../../lib/9Mobile/subscription'));
-const TerraLogger = require('terra-logger');
+const NineMobileApi = require('../../lib/9Mobile/subscription');
 
-class SubscriptionController extends ResponseManager{
-    constructor(){
-        super();
-    }
-
+module.exports = {
     async subscribe(req, res){
-        this.sendResponse({
+        ResponseManager.sendResponse({
             res,
             responseBody: await NineMobileApi.subscribe(req.body)
         });
-    }
+    },
 
     async unsubscribe(req, res){
-        this.sendResponse({
+        ResponseManager.sendResponse({
             res,
             responseBody: await NineMobileApi.unsubscribe(req.body)
         });
-    }
+    },
 
     async status(req, res){
-        this.sendResponse({
+        ResponseManager.sendResponse({
             res,
             responseBody: await NineMobileApi.status(req.body)
         });
     }
 }
-
-module.exports = SubscriptionController;
