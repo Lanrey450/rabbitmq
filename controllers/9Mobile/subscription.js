@@ -1,7 +1,8 @@
 const ResponseManager = require('../../commons/response');
 const NineMobileApi = new (require('../../lib/9Mobile/subscription'));
+const TerraLogger = require('terra-logger');
 
-class UserController extends ResponseManager{
+class SubscriptionController extends ResponseManager{
     constructor(){
         super();
     }
@@ -28,4 +29,4 @@ class UserController extends ResponseManager{
     }
 }
 
-module.exports = UserController;
+module.exports = SubscriptionController;

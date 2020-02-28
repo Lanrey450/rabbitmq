@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const TerraLogger = require('terra-logger');
 const app = express();
 
 
@@ -13,8 +14,11 @@ require('./mongoClient');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(TerraLogger.requestHandler);
+
 // parse application/json
 app.use(bodyParser.json());
+
 app.use(responseManager);
 
 app.get('/', (req, res) => {

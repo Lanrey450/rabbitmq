@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://services.ht.bharti.ibm.com" xmlns:impl="http://services.ht.bharti.ibm.com" xmlns:intf="http://services.ht.bharti.ibm.com" xmlns:tns2="http://bean.services.ht.bharti.ibm.com" xmlns:tns3="http://dto.processinvocation.ibm.com" xmlns:tns4="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema targetNamespace="http://bean.services.ht.bharti.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:intf="http://services.ht.bharti.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://services.ht.bharti.ibm.com"/>
+   <complexType name="HTDeSubRequest">
+    <sequence>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="songVcode" nillable="true" type="xsd:string"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTDeSubResponse">
+    <sequence>
+     <element name="arrOldVcode" nillable="true" type="impl:ArrayOf_xsd_nillable_string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSubChangeRequest">
+    <sequence>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="changeSubProdID" type="xsd:int"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarcopy" nillable="true" type="xsd:string"/>
+     <element name="newCopyrightID" nillable="true" type="xsd:string"/>
+     <element name="newSongCpID" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="newSubProdID" type="xsd:int"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSubChangeResponse">
+    <sequence>
+     <element name="arrOldVcode" nillable="true" type="impl:ArrayOf_xsd_nillable_string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="lowBalanceAmount" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="newSubProdID" type="xsd:int"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="CustomerConsentRequest">
+    <sequence>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="songVcode" nillable="true" type="xsd:string"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="CustomerConsentResponse">
+    <sequence>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTNewActivationRequest">
+    <sequence>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="copyrightID" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="firstConfirmationDttm" nillable="true" type="xsd:dateTime"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnGiftReceiver" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarcopy" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="secondConfirmationDttm" nillable="true" type="xsd:dateTime"/>
+     <element name="songCpID" nillable="true" type="xsd:string"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="songVcode" nillable="true" type="xsd:string"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTNewActivationResponse">
+    <sequence>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="lowBalanceAmount" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnGiftReceiver" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+     <element name="VCode" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSongChangeRequest">
+    <sequence>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="changeSongProdID" type="xsd:int"/>
+     <element name="changeSongVcode" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarcopy" nillable="true" type="xsd:string"/>
+     <element name="newCopyrightID" nillable="true" type="xsd:string"/>
+     <element name="newSongCpID" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSongChangeResponse">
+    <sequence>
+     <element name="arrOldVcode" nillable="true" type="impl:ArrayOf_xsd_nillable_string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="lowBalanceAmount" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSongTypeChangeRequest">
+    <sequence>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarcopy" nillable="true" type="xsd:string"/>
+     <element name="newCopyrightID" nillable="true" type="xsd:string"/>
+     <element name="newSongCpID" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSongTypeChangeResponse">
+    <sequence>
+     <element name="arrOldVcode" nillable="true" type="impl:ArrayOf_xsd_nillable_string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="lowBalanceAmount" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="newSongProdID" type="xsd:int"/>
+     <element name="newSongVcode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://services.ht.bharti.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://bean.services.ht.bharti.ibm.com" xmlns:tns3="http://dto.processinvocation.ibm.com" xmlns:tns4="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.engine.subs.ibm.com"/>
+   <import namespace="http://dto.processinvocation.ibm.com"/>
+   <import namespace="http://bean.services.ht.bharti.ibm.com"/>
+   <element name="handleHTDeSubRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="handleHTDeSubRequestReturn" nillable="true" type="tns2:HTDeSubResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTSubChangeRequest">
+    <complexType>
+     <sequence>
+      <element name="subChangeRequest" nillable="true" type="tns2:HTSubChangeRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTSubChangeRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="handleHTSubChangeRequestReturn" nillable="true" type="tns2:HTSubChangeResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="updateCustomerConsent">
+    <complexType>
+     <sequence>
+      <element name="customerConsentRequest" nillable="true" type="tns2:CustomerConsentRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="updateCustomerConsentResponse">
+    <complexType>
+     <sequence>
+      <element name="updateCustomerConsentReturn" nillable="true" type="tns2:CustomerConsentResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTNewActivation">
+    <complexType>
+     <sequence>
+      <element name="activationRequest" nillable="true" type="tns2:HTNewActivationRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTNewActivationResponse">
+    <complexType>
+     <sequence>
+      <element name="handleHTNewActivationReturn" nillable="true" type="tns2:HTNewActivationResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleSongChangeRequest">
+    <complexType>
+     <sequence>
+      <element name="songChangeRequest" nillable="true" type="tns2:HTSongChangeRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleSongChangeRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="handleSongChangeRequestReturn" nillable="true" type="tns2:HTSongChangeResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTSongTypeChangeRequest">
+    <complexType>
+     <sequence>
+      <element name="songTypeChangeRequest" nillable="true" type="tns2:HTSongTypeChangeRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTSongTypeChangeRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="handleHTSongTypeChangeRequestReturn" nillable="true" type="tns2:HTSongTypeChangeResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleEventBasedCharging">
+    <complexType>
+     <sequence>
+      <element name="eventBasedSubscriptionDTO" nillable="true" type="tns3:SubscriptionDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleEventBasedChargingResponse">
+    <complexType>
+     <sequence>
+      <element name="handleEventBasedChargingReturn" nillable="true" type="tns4:CPNotificationRespDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTDeSubRequest">
+    <complexType>
+     <sequence>
+      <element name="deSubRequest" nillable="true" type="tns2:HTDeSubRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_xsd_nillable_string">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="string" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://dto.processinvocation.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="SubscriptionDTO">
+    <sequence>
+     <element name="aocMsg1" nillable="true" type="xsd:string"/>
+     <element name="aocMsg2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpId" type="xsd:int"/>
+     <element name="cpName" nillable="true" type="xsd:string"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="firstConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="param_1" nillable="true" type="xsd:string"/>
+     <element name="param_2" nillable="true" type="xsd:string"/>
+     <element name="param_3" nillable="true" type="xsd:string"/>
+     <element name="param_4" nillable="true" type="xsd:string"/>
+     <element name="param_5" nillable="true" type="xsd:string"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="secondConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="subType" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://dto.engine.subs.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="CPNotificationRespDTO">
+    <sequence>
+     <element name="amount" type="xsd:double"/>
+     <element name="chargigTime" nillable="true" type="xsd:dateTime"/>
+     <element name="errorCode" type="xsd:int"/>
+     <element name="errorMsg" nillable="true" type="xsd:string"/>
+     <element name="lowBalance" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="temp1" nillable="true" type="xsd:string"/>
+     <element name="temp2" nillable="true" type="xsd:string"/>
+     <element name="temp3" nillable="true" type="xsd:string"/>
+     <element name="xactionId" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="handleHTSubChangeRequestResponse">
+     <wsdl:part element="intf:handleHTSubChangeRequestResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="updateCustomerConsentResponse">
+     <wsdl:part element="intf:updateCustomerConsentResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleEventBasedChargingResponse">
+     <wsdl:part element="intf:handleEventBasedChargingResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTSongTypeChangeRequestRequest">
+     <wsdl:part element="intf:handleHTSongTypeChangeRequest" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTSubChangeRequestRequest">
+     <wsdl:part element="intf:handleHTSubChangeRequest" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="updateCustomerConsentRequest">
+     <wsdl:part element="intf:updateCustomerConsent" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTSongTypeChangeRequestResponse">
+     <wsdl:part element="intf:handleHTSongTypeChangeRequestResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleEventBasedChargingRequest">
+     <wsdl:part element="intf:handleEventBasedCharging" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTDeSubRequestResponse">
+     <wsdl:part element="intf:handleHTDeSubRequestResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTNewActivationResponse">
+     <wsdl:part element="intf:handleHTNewActivationResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleSongChangeRequestResponse">
+     <wsdl:part element="intf:handleSongChangeRequestResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTNewActivationRequest">
+     <wsdl:part element="intf:handleHTNewActivation" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleSongChangeRequestRequest">
+     <wsdl:part element="intf:handleSongChangeRequest" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTDeSubRequestRequest">
+     <wsdl:part element="intf:handleHTDeSubRequest" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:portType name="HTSubscriptionServices">
+     <wsdl:operation name="handleHTDeSubRequest">
+       <wsdl:input message="intf:handleHTDeSubRequestRequest" name="handleHTDeSubRequestRequest"/>
+
+       <wsdl:output message="intf:handleHTDeSubRequestResponse" name="handleHTDeSubRequestResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTSubChangeRequest">
+       <wsdl:input message="intf:handleHTSubChangeRequestRequest" name="handleHTSubChangeRequestRequest"/>
+
+       <wsdl:output message="intf:handleHTSubChangeRequestResponse" name="handleHTSubChangeRequestResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="updateCustomerConsent">
+       <wsdl:input message="intf:updateCustomerConsentRequest" name="updateCustomerConsentRequest"/>
+
+       <wsdl:output message="intf:updateCustomerConsentResponse" name="updateCustomerConsentResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTNewActivation">
+       <wsdl:input message="intf:handleHTNewActivationRequest" name="handleHTNewActivationRequest"/>
+
+       <wsdl:output message="intf:handleHTNewActivationResponse" name="handleHTNewActivationResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleSongChangeRequest">
+       <wsdl:input message="intf:handleSongChangeRequestRequest" name="handleSongChangeRequestRequest"/>
+
+       <wsdl:output message="intf:handleSongChangeRequestResponse" name="handleSongChangeRequestResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTSongTypeChangeRequest">
+       <wsdl:input message="intf:handleHTSongTypeChangeRequestRequest" name="handleHTSongTypeChangeRequestRequest"/>
+
+       <wsdl:output message="intf:handleHTSongTypeChangeRequestResponse" name="handleHTSongTypeChangeRequestResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleEventBasedCharging">
+       <wsdl:input message="intf:handleEventBasedChargingRequest" name="handleEventBasedChargingRequest"/>
+
+       <wsdl:output message="intf:handleEventBasedChargingResponse" name="handleEventBasedChargingResponse"/>
+
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+   <wsdl:binding name="HTSubscriptionServicesSoapBinding" type="intf:HTSubscriptionServices">
+ <wsaw:UsingAddressing wsdl:required="false" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
+
+     <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+     <wsdl:operation name="handleHTDeSubRequest">
+       <wsdlsoap:operation soapAction="handleHTDeSubRequest"/>
+
+       <wsdl:input name="handleHTDeSubRequestRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleHTDeSubRequestResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTSubChangeRequest">
+       <wsdlsoap:operation soapAction="handleHTSubChangeRequest"/>
+
+       <wsdl:input name="handleHTSubChangeRequestRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleHTSubChangeRequestResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="updateCustomerConsent">
+       <wsdlsoap:operation soapAction="updateCustomerConsent"/>
+
+       <wsdl:input name="updateCustomerConsentRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="updateCustomerConsentResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTNewActivation">
+       <wsdlsoap:operation soapAction="handleHTNewActivation"/>
+
+       <wsdl:input name="handleHTNewActivationRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleHTNewActivationResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleSongChangeRequest">
+       <wsdlsoap:operation soapAction="handleSongChangeRequest"/>
+
+       <wsdl:input name="handleSongChangeRequestRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleSongChangeRequestResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTSongTypeChangeRequest">
+       <wsdlsoap:operation soapAction="handleHTSongTypeChangeRequest"/>
+
+       <wsdl:input name="handleHTSongTypeChangeRequestRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleHTSongTypeChangeRequestResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleEventBasedCharging">
+       <wsdlsoap:operation soapAction="handleEventBasedCharging"/>
+
+       <wsdl:input name="handleEventBasedChargingRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleEventBasedChargingResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+   <wsdl:service name="HTSubscriptionServicesService">
+     <wsdl:port binding="intf:HTSubscriptionServicesSoapBinding" name="HTSubscriptionServices">
+       <wsdlsoap:address location="http://localhost:9082/SchedulingEngineWeb/services/HTSubscriptionServices"/>
+
+    </wsdl:port>
+
+  </wsdl:service>
+
+</wsdl:definitions>

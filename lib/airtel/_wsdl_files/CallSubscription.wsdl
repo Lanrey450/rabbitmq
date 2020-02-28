@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://SubscriptionEngine.ibm.com" xmlns:impl="http://SubscriptionEngine.ibm.com" xmlns:intf="http://SubscriptionEngine.ibm.com" xmlns:tns2="http://dto.processinvocation.ibm.com" xmlns:tns3="http://dto.engine.subs.ibm.com" xmlns:tns4="http://bean.services.ht.bharti.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema targetNamespace="http://dto.processinvocation.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:intf="http://SubscriptionEngine.ibm.com" xmlns:tns3="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://SubscriptionEngine.ibm.com"/>
+   <import namespace="http://dto.engine.subs.ibm.com"/>
+   <complexType name="CustomerAttributesDTO">
+    <sequence>
+     <element name="NDSCreated" type="xsd:boolean"/>
+     <element name="notificationRespDTO" nillable="true" type="tns3:CPNotificationRespDTO"/>
+     <element name="eventBasedProductId" type="xsd:int"/>
+     <element name="chargingType" nillable="true" type="xsd:string"/>
+     <element name="subscriptionPackDTO" nillable="true" type="tns2:HTSubscriptionPackDTO"/>
+     <element name="id" type="xsd:int"/>
+     <element name="helloTunesDTO" nillable="true" type="tns2:HelloTunesDTO"/>
+     <element name="transId" type="xsd:int"/>
+     <element name="recoveryAmount" type="xsd:double"/>
+     <element name="recoveryPeriod" type="xsd:int"/>
+     <element name="custAssProdList" nillable="true" type="impl:ArrayOfXSDAnyType"/>
+     <element name="deliveryChannel" nillable="true" type="xsd:string"/>
+     <element name="parentProdId" type="xsd:int"/>
+     <element name="recordCount" nillable="true" type="impl:ArrayOfXSDAnyType"/>
+     <element name="chargingStatus" nillable="true" type="xsd:string"/>
+     <element name="isFallbackRequired" nillable="true" type="xsd:string"/>
+     <element name="fallbackProdId" type="xsd:int"/>
+     <element name="validproduct" type="xsd:boolean"/>
+     <element name="failureReason" nillable="true" type="xsd:string"/>
+     <element name="firstDate" nillable="true" type="xsd:string"/>
+     <element name="secondDate" nillable="true" type="xsd:string"/>
+     <element name="deprovisionDate" nillable="true" type="xsd:dateTime"/>
+     <element name="prevProductId" type="xsd:int"/>
+     <element name="aocXactionId" nillable="true" type="xsd:string"/>
+     <element name="isInGracePeriod" nillable="true" type="xsd:string"/>
+     <element name="chargingTime" nillable="true" type="xsd:dateTime"/>
+     <element name="lowBalance" type="xsd:double"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="subType" nillable="true" type="xsd:string"/>
+     <element name="cpId" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="aocRespMsg" nillable="true" type="xsd:string"/>
+     <element name="aocChannel" nillable="true" type="xsd:string"/>
+     <element name="aocMessage" nillable="true" type="xsd:string"/>
+     <element name="aocRequired" nillable="true" type="xsd:string"/>
+     <element name="chargingRequired" type="xsd:int"/>
+     <element name="circleCode" nillable="true" type="xsd:string"/>
+     <element name="gracePeriod" type="xsd:int"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="mstrProductId" type="xsd:int"/>
+     <element name="resubRequired" type="xsd:int"/>
+     <element name="subscriptionAmount" type="xsd:double"/>
+     <element name="transactionId" type="xsd:long"/>
+     <element name="status" type="xsd:int"/>
+     <element name="expiryDate" nillable="true" type="xsd:dateTime"/>
+     <element name="pricePoint" nillable="true" type="xsd:string"/>
+     <element name="productName" nillable="true" type="xsd:string"/>
+     <element name="retryCount" type="xsd:int"/>
+     <element name="currentStatus" type="xsd:int"/>
+     <element name="ratePlan" type="xsd:int"/>
+     <element name="contentPartnerId" type="xsd:int"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="subscriptionType" nillable="true" type="xsd:string"/>
+     <element name="autoExpiry" nillable="true" type="xsd:string"/>
+     <element name="chargingAuthorizatio" nillable="true" type="xsd:string"/>
+     <element name="chrgngRetry" nillable="true" type="xsd:string"/>
+     <element name="contentProvider" nillable="true" type="xsd:string"/>
+     <element name="contentProviderId" nillable="true" type="xsd:string"/>
+     <element name="metaData" nillable="true" type="xsd:string"/>
+     <element name="preRenAlertDays" nillable="true" type="xsd:string"/>
+     <element name="preRenAlertMsg" nillable="true" type="xsd:string"/>
+     <element name="prodMaxLimit" nillable="true" type="xsd:string"/>
+     <element name="productDescription" nillable="true" type="xsd:string"/>
+     <element name="productEndDate" nillable="true" type="xsd:string"/>
+     <element name="productStartDate" nillable="true" type="xsd:string"/>
+     <element name="renewalAmount" nillable="true" type="xsd:string"/>
+     <element name="renewalType" nillable="true" type="xsd:string"/>
+     <element name="renewalDate" nillable="true" type="xsd:dateTime"/>
+     <element name="subscriptionDate" nillable="true" type="xsd:dateTime"/>
+     <element name="validiltyPeriod" type="xsd:int"/>
+     <element name="cpName" nillable="true" type="xsd:string"/>
+     <element name="aocMsg1" nillable="true" type="xsd:string"/>
+     <element name="aocMsg2" nillable="true" type="xsd:string"/>
+     <element name="firstConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="secondConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="contentMediaType" nillable="true" type="xsd:string"/>
+     <element name="actionDate" nillable="true" type="xsd:dateTime"/>
+     <element name="actionTaken" nillable="true" type="xsd:string"/>
+     <element name="balance" type="xsd:double"/>
+     <element name="xactionStatus" nillable="true" type="xsd:string"/>
+     <element name="param_1" nillable="true" type="xsd:string"/>
+     <element name="param_2" nillable="true" type="xsd:string"/>
+     <element name="param_3" nillable="true" type="xsd:string"/>
+     <element name="param_4" nillable="true" type="xsd:string"/>
+     <element name="cumulativeFrequency" nillable="true" type="xsd:string"/>
+     <element name="cumulativeAmountToBeCharged" type="xsd:double"/>
+     <element name="chargedAmount" type="xsd:double"/>
+     <element name="finalAction" type="xsd:int"/>
+     <element name="shortCode" nillable="true" type="xsd:string"/>
+     <element name="suspensionPeriod" nillable="true" type="xsd:string"/>
+     <element name="productDuration" type="xsd:int"/>
+     <element name="lastChrgdAmt1" type="xsd:double"/>
+     <element name="lastChrgdDate1" nillable="true" type="xsd:dateTime"/>
+     <element name="contentId" nillable="true" type="xsd:string"/>
+     <element name="contentURL" nillable="true" type="xsd:string"/>
+     <element name="copyrightId" nillable="true" type="xsd:string"/>
+     <element name="discountApplied" nillable="true" type="xsd:string"/>
+     <element name="operation" nillable="true" type="xsd:string"/>
+     <element name="smsKeyword" nillable="true" type="xsd:string"/>
+     <element name="sourceCode" nillable="true" type="xsd:string"/>
+     <element name="subscriptionExternalId" nillable="true" type="xsd:string"/>
+     <element name="subscriptionName" nillable="true" type="xsd:string"/>
+     <element name="subscriptionTypeCode" nillable="true" type="xsd:string"/>
+     <element name="totalTimeInCharging" type="xsd:long"/>
+     <element name="totalTimeInNds" type="xsd:long"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTSubscriptionPackDTO">
+    <sequence>
+     <element name="aocMsg1" nillable="true" type="xsd:string"/>
+     <element name="aocMsg2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpId" type="xsd:int"/>
+     <element name="customerStatus" nillable="true" type="xsd:string"/>
+     <element name="expiryDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="extendedInfo" nillable="true" type="xsd:string"/>
+     <element name="firstConfrmDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="isInGracePeriod" nillable="true" type="xsd:string"/>
+     <element name="isNDSUpdate" type="xsd:int"/>
+     <element name="lastChgdDT1" nillable="true" type="xsd:dateTime"/>
+     <element name="lastChgdDT2" nillable="true" type="xsd:dateTime"/>
+     <element name="lastChgrAmt1" type="xsd:double"/>
+     <element name="lastChgrAmt2" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="optIn" nillable="true" type="xsd:string"/>
+     <element name="partyB" nillable="true" type="xsd:string"/>
+     <element name="prevProdId" type="xsd:int"/>
+     <element name="primaryId" type="xsd:int"/>
+     <element name="productGroupId" type="xsd:int"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="renewalDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="secondConfrmDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="songVCode" nillable="true" type="xsd:string"/>
+     <element name="subPackId" type="xsd:int"/>
+     <element name="subscriptionDTTM" nillable="true" type="xsd:dateTime"/>
+    </sequence>
+   </complexType>
+   <complexType name="HelloTunesDTO">
+    <sequence>
+     <element name="zeroConsecutiveFlag" type="xsd:int"/>
+     <element name="serviceType" nillable="true" type="xsd:string"/>
+     <element name="songTypeCheck" type="xsd:int"/>
+     <element name="familyId" type="xsd:int"/>
+     <element name="songProdFinal" type="xsd:int"/>
+     <element name="subProdFinal" type="xsd:int"/>
+     <element name="packSubId" type="xsd:int"/>
+     <element name="xywzMaxDisDwnld" nillable="true" type="xsd:string"/>
+     <element name="xywzCode" type="xsd:int"/>
+     <element name="giftSongCode" nillable="true" type="xsd:string"/>
+     <element name="existSongType" type="xsd:int"/>
+     <element name="zeroConfFlagCode" nillable="true" type="xsd:string"/>
+     <element name="subCode" nillable="true" type="xsd:string"/>
+     <element name="HTSubAssigned" type="xsd:boolean"/>
+     <element name="subProdFound" type="xsd:int"/>
+     <element name="scrCode" nillable="true" type="xsd:string"/>
+     <element name="primaryId" type="xsd:int"/>
+     <element name="remarks" nillable="true" type="xsd:string"/>
+     <element name="downloadCounter" type="xsd:int"/>
+     <element name="prodGroupId" type="xsd:int"/>
+     <element name="subPackId" type="xsd:int"/>
+     <element name="subsId" type="xsd:int"/>
+     <element name="moduleType" nillable="true" type="xsd:string"/>
+     <element name="changSongProdId" type="xsd:int"/>
+     <element name="changSongVCode" nillable="true" type="xsd:string"/>
+     <element name="copyrightId" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionId" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnGiftReceiver" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarCopy" nillable="true" type="xsd:string"/>
+     <element name="newCopyrightId" nillable="true" type="xsd:string"/>
+     <element name="newSongCpId" nillable="true" type="xsd:string"/>
+     <element name="newSongProdId" type="xsd:int"/>
+     <element name="newSongVCode" nillable="true" type="xsd:string"/>
+     <element name="newSubProductId" type="xsd:int"/>
+     <element name="songCpId" nillable="true" type="xsd:string"/>
+     <element name="songProductId" type="xsd:int"/>
+     <element name="songVCode" nillable="true" type="xsd:string"/>
+     <element name="subProductId" type="xsd:int"/>
+     <element name="accumRequired" nillable="true" type="xsd:string"/>
+     <element name="applicableOn" nillable="true" type="xsd:string"/>
+     <element name="aqRequired" nillable="true" type="xsd:string"/>
+     <element name="discountedPrice" nillable="true" type="xsd:string"/>
+     <element name="familyType" nillable="true" type="xsd:string"/>
+     <element name="maxCumDays" nillable="true" type="xsd:string"/>
+     <element name="maxDisDownload" nillable="true" type="xsd:string"/>
+     <element name="rvc" nillable="true" type="xsd:string"/>
+     <element name="songType" type="xsd:int"/>
+     <element name="zeroConfFlag" nillable="true" type="xsd:string"/>
+     <element name="extendedInfo" nillable="true" type="xsd:string"/>
+     <element name="optIn" nillable="true" type="xsd:string"/>
+     <element name="partyB" nillable="true" type="xsd:string"/>
+     <element name="productGroudId" type="xsd:int"/>
+     <element name="subscriptionId" type="xsd:int"/>
+     <element name="chargingPlatform" nillable="true" type="xsd:string"/>
+     <element name="ucipTransactionCode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songSubId" type="xsd:int"/>
+     <element name="respSongVCode" nillable="true" type="xsd:string"/>
+     <element name="partyBParam" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://dto.engine.subs.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="CPNotificationRespDTO">
+    <sequence>
+     <element name="amount" type="xsd:double"/>
+     <element name="chargigTime" nillable="true" type="xsd:dateTime"/>
+     <element name="errorCode" type="xsd:int"/>
+     <element name="errorMsg" nillable="true" type="xsd:string"/>
+     <element name="lowBalance" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="temp1" nillable="true" type="xsd:string"/>
+     <element name="temp2" nillable="true" type="xsd:string"/>
+     <element name="temp3" nillable="true" type="xsd:string"/>
+     <element name="xactionId" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://SubscriptionEngine.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://dto.processinvocation.ibm.com" xmlns:tns3="http://dto.engine.subs.ibm.com" xmlns:tns4="http://bean.services.ht.bharti.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://bean.services.ht.bharti.ibm.com"/>
+   <import namespace="http://dto.engine.subs.ibm.com"/>
+   <import namespace="http://dto.processinvocation.ibm.com"/>
+   <complexType name="ArrayOfXSDAnyType">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="anyType" nillable="true" type="xsd:anyType"/>
+    </sequence>
+   </complexType>
+   <element name="handleDeSubscriptionFromStartStopResponse">
+    <complexType>
+     <sequence>
+      <element name="handleDeSubscriptionFromStartStopReturn" nillable="true" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleNewSubscription">
+    <complexType>
+     <sequence>
+      <element name="custAttributesDTO" nillable="true" type="tns2:CustomerAttributesDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleNewSubscriptionResponse">
+    <complexType>
+     <sequence>
+      <element name="handleNewSubscriptionReturn" nillable="true" type="tns3:CPNotificationRespDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getSubscriptionRequestStatus">
+    <complexType>
+     <sequence>
+      <element name="xactionID" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getSubscriptionRequestStatusResponse">
+    <complexType>
+     <sequence>
+      <element name="getSubscriptionRequestStatusReturn" nillable="true" type="impl:ArrayOfXSDAnyType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTNewActivation">
+    <complexType>
+     <sequence>
+      <element name="activationRequest" nillable="true" type="tns4:HTNewActivationRequest"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleHTNewActivationResponse">
+    <complexType>
+     <sequence>
+      <element name="handleHTNewActivationReturn" nillable="true" type="tns4:HTNewActivationResponse"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleDeSubscription">
+    <complexType>
+     <sequence>
+      <element name="custAttributesDTO" nillable="true" type="tns2:CustomerAttributesDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleDeSubscriptionResponse">
+    <complexType>
+     <sequence>
+      <element name="handleDeSubscriptionReturn" nillable="true" type="tns3:CPNotificationRespDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleDeSubscriptionFromStartStop">
+    <complexType>
+     <sequence>
+      <element name="custAttributesDTO" nillable="true" type="tns2:CustomerAttributesDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema targetNamespace="http://bean.services.ht.bharti.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="HTNewActivationRequest">
+    <sequence>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage1" nillable="true" type="xsd:string"/>
+     <element name="AOCMessage2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="copyrightID" nillable="true" type="xsd:string"/>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="firstConfirmationDttm" nillable="true" type="xsd:dateTime"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnGiftReceiver" nillable="true" type="xsd:string"/>
+     <element name="msisdnStarcopy" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="secondConfirmationDttm" nillable="true" type="xsd:dateTime"/>
+     <element name="songCpID" nillable="true" type="xsd:string"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="songVcode" nillable="true" type="xsd:string"/>
+     <element name="subProdID" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="HTNewActivationResponse">
+    <sequence>
+     <element name="cpID" type="xsd:int"/>
+     <element name="cpTransactionID" nillable="true" type="xsd:string"/>
+     <element name="errorCode" nillable="true" type="xsd:string"/>
+     <element name="errorDescription" nillable="true" type="xsd:string"/>
+     <element name="lowBalanceAmount" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="msisdnDedicatee" nillable="true" type="xsd:string"/>
+     <element name="msisdnGiftReceiver" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:dateTime"/>
+     <element name="songProdID" type="xsd:int"/>
+     <element name="subProdID" type="xsd:int"/>
+     <element name="transactionID" nillable="true" type="xsd:string"/>
+     <element name="VCode" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="handleDeSubscriptionFromStartStopResponse">
+     <wsdl:part element="intf:handleDeSubscriptionFromStartStopResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleDeSubscriptionResponse">
+     <wsdl:part element="intf:handleDeSubscriptionResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleNewSubscriptionResponse">
+     <wsdl:part element="intf:handleNewSubscriptionResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="getSubscriptionRequestStatusRequest">
+     <wsdl:part element="intf:getSubscriptionRequestStatus" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTNewActivationResponse">
+     <wsdl:part element="intf:handleHTNewActivationResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleHTNewActivationRequest">
+     <wsdl:part element="intf:handleHTNewActivation" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="getSubscriptionRequestStatusResponse">
+     <wsdl:part element="intf:getSubscriptionRequestStatusResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleDeSubscriptionRequest">
+     <wsdl:part element="intf:handleDeSubscription" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleDeSubscriptionFromStartStopRequest">
+     <wsdl:part element="intf:handleDeSubscriptionFromStartStop" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleNewSubscriptionRequest">
+     <wsdl:part element="intf:handleNewSubscription" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:portType name="CallSubscription">
+     <wsdl:operation name="handleDeSubscriptionFromStartStop">
+       <wsdl:input message="intf:handleDeSubscriptionFromStartStopRequest" name="handleDeSubscriptionFromStartStopRequest"/>
+
+       <wsdl:output message="intf:handleDeSubscriptionFromStartStopResponse" name="handleDeSubscriptionFromStartStopResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleNewSubscription">
+       <wsdl:input message="intf:handleNewSubscriptionRequest" name="handleNewSubscriptionRequest"/>
+
+       <wsdl:output message="intf:handleNewSubscriptionResponse" name="handleNewSubscriptionResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="getSubscriptionRequestStatus">
+       <wsdl:input message="intf:getSubscriptionRequestStatusRequest" name="getSubscriptionRequestStatusRequest"/>
+
+       <wsdl:output message="intf:getSubscriptionRequestStatusResponse" name="getSubscriptionRequestStatusResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTNewActivation">
+       <wsdl:input message="intf:handleHTNewActivationRequest" name="handleHTNewActivationRequest"/>
+
+       <wsdl:output message="intf:handleHTNewActivationResponse" name="handleHTNewActivationResponse"/>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleDeSubscription">
+       <wsdl:input message="intf:handleDeSubscriptionRequest" name="handleDeSubscriptionRequest"/>
+
+       <wsdl:output message="intf:handleDeSubscriptionResponse" name="handleDeSubscriptionResponse"/>
+
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+   <wsdl:binding name="CallSubscriptionSoapBinding" type="intf:CallSubscription">
+ <wsaw:UsingAddressing wsdl:required="false" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
+
+     <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+     <wsdl:operation name="handleDeSubscriptionFromStartStop">
+       <wsdlsoap:operation soapAction="handleDeSubscriptionFromStartStop"/>
+
+       <wsdl:input name="handleDeSubscriptionFromStartStopRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleDeSubscriptionFromStartStopResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleNewSubscription">
+       <wsdlsoap:operation soapAction="handleNewSubscription"/>
+
+       <wsdl:input name="handleNewSubscriptionRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleNewSubscriptionResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="getSubscriptionRequestStatus">
+       <wsdlsoap:operation soapAction="getSubscriptionRequestStatus"/>
+
+       <wsdl:input name="getSubscriptionRequestStatusRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="getSubscriptionRequestStatusResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleHTNewActivation">
+       <wsdlsoap:operation soapAction="handleHTNewActivation"/>
+
+       <wsdl:input name="handleHTNewActivationRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleHTNewActivationResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+     <wsdl:operation name="handleDeSubscription">
+       <wsdlsoap:operation soapAction="handleDeSubscription"/>
+
+       <wsdl:input name="handleDeSubscriptionRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleDeSubscriptionResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+   <wsdl:service name="CallSubscriptionService">
+     <wsdl:port binding="intf:CallSubscriptionSoapBinding" name="CallSubscription">
+       <wsdlsoap:address location="http://172.24.15.34:8090/SchedulingEngineWeb/services/CallSubscription"/>
+
+    </wsdl:port>
+
+  </wsdl:service>
+
+</wsdl:definitions>

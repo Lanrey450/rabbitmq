@@ -20,13 +20,17 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/terragonengineering/aggregator_subscription__and_billing#readme",
   "dependencies": {
+    "amqplib": "^0.5.5",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
-    "mongoose": "^5.9.2"
+    "mongoose": "^5.9.2",
+    "mtn_sdp_nodejs": "bitbucket:terragonengineering/mtn-sdp-nodejs%2F#staging",
+    "ramda": "^0.27.0",
+    "terra-logger": "bitbucket:terragonengineering/terra-logger-js#1.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

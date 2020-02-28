@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://service.SubscriptionEngine.ibm.com" xmlns:impl="http://service.SubscriptionEngine.ibm.com" xmlns:intf="http://service.SubscriptionEngine.ibm.com" xmlns:tns2="http://dto.processinvocation.ibm.com" xmlns:tns3="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+ <wsdl:types>
+  <schema targetNamespace="http://dto.processinvocation.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="TopUpDTO">
+    <sequence>
+     <element name="aocMsg1" nillable="true" type="xsd:string"/>
+     <element name="aocMsg2" nillable="true" type="xsd:string"/>
+     <element name="channelName" nillable="true" type="xsd:string"/>
+     <element name="cpId" type="xsd:int"/>
+     <element name="cpName" nillable="true" type="xsd:string"/>
+     <element name="cpPwd" nillable="true" type="xsd:string"/>
+     <element name="firstConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="param_1" nillable="true" type="xsd:string"/>
+     <element name="param_2" nillable="true" type="xsd:string"/>
+     <element name="param_3" nillable="true" type="xsd:string"/>
+     <element name="param_4" nillable="true" type="xsd:string"/>
+     <element name="param_5" nillable="true" type="xsd:string"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="secondConfirmationDTTM" nillable="true" type="xsd:dateTime"/>
+     <element name="smsContent" nillable="true" type="xsd:string"/>
+     <element name="subType" nillable="true" type="xsd:string"/>
+     <element name="topUpProductId" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://service.SubscriptionEngine.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://dto.processinvocation.ibm.com" xmlns:tns3="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.engine.subs.ibm.com"/>
+   <import namespace="http://dto.processinvocation.ibm.com"/>
+   <element name="handleTopUpRequestResponse">
+    <complexType>
+     <sequence>
+      <element name="handleTopUpRequestReturn" nillable="true" type="tns3:CPNotificationTopUpResponseDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="handleTopUpRequest">
+    <complexType>
+     <sequence>
+      <element name="topUpDTO" nillable="true" type="tns2:TopUpDTO"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+  <schema targetNamespace="http://dto.engine.subs.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="CPNotificationTopUpResponseDTO">
+    <sequence>
+     <element name="amount" type="xsd:double"/>
+     <element name="chargingTime" nillable="true" type="xsd:dateTime"/>
+     <element name="cpId" type="xsd:int"/>
+     <element name="errorCode" type="xsd:int"/>
+     <element name="errorMsg" nillable="true" type="xsd:string"/>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="lowBalance" type="xsd:double"/>
+     <element name="msisdn" nillable="true" type="xsd:string"/>
+     <element name="partyB" nillable="true" type="xsd:string"/>
+     <element name="productId" type="xsd:int"/>
+     <element name="songVCode" nillable="true" type="xsd:string"/>
+     <element name="param1" nillable="true" type="xsd:string"/>
+     <element name="param2" nillable="true" type="xsd:string"/>
+     <element name="param3" nillable="true" type="xsd:string"/>
+     <element name="param4" nillable="true" type="xsd:string"/>
+     <element name="param5" nillable="true" type="xsd:string"/>
+     <element name="param6" nillable="true" type="xsd:string"/>
+     <element name="param7" nillable="true" type="xsd:string"/>
+     <element name="xactionId" nillable="true" type="xsd:string"/>
+     <element name="topUpProductId" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="handleTopUpRequestResponse">
+     <wsdl:part element="intf:handleTopUpRequestResponse" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:message name="handleTopUpRequestRequest">
+     <wsdl:part element="intf:handleTopUpRequest" name="parameters"/>
+
+  </wsdl:message>
+
+   <wsdl:portType name="TopUpService">
+     <wsdl:operation name="handleTopUpRequest">
+       <wsdl:input message="intf:handleTopUpRequestRequest" name="handleTopUpRequestRequest"/>
+
+       <wsdl:output message="intf:handleTopUpRequestResponse" name="handleTopUpRequestResponse"/>
+
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+   <wsdl:binding name="TopUpServiceSoapBinding" type="intf:TopUpService">
+ <wsaw:UsingAddressing wsdl:required="false" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
+
+     <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+     <wsdl:operation name="handleTopUpRequest">
+       <wsdlsoap:operation soapAction="handleTopUpRequest"/>
+
+       <wsdl:input name="handleTopUpRequestRequest">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:input>
+
+       <wsdl:output name="handleTopUpRequestResponse">
+         <wsdlsoap:body use="literal"/>
+
+      </wsdl:output>
+
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+   <wsdl:service name="TopUpServiceService">
+     <wsdl:port binding="intf:TopUpServiceSoapBinding" name="TopUpService">
+       <wsdlsoap:address location="http://localhost:9080/SchedulingEngineWeb/services/TopUpService"/>
+
+    </wsdl:port>
+
+  </wsdl:service>
+
+</wsdl:definitions>

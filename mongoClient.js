@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const debug = require('debug')('mongodb');
 const config = require('./config');
 
-console.log(config, 'config')
-
-
 
 const defaultConfig = {
     username: config.databases.mongodb.user,
@@ -12,16 +9,19 @@ const defaultConfig = {
     host: config.databases.mongodb.host,
     port: config.databases.mongodb.port,
     db: config.databases.mongodb.db,
+    url: config.databases.mongodb.url
 };
 
-console.log(defaultConfig, "default config");
+console.log(defaultConfig.url, "default-config");
 
-const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db}?retryWrites=true` || 'mongodb://localhost:27017/subscription&billing?retryWrites=true';
+// switch when deploying for production envs
+
+const defaultUrl = defaultConfig.url || `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db}?retryWrites=true`;
 
 mongoose.set('debug', true);
 
-
 console.log("MONGO_DB_FULL_URL", defaultUrl);
+
 mongoose.connect(defaultUrl, {useNewUrlParser: true, useCreateIndex: true}).catch(err => console.log(err));
 mongoose.Promise = global.Promise;
 let db = mongoose.connection;
