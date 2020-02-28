@@ -1,18 +1,14 @@
 require('dotenv').config();
-const responseManager = require('./lib/response_manager_middleware');
-
-
-const routes = require('./routes/index');
-
-
-console.log(routes);
-
-
-const config = require('./config');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+
+
+const config = require('./config');
+const responseManager = require('./lib/response_manager_middleware');
+const routes = require('./routes/index');
+
+require('./mongoClient');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -27,8 +23,7 @@ app.get('/', (req, res) => {
 
 
 // add routes here 
-app.use(require('./routes'));
-
+app.use(routes);
 
 
 app.listen(config.port, () => {
