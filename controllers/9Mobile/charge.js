@@ -1,25 +1,18 @@
 const ResponseManager = require('../../commons/response');
-const NineMobileChargeApi = new (require('../../lib/9Mobile/charging'));
+const NineMobileChargeApi = require('../../lib/9Mobile/charging');
 
-class UserController extends ResponseManager{
-    constructor(){
-        super();
-    }
+   module.exports = {
+        async chargeSync(req, res){
+            ResponseManager.sendResponse({
+                res,
+                responseBody: await NineMobileChargeApi.sync(req.body)
+            });
+        },
 
-    async chargeSync(req, res){
-        this.sendResponse({
-            res,
-            responseBody: await NineMobileChargeApi.sync(req.body)
-        });
-    }
-
-    async chargeAsync(req, res){
-        this.sendResponse({
-            res,
-            responseBody: await NineMobileChargeApi.async(req.body)
-        });
-    }
-
-}
-
-module.exports = UserController;
+        async chargeAsync(req, res){
+            ResponseManager.sendResponse({
+                res,
+                responseBody: await NineMobileChargeApi.async(req.body)
+            });
+        }
+   }

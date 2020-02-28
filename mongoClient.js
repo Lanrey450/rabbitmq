@@ -20,9 +20,11 @@ const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password
 
 mongoose.set('debug', true);
 
+const connectionString = 'mongodb://localhost:27017/subscription&billing'
 
-console.log("MONGO_DB_FULL_URL", defaultUrl);
-mongoose.connect(defaultUrl, {useNewUrlParser: true, useCreateIndex: true}).catch(err => console.log(err));
+
+//console.log("MONGO_DB_FULL_URL", defaultUrl);
+mongoose.connect(connectionString, {useNewUrlParser: true, useCreateIndex: true}).catch(err => console.log(err));
 mongoose.Promise = global.Promise;
 let db = mongoose.connection;
 db.on("connected", () => {
@@ -30,7 +32,7 @@ db.on("connected", () => {
 });
 db.on('error', (error) => {
     console.error("An error occurred", JSON.stringify(error));
-    console.log(error.message, new Error(error.message), { defaultUrl }, true);
+    console.log(error.message, new Error(error.message), { connectionString }, true);
     process.exit(0);
 });
 
