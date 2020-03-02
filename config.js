@@ -15,7 +15,7 @@ module.exports = {
     baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL
   },
   mtn: {
-
+    
   }, 
 
   airtel: {
