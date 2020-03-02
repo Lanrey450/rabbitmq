@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const Utils = require('../../lib/utils');
+
 const subscriptionSchemaAirtel = new Schema({
   msisdn: {
-    type: String,
-    required: true,
-  },
-  campaignId: {
     type: String,
     required: true,
   },
@@ -32,7 +30,7 @@ const subscriptionSchemaAirtel = new Schema({
     sparse: true,
     unique: true
   },
-  route: {
+  channel: {
     type: String,
     required: true
   },
@@ -42,6 +40,7 @@ const subscriptionSchemaAirtel = new Schema({
 }, {
   timestamps: true,
 });
+
 
 
 const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel);

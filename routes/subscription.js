@@ -15,9 +15,12 @@ route.post('/status', asyncHandler((req, res) => NineMOBILESubscriptionControlle
 
 
 // Airtel sub
-route.post('/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribe(req, res)));
-route.post('/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unsubscribe(req, res)));
-route.post('/status', asyncHandler((req, res) => AirtelSubscriptionController.status(req, res)));
+route.post('/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribeRequest(req, res)));
+route.post('/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unSubscribeRequest(req, res)));
+route.post('/status', asyncHandler((req, res) => AirtelSubscriptionController.getSubscriptionStatus(req, res)));
+
+route.post('/airtelPostBack', asyncHandler((req, res) => AirtelSubscriptionController.airtelDataSyncPostBack(req, res)));
+
 
 
 
@@ -25,6 +28,10 @@ route.post('/status', asyncHandler((req, res) => AirtelSubscriptionController.st
 route.post('/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)));
 route.post('/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)));
 route.post('/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)));
+
+
+
+route.post('/mtnPostBack', asyncHandler((req, res) => AirtelSubscriptionController.mtnDataSyncPostBack(req, res)));
 
 
 module.exports = route;
