@@ -15,8 +15,8 @@ route.post('/status', asyncHandler((req, res) => NineMOBILESubscriptionControlle
 
 
 // Airtel sub
-route.post('/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribe(req, res)));
-route.post('/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unsubscribe(req, res)));
+route.post('/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribeRequest(req, res)));
+route.post('/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unSubscribeRequest(req, res)));
 route.post('/status', asyncHandler((req, res) => AirtelSubscriptionController.status(req, res)));
 
 

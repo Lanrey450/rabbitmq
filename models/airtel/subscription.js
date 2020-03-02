@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const Utils = require('../../lib/utils');
+
 const subscriptionSchemaAirtel = new Schema({
   msisdn: {
     type: String,
@@ -42,6 +44,7 @@ const subscriptionSchemaAirtel = new Schema({
 }, {
   timestamps: true,
 });
+
 
 
 const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel);
