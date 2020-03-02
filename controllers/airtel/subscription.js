@@ -1,7 +1,6 @@
 const SubscriptionService = require('../../lib/airtel/subscription');
 const config = require('../../config');
 const Axios = require('axios');
-const moment = require('moment');
 const ResponseManager = require('../../commons/response');
 const Utils = require('../../lib/utils');
 
@@ -58,18 +57,16 @@ module.exports = {
             response.error = false;
             response.data = subscriptionData;
             return response;
-          })
-        .catch((error) => {
+          }).catch((error) => {
           console.log(`message: ${error.message}`);
           response.error = true;
           response.data = error.response;
           response.statusCode = error.statusCode;
           response.message = error.message;
           return response;
-        });
-    }
-        })
-        .catch((blackListError) => {
+          })
+          }
+        }).catch((blackListError) => {
           console.log(`Error attempting to check blacklist status for MSISDN = ${msisdn}`);
           response.error = true;
           response.message = `Error attempting to check blacklist status for MSISDN = ${msisdn}`;
@@ -92,9 +89,9 @@ module.exports = {
       unSubscribeRequest(req, res) {
         const { msisdn, serviceObject, channel  } = req.body;
         if (!(msisdn || serviceObject || channel )) {
-          return ResponseManager.sendErrorResponse(res, { message: 'Please pass user MSISDN!' });
+          return ResponseManager.sendErrorResponse(res, { message: 'Please pass all required params!' });
         }
-      console.log(`Making a unsubscription request for ${msisdn}`);
+        console.log(`Making a unsubscription request for ${msisdn}`);
         // If un-subscription was successful, update the status field of the record in
         // subscription collection and return success...
         return this.unSubscribeUser(msisdn, serviceObject, channel)
@@ -142,23 +139,9 @@ module.exports = {
           });
       },
     
-      
-      /**
-         * Save subscription data into subscription database
-         * @param {*} subscriptionParameters
-         */
-      consumeSubscription(subscriptionParameters) {
-        const subscriptionData = subscriptionParameters;
-        const { msisdn, serviceObject, channel } = subscriptionData;
-        if (!msisdn || !serviceObject || !channel) {
-          throw new Error(`Invalid subscription data to consume: ${JSON.stringify(subscriptionData)}`);
-        }
-        return SubscriptionService.putUserSubscription(subscriptionData)
-          .then(savedSubscription => savedSubscription);
-      },
 
      // get status of service subscription
-    async getSubscriptionStatus(req, res) {
+  getSubscriptionStatus(req, res) {
     const { msisdn, serviceId } = req.query;
 
     if (msisdn && serviceId) {
@@ -184,7 +167,6 @@ module.exports = {
   },
 
 
-
   async airtelDataSyncPostBack(req, res) {
 
     console.log('getting data sync feedback from airtel');
@@ -196,131 +178,5 @@ module.exports = {
 
   },
 
-
-  /**
-   * Notify Subscription Owner
-   * @param {Object} service Service object
-   * @param {Object} subscriptionData Subscription Data object
-   */
-    notifySubscriptionOwner(serviceObject, subscriptionData) {
-    const { feedbackURL } = serviceObject;
-    if (!feedbackURL) {
-      throw new Error(`No feedbackURL for service: ${JSON.stringify(service)}`);
-    }
-    return Axios({
-        method: 'post',
-        url: `${feedbackURL}`,
-        data: `${subscriptionData}`,
-        timeout: 5000, // 5 seconds
-        json: true,
-        headers = {},
-        responseType: 'json',
-      }).then((response)=>{
-        console.log(response);
-        return response;
-      }).catch((error)=>{
-          console.log(error);
-      })
-
-  },
-
-
-  /**
-   * Process Feedback from Airel SE
-   * @param {Object} feedbackParameters
-   */
-  processAirtelSEFeedback(feedbackParameters) {
-    const {amount, errorCode, msisdn, productId, temp3, xactionId, chargigTime, serviceObject} = feedbackParameters;
-
-        const subscriptionDetailsObject = Utils.xmltoJSON(temp3);
-        console.info(`Subscription Details for ${msisdn} is: ${JSON.stringify(subscriptionDetailsObject)}`);
-
-        const product = JSON.parse(serviceObject.product);
-
-        let chargingTime = moment().toISOString();
-        if (chargigTime && chargigTime != null) {
-          chargingTime = new Date(chargigTime).toISOString();
-        }
-        const subscriptionData = {
-          msisdn,
-          productId: product.productId,
-          amount: parseFloat(amount),
-          type: subscriptionDetailsObject.XML.ChargingType,
-          chargingTime,
-          response: JSON.stringify(feedbackParameters),
-          duration: product.duration,
-          transactionId: xactionId,
-          route: 'Airtel_SE_postback'
-        };
-
-        switch (errorCode) {
-          case 1000: {
-            subscriptionData.status = config.user_status.active;
-            break;
-          }
-          case 1001: {
-            subscriptionData.status = config.user_status.inactive;
-            break;
-          }
-          case 1013: {
-            subscriptionData.status = config.user_status.inactive;
-            break;
-          }
-          case 3027: {
-            // Set status to suspended because customer moved to grace and/or suspension
-            subscriptionData.status = config.user_status.suspended;
-            break;
-          }
-          default: {
-            throw new Error(`Unknown subscription code: ${JSON.stringify(feedbackParameters)}`);
-          }
-        }
-
-        if (subscriptionData.status === config.user_status.active && subscriptionData.type === 'R') {
-          subscriptionData.status = config.user_status.renew;
-        }
-
-        if (service.feedbackURL) {
-          return this.notifySubscriptionOwner(serviceObject, subscriptionData)
-            .then((ownerNotificationResponse) => {
-              console.info(`Notifcation to Owner response: ${JSON.stringify(ownerNotificationResponse)}`);
-              return SubscriptionService.publishToSubscriptionLogQueue(subscriptionData)
-                .then((status) => {
-                  console.info(`Successfully pushed to the Airtel subscription data queue: ${status}`);
-                  return status;
-                })
-                .catch((error) => {
-                // error occurred while pushing to queue
-                  console.error(`Could not push Airtel subscription to queue to be saved later in MongoDB: ${error}`);
-                  console.error(`Data not pushed : ${JSON.stringify(subscriptionData)}`);
-                  throw new Error(`Subscription data not pushed for logging: ${error}`);
-                });
-            })
-            .catch((ownerNotificationError) => {
-              console.error(`Error Posting back: ${ownerNotificationError}`);
-              return SubscriptionService.publishToSubscriptionLogQueue(subscriptionData)
-                .then((status) => {
-                  console.info(`Successfully pushed to the Airtel subscription data queue: ${status}`);
-                  return status;
-                })
-                .catch((error) => {
-                // error occurred while pushing to queue
-                  console.error(`Could not push Airtel subscription to queue to be saved later in MongoDB: ${error}`);
-                  console.error(`Data not pushed : ${JSON.stringify(subscriptionData)}`);
-                  throw new Error(`Subscription data not pushed for logging: ${error}`);
-                });
-            });
-        }
-        return SubscriptionService.publishToSubscriptionLogQueue(subscriptionData)
-          .then((status) => {
-            console.info(`Successfully pushed to the Airtel subscription data queue: ${status}`);
-            return status;
-          })
-          .catch((error) => {
-            // error occurred while pushing to queue
-            console.error(`Could not push Airtel subscription to queue to be saved later in MongoDB: ${error}`);
-            console.error(`Data not pushed : ${JSON.stringify(subscriptionData)}`);
-            throw new Error(`Subscription data not pushed for logging: ${error}`);
-          });
-  },   
+    
 };
