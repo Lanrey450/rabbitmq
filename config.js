@@ -15,10 +15,7 @@ module.exports = {
     baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL
   },
   mtn: {
-    serviceConfig: {
-      servicePassword: process.env.spPwd,
-      serviceID: process.env.spId,
-    },
+    
   }, 
 
   airtel: {
