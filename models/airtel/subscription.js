@@ -9,10 +9,6 @@ const subscriptionSchemaAirtel = new Schema({
     type: String,
     required: true,
   },
-  campaignId: {
-    type: String,
-    required: true,
-  },
   productId: {
     type: String,
     required: true,
@@ -34,7 +30,7 @@ const subscriptionSchemaAirtel = new Schema({
     sparse: true,
     unique: true
   },
-  route: {
+  channel: {
     type: String,
     required: true
   },
