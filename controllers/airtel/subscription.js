@@ -17,9 +17,8 @@ module.exports = {
      */
     subscribeRequest(req, res) {
         const { msisdn, serviceObject, channel } = req.body;
-        if (!(msisdn || serviceObject || channel )) {
-          
-            return ResponseManager.sendErrorResponse({res, message:'Please pass all required parameters!', statusCode})
+        if (!(msisdn || serviceObject || channel )) {  
+          return ResponseManager.sendErrorResponse({res, message:'Please pass all required parameters!', statusCode})
         }
 
         if (!config.airtel_options.allowed_channels.includes(channel.toUpperCase())) {
@@ -47,11 +46,10 @@ module.exports = {
       subscribeUser(channel, msisdn, serviceObject) {
         const response = {};
         console.log(`Checking for ${msisdn} in Blacklist`);
-
           // Check if MSISDN is blacklisted
         return SubscriptionService.isInBlacklist(msisdn)
           .then((blacklistResponse) => {
-            console.log(`Blacklist response for ${msisdn}: ${JSON.stringify(blacklistResponse)}`);
+          console.log(`Blacklist response for ${msisdn}: ${JSON.stringify(blacklistResponse)}`);
          if (!blacklistResponse.error && !blacklistResponse.data) {
         // If subscription was successful, save in subscription collection and return success...
         return SubscriptionService.sendSubscriptionRequest(msisdn, channel, serviceObject, 'API')
@@ -92,16 +90,14 @@ module.exports = {
          * @methodVerb POST
          */
       unSubscribeRequest(req, res) {
-        const { msisdn, serviceObject } = req.body;
-        if (!msisdn && !serviceObject) {
+        const { msisdn, serviceObject, channel  } = req.body;
+        if (!(msisdn || serviceObject || channel )) {
           return ResponseManager.sendErrorResponse(res, { message: 'Please pass user MSISDN!' });
         }
-
-        console.log(`Making a unsubscription request for ${msisdn}`);
-        // use service information to make  call to Airtel
+      console.log(`Making a unsubscription request for ${msisdn}`);
         // If un-subscription was successful, update the status field of the record in
         // subscription collection and return success...
-        return this.unSubscribeUser(msisdn, serviceObject)
+        return this.unSubscribeUser(msisdn, serviceObject, channel)
           .then((response) => {
             console.info(`response ${response}`);
             if (response.error) {
@@ -110,7 +106,7 @@ module.exports = {
                 message: response.message,
               }, response.statusCode);
             } else {
-              ResponseManager.sendResponse(res, `${response.data}`);
+              ResponseManager.sendResponse({res, responseBody: response.data});
             }
           }).catch((error) => {
             console.info(error);
@@ -124,14 +120,13 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be unsubcribed from a service
        * @param serviceObject this is the serviceObject 
        */
-      unSubscribeUser(msisdn, serviceObject) {
+      unSubscribeUser(msisdn, serviceObject, channel) {
         const response = {};
         console.info(`Making a unsubscription request for ${msisdn}`);
-
         // If un-subscription was successful, update the status field of the record in
         // subscription collection and return success...
-        return SubscriptionService.sendUnSubscriptionRequest(msisdn, serviceObject, 'API')
-              .then((unsubscriptionData) => {
+         return SubscriptionService.sendUnSubscriptionRequest(msisdn, serviceObject, channel, 'API')
+          .then((unsubscriptionData) => {
                 console.info(`message: ${unsubscriptionData}`);
                 response.error = false;
                 response.data = unsubscriptionData;
@@ -147,14 +142,15 @@ module.exports = {
           });
       },
     
+      
       /**
          * Save subscription data into subscription database
          * @param {*} subscriptionParameters
          */
       consumeSubscription(subscriptionParameters) {
         const subscriptionData = subscriptionParameters;
-        const { msisdn, serviceObject } = subscriptionData;
-        if (!msisdn || !serviceObject) {
+        const { msisdn, serviceObject, channel } = subscriptionData;
+        if (!msisdn || !serviceObject || !channel) {
           throw new Error(`Invalid subscription data to consume: ${JSON.stringify(subscriptionData)}`);
         }
         return SubscriptionService.putUserSubscription(subscriptionData)
@@ -162,7 +158,7 @@ module.exports = {
       },
 
      // get status of service subscription
-    getSubscriptionStatus(req, res) {
+    async getSubscriptionStatus(req, res) {
     const { msisdn, serviceId } = req.query;
 
     if (msisdn && serviceId) {
@@ -189,14 +185,25 @@ module.exports = {
 
 
 
+  async airtelDataSyncPostBack(req, res) {
+
+    console.log('getting data sync feedback from airtel');
+
+    const data = req.body;
+
+    console.log(data);
+
+
+  },
+
 
   /**
    * Notify Subscription Owner
    * @param {Object} service Service object
    * @param {Object} subscriptionData Subscription Data object
    */
-    notifySubscriptionOwner(service, subscriptionData) {
-    const { feedbackURL } = service;
+    notifySubscriptionOwner(serviceObject, subscriptionData) {
+    const { feedbackURL } = serviceObject;
     if (!feedbackURL) {
       throw new Error(`No feedbackURL for service: ${JSON.stringify(service)}`);
     }
@@ -315,53 +322,5 @@ module.exports = {
             console.error(`Data not pushed : ${JSON.stringify(subscriptionData)}`);
             throw new Error(`Subscription data not pushed for logging: ${error}`);
           });
-  },
-
-
-  
-  /**
-     * Process Requests consumed from the SMS Requests queue
-     * @param {Object} requestParameters
-     */
-    processSMSRequest(requestParameters) {
-        const {msisdn, shortcode, message, route, service } = requestParameters;
-
-        const cleanMessage = Utils.keywordSanitizer(message);
-            if (service.optInKeywords.indexOf(cleanMessage) > -1 && service.shortCode === shortcode) {
-              return SubscriptionService.sendSubscriptionRequest(msisdn, service, route)
-                .then(subscriptionData =>
-                  this.notifySubscriptionOwner(service, subscriptionData)
-                    .then((apiResponse) => {
-                      console.info(`Subscription Feedback posting to ${service.name} response: ${JSON.stringify(apiResponse)}`);
-                      return subscriptionData;
-                    })
-                    .catch((apiError) => {
-                      console.error(`Subscription Feedback posting to ${service.name} error: ${apiError}`);
-                      return subscriptionData;
-                    }))
-                .catch((error) => {
-                  console.error(`Error occurred while subscribing ${msisdn} to service with service key = ${cleanMessage}`, error);
-                  throw new Error(error);
-                });
-            } else if (service.optOutKeywords.indexOf(cleanMessage) > -1 && service.shortCode === shortcode) {
-              return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, route)
-                .then(unSubscriptionData =>
-                  this.notifySubscriptionOwner(service, unSubscriptionData)
-                    .then((apiResponse) => {
-                      console.info(`Unsubscription Feedback posting to ${service.name} response: ${JSON.stringify(apiResponse)}`);
-                      return unSubscriptionData;
-                    })
-                    .catch((apiError) => {
-                      console.error(`Unsubscription Feedback posting to ${service.name} error: ${apiError}`);
-                      return unSubscriptionData;
-                    }))
-                .catch((error) => {
-                  console.error(`Error occurred while unsubscribing ${msisdn} from service with service key = ${cleanMessage}`, error);
-                  throw new Error(error);
-                });
-            }
-            throw new Error(`Invalid Service Key: ${message} : ${cleanMessage} on ${shortcode} is neither an opt-in or opt-out keyword for ${service.name} service on ${service.shortCode}`);
-      },
-
-   
+  },   
 };
