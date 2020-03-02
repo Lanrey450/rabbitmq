@@ -161,6 +161,33 @@ module.exports = {
           .then(savedSubscription => savedSubscription);
       },
 
+     // get status of service subscription
+    getSubscriptionStatus(req, res) {
+    const { msisdn, serviceId } = req.query;
+
+    if (msisdn && serviceId) {
+      const subscriptionDetails = await SubscriptionService.getSubscriptionStatus({msisdn, serviceId});
+
+      if (subscriptionDetails) {
+        return ResponseManager.sendResponse({
+          res,
+          message: 'Subscription status successfully fetched',
+          data: subscriptionDetails,
+        });
+      }
+      return ResponseManager.sendErrorResponse({
+        res,
+        message: 'The subscriber does not exist(invalid status)!',
+        data: '',
+      });
+    }
+    return  ResponseManager.sendErrorResponse({
+      res,
+      message: 'Please provide both msisdn and serviceId!',
+    });
+  },
+
+
 
 
   /**
