@@ -6,8 +6,7 @@ const app = express();
 
 
 const config = require('./config');
-const responseManager = require('./lib/response_manager_middleware');
-const routes = require('./routes/index');
+const responseManager = require('./commons/response');
 
 require('./mongoClient');
 

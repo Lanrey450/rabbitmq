@@ -22,9 +22,9 @@ route.post('/status', asyncHandler((req, res) => AirtelSubscriptionController.st
 
 
 // MTN sub
-route.post('/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)));
-route.post('/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)));
-route.post('/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)));
+route.post('/mtn', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)));
+route.post('/mtnun', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)));
+route.post('/mtnst', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)));
 
 
 module.exports = route;

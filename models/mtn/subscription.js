@@ -3,19 +3,44 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-const subscriptionSchema = new Schema({
-    username: {
+const subscriptionSchema =  new Schema({
+    service_name: {
         type: String,
-        required: true,
+        required: true
     },
-    password: {
+    service_id: {
         type: String,
-        required: true,
+        required: true
     },
-}, {
-    timestamps: true,
-});
-
+    msisdn: {
+        type: String,
+        required: true
+    },
+    expiry_date: {
+        type: Date,
+        required: true
+    },
+    duration: {
+        type: Date,
+        required: true
+    },
+    operator: {
+        type: String,
+        required: true
+    },
+    renewal_date: {
+        type: Date,
+        required: true
+    },
+    subscription_date:{
+        type: Date,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+  });
 const SubscriptionModel = mongoose.model('subscription', subscriptionSchema);
 
 module.exports = SubscriptionModel;

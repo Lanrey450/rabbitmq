@@ -29,7 +29,7 @@
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "mongoose": "^5.9.2",
-    "mtn_sdp_nodejs": "bitbucket:terragonengineering/mtn-sdp-nodejs%2F#staging",
+    "mtn-sdp-nodejs": "bitbucket:terragonengineering/mtn-sdp-nodejs/#staging",
     "ramda": "^0.27.0",
     "terra-logger": "bitbucket:terragonengineering/terra-logger-js#1.0"
   },
