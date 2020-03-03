@@ -41,6 +41,6 @@ const subscriptionSchema =  new Schema({
         required: true
     },
   });
-const SubscriptionModel = mongoose.model('subscription', subscriptionSchema);
+const SubscriptionModel = mongoose.model('mtn', subscriptionSchema);
 
 module.exports = SubscriptionModel;
