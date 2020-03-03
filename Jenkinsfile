@@ -23,6 +23,11 @@ try {
         stage ('Checkout') {
             checkout scm
         }
+
+        stage ('Install Dependencies') {
+            sh 'npm install --production'
+        }
+
        stage("test deployment") {
          try {
              sh 'kubectl apply --validate=true --dry-run=true -f kubernetes/ --context azurek8s'

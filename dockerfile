@@ -22,7 +22,6 @@ ENV TZ=Africa/Lagos
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
 
-RUN npm install --production
 
 COPY --chown=node:node . .
 
