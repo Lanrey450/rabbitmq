@@ -2,10 +2,11 @@ const Utils = require('../../lib/utils');
 const ResponseManager = require('../../commons/response');
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription');
 const config = require('../../config');
+const publish = require('../../rabbitmq/producer')
 
 module.exports = {
     async subscribe(req, res){
-        
+
         const { service_id, service_password, msisdn, product_id } = req.body;
         if(!msisdn || !product_id){
             console.log('pass msisdn and product_id');
@@ -33,12 +34,26 @@ module.exports = {
                 });
                 return;
             }
-            ResponseManager.sendResponse({
-                res,
-                message: 'Subscription was successful',
-                responseBody: subscribedResponse
-            });
-            return;
+            try{
+                publish(config.rabbit_mq.queue, subscribedResponse)
+                .then((status) => {
+                    console.info(`successfully pushed to the MTN subscription data queue: ${status}`);
+                    ResponseManager.sendResponse({
+                        res,
+                        message: 'Subscription was successful',
+                        responseBody: subscribedResponse
+                    });
+                    return;             
+                });
+            }
+            catch(err){
+                ResponseManager.sendErrorResponse({
+                    res,
+                    message: 'unable to push subscription data to queue',
+                    responseBody: err
+                });
+                return;
+            }
         }
 
         catch(error){
@@ -82,11 +97,26 @@ module.exports = {
                 });
                 return;
             }
-            ResponseManager.sendResponse({
-                res,
-                message: 'Subscription was successfully removed',
-                responseBody: UnSubscribedResponse
-            });
+            try{
+                publish(config.rabbit_mq.queue, UnSubscribedResponse)
+                .then((status) => {
+                    console.info(`successfully pushed to the MTN subscription data queue: ${status}`);
+                    ResponseManager.sendResponse({
+                        res,
+                        message: 'Subscription was successfully removed',
+                        responseBody: UnSubscribedResponse
+                    });
+                    return;             
+                });
+            }
+            catch(err){
+                ResponseManager.sendErrorResponse({
+                    res,
+                    message: 'unable to push unsubscription request data to queue',
+                    responseBody: err
+                });
+                return;
+            }
         }
         catch(error){
             ResponseManager.sendErrorResponse({
@@ -134,14 +164,9 @@ module.exports = {
     },
 
     async MTNDataSyncPostBack(req, res) {
-
         console.log('getting data sync feedback from mtn');
-    
         const data = req.body;
-    
         console.log(data);
-    
-    
-      },
+    }
     
 }
