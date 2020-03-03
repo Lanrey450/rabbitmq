@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vas-aggregator-subscription-billing
+
+spec:
+   selector:
+     com.terragonbase.service: vas-aggregator-subscription-billing
+   ports:
+       - protocol: TCP
+         port: 80
+         targetPort: 3337
+   type: NodePort

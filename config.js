@@ -15,10 +15,15 @@ module.exports = {
     baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL
   },
   mtn: {
-    
+    spID: env.MTN_SPID,
+    spPwd: env.MTN_SPPWD,
+    username: env.MTN_USERNAME
+   
   }, 
-
   airtel: {
+    cpID: env.AIRTEL_CPID,
+    cpName: env.AIRTEL_CPNAME,
+    cpPassword: env.AIRTEL_CP_PASSWORD
 
   },
   databases: {
@@ -33,19 +38,19 @@ module.exports = {
     query_limit: process.env.MONGODB_QUERY_LIMIT
   },
     rabbit_mq: {
-      host: process.env.HOST,
-      port: process.env.PORT,
-      user: process.env.USER,
-      pass: process.env.PASS,
-      vhost: process.env.VHOST,
-      queue: env.QUEUE_NAME
+      host: process.env.RABBITMQ_HOST,
+      port: process.env.RABBITMQ_PORT,
+      user: process.env.RABBITMQ_USER,
+      pass: process.env.RABBITMQ_PASS,
+      vhost: process.env.RABBITMQ_VHOST,
+      airtel_log_queue: env.AIRTEL_SE_LOG_QUEUE_NAME
     },
     airtel_options: {
-      host: process.env.AIRTEL_SE_AIRTEL_HOST,
-      port: process.env.AIRTEL_SE_AIRTEL_PORT,
-      timeout: process.env.AIRTEL_SE_CLIENT_TIMEOUT || 120000,
+      host: env.AIRTEL_SE_AIRTEL_HOST,
+      port: env.AIRTEL_SE_AIRTEL_PORT,
+      timeout: env.AIRTEL_SE_CLIENT_TIMEOUT,
       endpoints: {
-        subscription: 'http://<IP>:<PORT>/SchedulingEngineWeb/services/CallSubscription'
+        subscription: 'http://51.141.239.120:8090/SchedulingEngineWeb/services/CallSubscription'
         // https://172.24.15.34:8090/SchedulingEngineWeb/services/CallSubscription
       },
       soap_xml: {

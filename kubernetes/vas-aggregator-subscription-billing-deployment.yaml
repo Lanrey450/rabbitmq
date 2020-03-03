@@ -1,0 +1,182 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+   name: vas-aggregator-subscription-billing
+
+   labels:
+      com.terragonbase.service: vas-aggregator-subscription-billing
+spec:
+   replicas: 1
+   strategy: Recreate
+   revisionHistoryLimit: 10
+   selector:
+      matchLabels:
+          com.terragonbase.service: vas-aggregator-subscription-billing
+   strategy:
+     rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+     type: RollingUpdate
+   template:
+         metadata:
+            labels:
+                com.terragonbase.service: vas-aggregator-subscription-billing
+         spec:
+            imagePullSecrets:
+                  - name: aggregator-acr-key
+            containers:
+                   - name: vas-aggregator-subscription-billing
+                     env:
+                      - name: PORT
+                        value: '3337'
+                      - name: NINE_MOBILE_AGGREGATOR_BASEURL
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_AGGREGATOR_BASEURL
+                      - name: NINE_MOBILE_SUBSCRIPTION_KEY
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_SUBSCRIPTION_KEY
+                      - name: APP_NAME
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: APP_NAME
+                      - name: NINE_MOBILE_AGGREGATOR_ID
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_AGGREGATOR_ID
+                      - name: NINE_MOBILE_SUBSCRIPTION_KEY
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_SUBSCRIPTION_KEY
+                      - name: NINE_MOBILE_AGGREGATOR_USERNAME
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_AGGREGATOR_USERNAME
+                      - name: NINE_MOBILE_AGGREGATOR_PASSWORD
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: NINE_MOBILE_AGGREGATOR_PASSWORD
+                      - name: MONGODB_USERNAME
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: MONGODB_USERNAME
+                      - name: MONGODB_PORT
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: MONGODB_PORT
+                      - name: MONGODB_HOST
+                        valueFrom:
+                          secretKeyRef: 
+                            name: vas-aggregator-subscription-billing-secrets
+                            key:  MONGODB_HOST
+                      - name: MONGODB_PASSWORD
+                        valueFrom:
+                          configMapKeyRef: 
+                            name: vas-aggregator-secrets
+                            key:  MONGODB_PASSWORD
+                      - name: MONGODB_USER
+                        valueFrom:
+                          configMapKeyRef: 
+                            name: vas-aggregator-secrets
+                            key:  MONGODB_USER
+                      - name: AIRTEL_SE_LOG_QUEUE_NAME
+                        valueFrom:
+                          configMapKeyRef: 
+                            name: vas-aggregator-secrets
+                            key:  AIRTEL_SE_LOG_QUEUE_NAME
+                      - name: RABBITMQ_HOST
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_HOST
+                      - name: RABBITMQ_PORT
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_PORT
+                      - name: RABBITMQ_USER
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_USER
+                      - name: RABBITMQ_PORT
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_PORT
+                      - name: RABBITMQ_HOST
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_HOST
+                      - name: AIRTEL_SE_AIRTEL_HOST
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_SE_AIRTEL_HOST 
+                      - name: AIRTEL_SE_AIRTEL_PORT
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_SE_AIRTEL_PORT
+                      - name: AIRTEL_SE_CLIENT_TIMEOUT
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_SE_CLIENT_TIMEOUT
+                      - name: AIRTEL_SE_CLIENT_WSDL_PATH
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_SE_CLIENT_WSDL_PATH
+                      - name: AIRTEL_SE_CLIENT_BLACKLIST_BASE_URL
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_SE_CLIENT_BLACKLIST_BASE_URL
+                      - name: MTN_SPID
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: MTN_SPID
+                      - name: MTN_SPPWD
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: MTN_SPPWD
+                      - name: AIRTEL_CPID
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_CPID
+                      - name: AIRTEL_CPNAME
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: AIRTEL_CPNAME
+                      - name: AIRTEL_CP_PASSWORD
+                        valueFrom:
+                          configMapKeyRef:
+                               name: vas-aggregator-secrets
+                               key: AIRTEL_CP_PASSWORD
+                      - name: MTN_USERNAME
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: MTN_USERNAME
+                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
+                     ports:
+                       - containerPort: 3337
+                         name: tcp3000
+                         protocol: TCP
+                     imagePullPolicy: Always
