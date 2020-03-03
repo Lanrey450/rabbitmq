@@ -11,7 +11,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 #Copy the package.json file
-COPY package.json yarn.lock ./
+COPY package.json  ./
 
 RUN apk update && apk upgrade && apk add ca-certificates && update-ca-certificates
 
