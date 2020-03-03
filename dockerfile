@@ -22,7 +22,7 @@ ENV TZ=Africa/Lagos
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
 
-RUN yarn install --production
+RUN npm install --production
 
 COPY --chown=node:node . .
 
@@ -30,7 +30,7 @@ COPY --chown=node:node . .
 
 EXPOSE 80
 
-CMD yarn start
+CMD npm start
 
 
 #DOCKER_NAME=registry.gitlab.com/tm30/vas-aggregator-platform/backend/campaign-service
