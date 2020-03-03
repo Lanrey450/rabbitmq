@@ -14,24 +14,24 @@ module.exports = {
      * @methodVerb POST
      */
     subscribeRequest(req, res) {
-        const { msisdn, serviceObject, channel } = req.body;
-        if (!(msisdn || serviceObject || channel )) {  
-          return ResponseManager.sendErrorResponse({res, message:'Please pass all required parameters!', statusCode})
+        const { msisdn, channel, service } = req.body;
+        if (!msisdn  || !channel ||! service ) {  
+          return ResponseManager.sendErrorResponse({res, message:'Please pass all required parameters!'})
         }
 
         if (!config.airtel_options.allowed_channels.includes(channel.toUpperCase())) {
-            return ResponseManager.sendErrorResponse({res, message:'unavailable channel at this time!', statusCode})
+            return ResponseManager.sendErrorResponse({res, message:'unavailable channel at this time!'})
         }
-        return this.subscribeUser(channel, msisdn, serviceObject)
+        return this.subscribeUser(channel, msisdn, service)
           .then((response) => {
             console.log(`response ${JSON.stringify(response)}`);
             if (response.error) {
-                return ResponseManager.sendErrorResponse({res, message: response.message,responseBody: response.data, statusCode})
+                return ResponseManager.sendErrorResponse({res, message: response.message, responseBody: response.data})
             }
             return ResponseManager.sendResponse({res, responseBody: response.data});
           }).catch((error) => {
             console.log(error);
-            return ResponseManager.sendErrorResponse(res, { message: error.message }, error.statusCode);
+            return ResponseManager.sendErrorResponse({res, message: error.message });
           });
       },
     
@@ -41,7 +41,7 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be subscribed
        * @param serviceObject this is the service config to be subscribed against
        */
-      subscribeUser(channel, msisdn, serviceObject) {
+      subscribeUser(channel, msisdn, service) {
         const response = {};
         console.log(`Checking for ${msisdn} in Blacklist`);
           // Check if MSISDN is blacklisted
@@ -50,7 +50,7 @@ module.exports = {
           console.log(`Blacklist response for ${msisdn}: ${JSON.stringify(blacklistResponse)}`);
          if (!blacklistResponse.error && !blacklistResponse.data) {
         // If subscription was successful, save in subscription collection and return success...
-        return SubscriptionService.sendSubscriptionRequest(msisdn, channel, serviceObject, 'API')
+        return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
           .then((subscriptionData) => {
             console.log(subscriptionData, 'subscription data :)');
             response.error = false;
@@ -86,27 +86,27 @@ module.exports = {
          * @methodVerb POST
          */
       unSubscribeRequest(req, res) {
-        const { msisdn, serviceObject, channel  } = req.body;
-        if (!(msisdn || serviceObject || channel )) {
-          return ResponseManager.sendErrorResponse(res, { message: 'Please pass all required params!' });
+        const { msisdn, service, channel  } = req.body;
+        if (!msisdn || !service || !channel) {
+          return ResponseManager.sendErrorResponse({res, message: 'Please pass all required params!'});
         }
         console.log(`Making a unsubscription request for ${msisdn}`);
         // If un-subscription was successful, update the status field of the record in
         // subscription collection and return success...
-        return this.unSubscribeUser(msisdn, serviceObject, channel)
+        return this.unSubscribeUser(msisdn, service, channel)
           .then((response) => {
             console.info(`response ${response}`);
             if (response.error) {
-              ResponseManager.sendErrorResponse(res, {
+              ResponseManager.sendErrorResponse({res, 
                 response: response.data,
                 message: response.message,
-              }, response.statusCode);
+              });
             } else {
               ResponseManager.sendResponse({res, responseBody: response.data});
             }
           }).catch((error) => {
             console.info(error);
-            return ResponseManager.sendErrorResponse(res, { message: error.message }, error.statusCode);
+            return ResponseManager.sendErrorResponse({res,  message: error.message,});
           });
       },
     
