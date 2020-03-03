@@ -144,7 +144,8 @@ module.exports = {
        * @param msisdn this is the mobile number of user subscribed to a service
        * @param serviceID this is the serviceID 
     */
-  getSubscriptionStatus(req, res) {
+     // get status of service subscription
+  async getSubscriptionStatus(req, res) {
     const { msisdn, serviceId } = req.query;
 
     if (msisdn && serviceId) {
