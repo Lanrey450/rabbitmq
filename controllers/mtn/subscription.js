@@ -54,6 +54,8 @@ module.exports = {
     async unsubscribe(req, res){
 
         const { service_id, service_password, msisdn, product_id } = req.body;
+        console.log(req.body);
+
         if(!msisdn || !product_id){
             console.log('pass msisdn and product_id');
             ResponseManager.sendErrorResponse({
@@ -117,7 +119,7 @@ module.exports = {
 
         const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId);
 
-        if(subscriptionDetail.msisdn){
+        if(subscriptionDetail){
             ResponseManager.sendResponse({
                 res,
                 responseBody: response,

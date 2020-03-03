@@ -12,11 +12,10 @@ const config = require('./config');
 
 require('./mongoClient');
 
+app.use(TerraLogger.requestHandler);
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-
-
-app.use(TerraLogger.requestHandler);
 
 // parse application/json
 app.use(bodyParser.json());
@@ -31,7 +30,7 @@ app.get('/', (req, res) => {
 routes(app);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use( (req, res, next) => {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
