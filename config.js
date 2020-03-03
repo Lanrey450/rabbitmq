@@ -51,7 +51,6 @@ module.exports = {
       timeout: env.AIRTEL_SE_CLIENT_TIMEOUT,
       endpoints: {
         subscription: 'http://51.141.239.120:8090/SchedulingEngineWeb/services/CallSubscription'
-        // https://172.24.15.34:8090/SchedulingEngineWeb/services/CallSubscription
       },
       soap_xml: {
         subscription: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sub="http://SubscriptionEngine.ibm.com"> <soapenv:Header/><soapenv:Body><sub:handleNewSubscription><custAttributesDTO><msisdn>[msisdn]</msisdn><cpId>[cp_id]</cpId><cpName>[cp_name]</cpName><cpPwd>[cp_password]</cpPwd><channelName>[channel_name]</channelName><productId>[product_id]</productId><aocMsg1>8</aocMsg1><aocMsg2>9</aocMsg2><firstConfirmationDTTM>[firstConfirmationDTTM]</firstConfirmationDTTM></custAttributesDTO></sub:handleNewSubscription></soapenv:Body></soapenv:Envelope>',
