@@ -7,8 +7,7 @@ const Utils = require('../../lib/utils');
 module.exports = {
 
 /**
-     * This subscribes a user to a service on Airtel SE.
-     * It also logs the subscription request into MongoDB (via RabbitMQ)
+     * This subscribes a user to a service on Airtel SE
      *
      * @param req
      * @param res
