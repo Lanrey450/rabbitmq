@@ -79,7 +79,7 @@ module.exports = {
      
       /**
          * Unsubscribe a user from Airtel's SE.
-         * It also logs the unsubscription request into MongoDB (via RabbitMQ)...
+         * It also logs the unsubscription request
          *
          * @param req
          * @param res
@@ -139,7 +139,11 @@ module.exports = {
       },
     
 
-     // get status of service subscription
+    /**
+       * This is a method use to get the statua of a user subscription to a service
+       * @param msisdn this is the mobile number of user subscribed to a service
+       * @param serviceID this is the serviceID 
+    */
   getSubscriptionStatus(req, res) {
     const { msisdn, serviceId } = req.query;
 

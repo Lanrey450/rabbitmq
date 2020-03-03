@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const TerraLogger = require('terra-logger');
 const app = express();
 
+const routes = require('./routes/index');
+
 
 const config = require('./config');
 const responseManager = require('./commons/response');
@@ -23,7 +25,6 @@ app.use(responseManager);
 app.get('/', (req, res) => {
     res.status(200).send('Welcome to the Aggregator subscription and billing Engine')
 });
-
 
 // add routes here 
 require(routes)(app);
