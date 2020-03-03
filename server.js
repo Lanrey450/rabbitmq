@@ -2,11 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const TerraLogger = require('terra-logger');
+const routes = require('./routes');
 const app = express();
 
 
 const config = require('./config');
-const responseManager = require('./commons/response');
 
 require('./mongoClient');
 
@@ -18,15 +18,13 @@ app.use(TerraLogger.requestHandler);
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(responseManager);
-
 app.get('/', (req, res) => {
     res.status(200).send('Welcome to the Aggregator subscription and billing Engine')
 });
 
 
 // add routes here 
-require(routes)(app);
+routes(app);
 
 app.listen(config.port, () => {
     console.log(`${config.name} listening on port ${config.port}!`);

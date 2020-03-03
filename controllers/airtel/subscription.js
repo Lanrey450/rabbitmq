@@ -141,7 +141,7 @@ module.exports = {
     
 
      // get status of service subscription
-  getSubscriptionStatus(req, res) {
+  async getSubscriptionStatus(req, res) {
     const { msisdn, serviceId } = req.query;
 
     if (msisdn && serviceId) {
