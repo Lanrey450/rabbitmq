@@ -119,7 +119,7 @@ module.exports = {
 
         const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId);
 
-        if(subscriptionDetail.msisdn){
+        if(subscriptionDetail){
             ResponseManager.sendResponse({
                 res,
                 responseBody: response,
