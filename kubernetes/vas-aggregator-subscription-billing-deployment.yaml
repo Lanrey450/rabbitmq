@@ -1,26 +1,26 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-   name: vas-aggregator-subscription-billing
-   labels:
+    name: vas-aggregator-subscription-billing
+    labels:
       com.terragonbase.service: vas-aggregator-subscription-billing
 spec:
-   replicas: 1
-   strategy: Recreate
-   revisionHistoryLimit: 10
-   selector:
+    replicas: 1
+    strategy: Recreate
+    revisionHistoryLimit: 10
+    selector:
       matchLabels:
           com.terragonbase.service: vas-aggregator-subscription-billing
-   strategy:
-     rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 1
-     type: RollingUpdate
-   template:
-         metadata:
+    strategy:
+      rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+          metadata:
             labels:
-                com.terragonbase.service: vas-aggregator-subscription-billing
-         spec:
+              com.terragonbase.service: vas-aggregator-subscription-billing
+          spec:
             imagePullSecrets:
                   - name: aggregator-acr-key           
             containers:
@@ -166,8 +166,8 @@ spec:
                       - name: AIRTEL_CP_PASSWORD
                         valueFrom:
                           secretKeyRef:
-                               name: vas-aggregator-subscription-billing-secrets
-                               key: AIRTEL_CP_PASSWORD
+                                name: vas-aggregator-subscription-billing-secrets
+                                key: AIRTEL_CP_PASSWORD
                       - name: MTN_USERNAME
                         valueFrom:
                           secretKeyRef:
@@ -186,6 +186,6 @@ spec:
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337
-                          name: tcp3000
-                          protocol: TCP
+                        name: tcp3000
+                        protocol: TCP
                     imagePullPolicy: Always
