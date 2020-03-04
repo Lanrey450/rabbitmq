@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
+/* eslint-disable indent */
+const mongoose = require('mongoose')
 
-const { Schema } = mongoose;
-
-const Utils = require('../../lib/utils');
+const { Schema } = mongoose
 
 const subscriptionSchemaAirtel = new Schema({
   msisdn: {
@@ -23,26 +22,25 @@ const subscriptionSchemaAirtel = new Schema({
   },
   response: {
     type: String,
-    required: true
+    required: true,
   },
   transactionId: {
     type: String,
     sparse: true,
-    unique: true
+    unique: true,
   },
   channel: {
     type: String,
-    required: true
+    required: true,
   },
   amount: {
     type: Number,
   },
 }, {
   timestamps: true,
-});
+})
 
 
+const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel)
 
-const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel);
-
-module.exports = SubscriptionModel;
+module.exports = SubscriptionModel
