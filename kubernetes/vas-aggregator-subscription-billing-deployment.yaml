@@ -21,7 +21,8 @@ spec:
             labels:
               com.terragonbase.service: vas-aggregator-subscription-billing
           spec:
-                        
+            imagePullSecrets:
+                  - name: aggregator-acr-key                
             containers:
                   - name: vas-aggregator-subscription-billing
                     env:
