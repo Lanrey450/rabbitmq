@@ -28,7 +28,7 @@ module.exports = {
 	},
 	userAuth: {
 		username: env.PARTNER_USERNAME,
-		password: env.PASSWORD,
+		password: env.PARTNER_PASSWORD,
 
 	},
 	databases: {
