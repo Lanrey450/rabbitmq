@@ -1,9 +1,9 @@
 #!/usr/bin/env groovy
 import java.util.Date
 import groovy.json.*
-def repoName = 'vas-aggregator-subscription-billing-service'
-def projectName = 'vas-aggregator-subscription-billing-service'
-def deploymentName = 'vas-aggregator-subscription-billing-service'
+def repoName = 'vas-aggregator-subscription-billing'
+def projectName = 'vas-aggregator-subscription-billing'
+def deploymentName = 'vas-aggregator-subscription-billing'
 def isMaster = env.BRANCH_NAME == 'master'
 def isStaging = env.BRANCH_NAME == 'develop'
 def start = new Date()
