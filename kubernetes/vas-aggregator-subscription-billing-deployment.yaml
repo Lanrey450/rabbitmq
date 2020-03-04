@@ -1,17 +1,17 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-   name: vas-aggregator-subscription-billing-secrets
+   name: vas-aggregator-subscription-billing
 
    labels:
-      com.terragonbase.service: vas-aggregator-subscription-billing-secrets
+      com.terragonbase.service: vas-aggregator-subscription-billing
 spec:
    replicas: 1
    strategy: Recreate
    revisionHistoryLimit: 10
    selector:
       matchLabels:
-          com.terragonbase.service: vas-aggregator-subscription-billing-secrets
+          com.terragonbase.service: vas-aggregator-subscription-billing
    strategy:
      rollingUpdate:
       maxSurge: 2
@@ -20,12 +20,12 @@ spec:
    template:
          metadata:
             labels:
-                com.terragonbase.service: vas-aggregator-subscription-billing-secrets
+                com.terragonbase.service: vas-aggregator-subscription-billing
          spec:
             imagePullSecrets:
                   - name: aggregator-acr-key
             containers:
-                   - name: vas-aggregator-subscription-billing-secrets
+                   - name: vas-aggregator-subscription-billing
                      env:
                       - name: PORT
                         value: '3337'
@@ -42,7 +42,7 @@ spec:
                       - name: APP_NAME
                         valueFrom:
                           secretKeyRef:
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key: APP_NAME
                       - name: NINE_MOBILE_AGGREGATOR_ID
                         valueFrom:
@@ -67,27 +67,27 @@ spec:
                       - name: MONGODB_USERNAME
                         valueFrom:
                           secretKeyRef:
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key: MONGODB_USERNAME
                       - name: MONGODB_PORT
                         valueFrom:
                           secretKeyRef:
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key: MONGODB_PORT
                       - name: MONGODB_HOST
                         valueFrom:
                           secretKeyRef: 
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key:  MONGODB_HOST
                       - name: MONGODB_PASSWORD
                         valueFrom:
                           secretKeyRef: 
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key:  MONGODB_PASSWORD
                       - name: MONGODB_USER
                         valueFrom:
                           secretKeyRef: 
-                            name: vas-aggregator-subscription-billing-secrets-secrets
+                            name: vas-aggregator-subscription-billing-secrets
                             key:  MONGODB_USER
                       - name: AIRTEL_SE_LOG_QUEUE_NAME
                         valueFrom:
