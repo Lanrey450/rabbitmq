@@ -1,5 +1,3 @@
-/* eslint-disable eol-last */
-/* eslint-disable no-tabs */
 const amqp = require('amqplib')
 const config = require('../config')
 
@@ -9,8 +7,9 @@ const consumeFromQueue = async (queue, callback) => {
 		const channel = await cluster.createChannel()
 		await channel.assertQueue(queue, { durable: true, noAck: false })
 		await channel.consume(queue, (msg)=> {
-                channel.ack(msg);
-                callback(null, msg.content.toString());
+			channel.ack(msg);
+			const data = JSON.parse(msg.content);
+			callback(null, data);
         });
 		await channel.close()
 	} catch (error) {

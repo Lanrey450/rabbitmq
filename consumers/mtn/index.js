@@ -40,7 +40,7 @@ function consumeHandler(queue, model){
                 if(data){
                     ResponseManager.sendResponse({
                         res,
-                        message: 'Subscription was successfully saved',
+                        message: 'Success',
                         responseBody: data,
                     });
                 }
