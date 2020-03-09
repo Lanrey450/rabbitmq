@@ -51,11 +51,11 @@ module.exports = {
 		mtn: {
 			subscription_queue: process.env.MTN_SUBSCRIPTION_QUEUE || 'MTN',
 			un_subscription_queue: process.env.MTN_UNSUBSCRIPTION_QUEUE || 'MTN',
-			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'MTN'
+			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'MTN',
 		},
 		airtel: {
 
-		}
+		},
 	},
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,
@@ -78,6 +78,8 @@ module.exports = {
 		TopUpService: 'TopUpService.wsdl',
 	},
 	blacklist_base_url: env.AIRTEL_SE_CLIENT_BLACKLIST_BASE_URL,
+	notification_service_url: env.NOTIFICATION_SERVICE_URL,
+	redisSecret: env.REDIS_SECRET,
 	user_status: {
 		new: 'new',
 		active: 'active',

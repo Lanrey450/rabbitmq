@@ -1,8 +1,22 @@
+/* eslint-disable indent */
+/* eslint-disable comma-dangle */
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-tabs */
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const TerraLogger = require('terra-logger')
+
+
+const cors = require('cors')
+
+
+const redis = require('redis')
+const session = require('express-session')
+ 
+const RedisStore = require('connect-redis')(session)
+
+const redisClient = redis.createClient()
 
 
 const routes = require('./routes')
@@ -15,6 +29,18 @@ const config = require('./config')
 require('./mongoClient')
 
 app.use(TerraLogger.requestHandler)
+
+app.use(cors)
+
+
+app.use(
+	session({
+	  store: new RedisStore({ client: redisClient }),
+	  secret: `${config.redisSecret}`,
+	  resave: false,
+	  saveUninitialized: false,
+	})
+  )
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -31,12 +57,6 @@ app.get('/', (req, res) => {
 // add routes here
 routes(app)
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-	const err = new Error('Not Found')
-	err.status = 404
-	next(err)
-})
 
 app.listen(config.port, () => {
 	console.log(`${config.name} listening on port ${config.port}!`)

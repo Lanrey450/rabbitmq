@@ -1,9 +1,13 @@
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
 const bcrypt = require('bcrypt')
+const redis = require('redis')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
+
 const config = require('../../config')
+
+
 
 module.exports = {
 	async subscribe(req, res) {
