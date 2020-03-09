@@ -18,6 +18,7 @@ const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 
 module.exports = {
+	// Some of the mongodb schemas are not ready, as we are not sure yet, what will be on their queue.
 	// MTN CONSUMERS
 	saveConsumedSubscriptionDataMTN() {
 		consumeHandler(config.rabbit_mq.mtn.subscription_queue, SubscriptionModelMTN)

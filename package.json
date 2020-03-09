@@ -10,9 +10,19 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "mtn_subscription": "node consumers/subscription.js",
-    "mtn_unsubscription": "node consumers/unsubscription.js",
-    "mtn_postback": "node consumers/postback.js",
+
+    "mtn_subscription": "node consumers/subscriptionMTN.js",
+    "mtn_unsubscription": "node consumers/unsubscriptionMTN.js",
+    "mtn_postback": "node consumers/postbackMTN.js",
+
+    "airtel_subscription": "node consumers/subscriptionAIRTEL.js",
+    "airtel_unsubscription": "node consumers/unsubscriptionAIRTEL.js",
+    "airtel_postback": "node consumers/postbackAIRTEL.js",
+
+    "nine_mobile_subscription": "node consumers/subscription9mobile.js",
+    "nine_mobile_unsubscription": "node consumers/unsubscription9mobile.js",
+    "nine_mobile_postback": "node consumers/postback9mobile.js",
+
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
