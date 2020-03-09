@@ -52,7 +52,7 @@ module.exports = {
 						return
 					}
 					try {
-						publish(config.rabbit_mq.queue, subscribedResponse)
+						publish(config.rabbit_mq.mtn.subscription_queue, subscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
 								ResponseManager.sendResponse({
@@ -126,7 +126,7 @@ module.exports = {
 						return
 					}
 					try {
-						publish(config.rabbit_mq.queue, UnSubscribedResponse)
+						publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
 								ResponseManager.sendResponse({
@@ -210,6 +210,21 @@ module.exports = {
 		console.log('getting data sync feedback from mtn')
 		const data = req.body
 		console.log(data)
+		publish(config.rabbit_mq.mtn.postback_queue, data)
+		.then((status) => {
+			console.log(`successfully pushed postback data to queue`)
+			ResponseManager.sendResponse({
+				res,
+				message: 'ok',
+				responseBody: status
+			});
+		}).catch( err =>{
+			ResponseManager.sendErrorResponse({
+				res,
+				message: 'unable to push postback data to queue',
+				responseBody: err,
+			})
+		});
 	},
 
 }
