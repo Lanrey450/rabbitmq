@@ -17,18 +17,15 @@ module.exports = {
 		const auth = req.headers.authorization
 
 		if (auth) {
+
 			const authDetails = auth.split(' ')
-
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
-
 			const credentials = rawAuth.split(':')
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
-				const {
-					service_id, service_password, msisdn, product_id,
-				} = req.body
+				const { msisdn, product_id } = req.body
 				if (!msisdn || !product_id) {
 					console.log('pass msisdn and product_id')
 					ResponseManager.sendErrorResponse({
@@ -39,11 +36,10 @@ module.exports = {
 				}
 				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
 				const data = {
-					spId: service_id,
-					spPwd: service_password,
-					productid: product_id,
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
+					productid: req.body.product_id,
 				}
-
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
@@ -52,11 +48,11 @@ module.exports = {
 							res,
 							message: 'subscription call failed!',
 							responseBody: subscribedResponse,
-						})
+						});
 						return
 					}
 					try {
-						publish(config.rabbit_mq.queue, subscribedResponse)
+						publish(config.rabbit_mq.mtn.subscription_queue, subscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
 								ResponseManager.sendResponse({
@@ -101,9 +97,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
-				const {
-					service_id, service_password, msisdn, product_id,
-				} = req.body
+				const { msisdn, product_id } = req.body
 				console.log(req.body)
 
 				if (!msisdn || !product_id) {
@@ -116,8 +110,8 @@ module.exports = {
 				}
 				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
 				const data = {
-					spId: service_id,
-					spPwd: service_password,
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
 					productid: req.body.product_id,
 				}
 
@@ -132,7 +126,7 @@ module.exports = {
 						return
 					}
 					try {
-						publish(config.rabbit_mq.queue, UnSubscribedResponse)
+						publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
 								ResponseManager.sendResponse({
@@ -192,7 +186,7 @@ module.exports = {
 					})
 				})
 
-				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
+				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId);
 
 				if (subscriptionDetail) {
 					ResponseManager.sendResponse({
@@ -216,6 +210,21 @@ module.exports = {
 		console.log('getting data sync feedback from mtn')
 		const data = req.body
 		console.log(data)
+		publish(config.rabbit_mq.mtn.postback_queue, data)
+		.then((status) => {
+			console.log(`successfully pushed postback data to queue`)
+			ResponseManager.sendResponse({
+				res,
+				message: 'ok',
+				responseBody: status
+			});
+		}).catch( err =>{
+			ResponseManager.sendErrorResponse({
+				res,
+				message: 'unable to push postback data to queue',
+				responseBody: err,
+			})
+		});
 	},
 
 }

@@ -48,6 +48,14 @@ module.exports = {
 		pass: process.env.RABBITMQ_PASS,
 		vhost: process.env.RABBITMQ_VHOST,
 		airtel_log_queue: env.AIRTEL_SE_LOG_QUEUE_NAME,
+		mtn: {
+			subscription_queue: process.env.MTN_SUBSCRIPTION_QUEUE || 'MTN',
+			un_subscription_queue: process.env.MTN_UNSUBSCRIPTION_QUEUE || 'MTN',
+			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'MTN'
+		},
+		airtel: {
+
+		}
 	},
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,
