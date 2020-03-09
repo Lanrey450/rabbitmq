@@ -1,11 +1,17 @@
 /* eslint-disable consistent-return */
+/* eslint-disable indent */
+/* eslint-disable space-before-blocks */
+/* eslint-disable object-curly-newline */
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
+
 const bcrypt = require('bcrypt')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
+const Utils = require('../../lib/utils')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
+
 
 module.exports = {
 	async subscribe(req, res) {
@@ -20,41 +26,22 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			// eslint-disable-next-line max-len
-			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
-				try {
-					const subscriptionResponse = await NineMobileApi.subscribe(req.body)
-					if (subscriptionResponse) {
-						console.info('subscription engine called...')
-						// push subscription data to queue
-						try {
-							publish(config.rabbit_mq.nineMobile.subscription_queue, subscriptionResponse)
-								.then((status) => {
-									console.info(`successfully pushed to the 9MOBILE subscription data queue: ${status}`)
-									ResponseManager.sendResponse({
-										res,
-										message: 'Subscription was successful',
-										responseBody: subscriptionResponse,
-									})
-								})
-						} catch (err) {
-							ResponseManager.sendErrorResponse({
-								res,
-								message: 'unable to push subscription data to queue',
-								responseBody: err,
-							})
-							return
-						}
-					}
-				} catch (error) {
-					return ResponseManager.sendErrorResponse({ res, message: 'subscription failed', responseBody: error })
-				}
+
+			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
+
+			if (username === config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+
+			if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
+				return ResponseManager.sendErrorResponse({
+					res, message: 'Please pass all required parameters for request',
+				})
 			}
-			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+				return Utils.sendUserConsentSMS(msisdn, keyword, channel)
 		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
-	},
+	}
+	return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+ },
+
 
 	async unsubscribe(req, res) {
 		const auth = req.headers.authorization

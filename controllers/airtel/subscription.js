@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
@@ -6,6 +7,7 @@ const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
 const publish = require('../../rabbitmq/producer')
+
 
 module.exports = {
 
@@ -250,6 +252,4 @@ module.exports = {
 				})
 			})
 	},
-
-
 }
