@@ -17,7 +17,6 @@ module.exports = {
 		const auth = req.headers.authorization
 
 		if (auth) {
-
 			const authDetails = auth.split(' ')
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
 			const credentials = rawAuth.split(':')
@@ -48,7 +47,7 @@ module.exports = {
 							res,
 							message: 'subscription call failed!',
 							responseBody: subscribedResponse,
-						});
+						})
 						return
 					}
 					try {
@@ -128,7 +127,7 @@ module.exports = {
 					try {
 						publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
 							.then((status) => {
-								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
+								console.info(`successfully pushed to the MTN unsubscription data queue: ${status}`)
 								ResponseManager.sendResponse({
 									res,
 									message: 'Subscription was successfully removed',
@@ -186,7 +185,7 @@ module.exports = {
 					})
 				})
 
-				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId);
+				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 
 				if (subscriptionDetail) {
 					ResponseManager.sendResponse({
@@ -211,20 +210,20 @@ module.exports = {
 		const data = req.body
 		console.log(data)
 		publish(config.rabbit_mq.mtn.postback_queue, data)
-		.then((status) => {
-			console.log(`successfully pushed postback data to queue`)
-			ResponseManager.sendResponse({
-				res,
-				message: 'ok',
-				responseBody: status
-			});
-		}).catch( err =>{
-			ResponseManager.sendErrorResponse({
-				res,
-				message: 'unable to push postback data to queue',
-				responseBody: err,
+			.then((status) => {
+				console.log('successfully pushed postback data to queue')
+				ResponseManager.sendResponse({
+					res,
+					message: 'ok',
+					responseBody: status,
+				})
+			}).catch((err) => {
+				ResponseManager.sendErrorResponse({
+					res,
+					message: 'unable to push postback data to queue',
+					responseBody: err,
+				})
 			})
-		});
 	},
 
 }

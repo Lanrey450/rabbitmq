@@ -6,6 +6,7 @@ const TerraLogger = require('terra-logger')
 
 
 const routes = require('./routes')
+const nineMobilePostbackRoutes = require('./controllers/9Mobile/notification')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 
 // add routes here
 routes(app)
+nineMobilePostbackRoutes(app)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

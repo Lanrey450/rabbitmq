@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
+const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 
@@ -46,7 +47,9 @@ module.exports = {
 							// eslint-disable-next-line max-len
 							return ResponseManager.sendErrorResponse({ res, message: response.message, responseBody: response.data })
 						}
-						return ResponseManager.sendResponse({ res, responseBody: response.data })
+						if (response.data) {
+							return ResponseManager.sendResponse({ res, responseBody: response.data })
+						}
 					}).catch((error) => {
 						console.log(error)
 						return ResponseManager.sendErrorResponse({ res, message: error.message })
@@ -130,13 +133,15 @@ module.exports = {
 					.then((response) => {
 						console.info(`response ${response}`)
 						if (response.error) {
-							ResponseManager.sendErrorResponse({
+							return ResponseManager.sendErrorResponse({
 								res,
 								response: response.data,
 								message: response.message,
 							})
-						} else {
-							ResponseManager.sendResponse({ res, responseBody: response.data })
+						}
+						// push unsubscription data to queue.
+						if (response.data) {
+							return ResponseManager.sendResponse({ res, responseBody: response.data })
 						}
 					}).catch((error) => {
 						console.info(error)
@@ -227,10 +232,23 @@ module.exports = {
 
 	async airtelDataSyncPostBack(req, res) {
 		console.log('getting data sync feedback from airtel')
-
 		const data = req.body
-
 		console.log(data)
+		publish(config.rabbit_mq.airtel.postback_queue, data)
+			.then((status) => {
+				console.log('successfully pushed postback data to queue')
+				ResponseManager.sendResponse({
+					res,
+					message: 'ok',
+					responseBody: status,
+				})
+			}).catch((err) => {
+				ResponseManager.sendErrorResponse({
+					res,
+					message: 'unable to push postback data to queue',
+					responseBody: err,
+				})
+			})
 	},
 
 
