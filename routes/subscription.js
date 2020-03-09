@@ -8,6 +8,7 @@ const MTNSubscriptionController = require('../controllers/mtn/subscription')
 
 
 // Nine mobile subscription
+// initiate verification endpoint (once called we send out a verification )
 route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.subscribe(req, res)))
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
