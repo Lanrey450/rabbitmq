@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
@@ -5,6 +6,8 @@ const bcrypt = require('bcrypt')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
+
+const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 
@@ -231,7 +234,21 @@ module.exports = {
 		const data = req.body
 
 		console.log(data)
+
+		publish(config.rabbit_mq.airtel.postback_queue, data)
+		.then((status) => {
+			console.log('successfully pushed postback data to queue')
+			ResponseManager.sendResponse({
+				res,
+				message: 'ok',
+				responseBody: status,
+			})
+		}).catch((err) => {
+			ResponseManager.sendErrorResponse({
+				res,
+				message: 'unable to push postback data to queue',
+				responseBody: err,
+			})
+		})
 	},
-
-
 }

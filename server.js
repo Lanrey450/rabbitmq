@@ -11,12 +11,11 @@ const TerraLogger = require('terra-logger')
 const cors = require('cors')
 
 
-const redis = require('redis')
 const session = require('express-session')
- 
+
 const RedisStore = require('connect-redis')(session)
 
-const redisClient = redis.createClient()
+const redisClient = require('./redis')
 
 
 const routes = require('./routes')
@@ -41,6 +40,12 @@ app.use(
 	  saveUninitialized: false,
 	})
   )
+
+// Print redis errors to the console
+redisClient.on('error', (err) => {
+	console.log(`Redis Client Error ${err}`)
+})
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
