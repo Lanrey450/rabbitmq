@@ -1,3 +1,3 @@
-const consumer = require('.');
+const consumer = require('.')
 
-consumer.saveConsumedUnSubscriptionDataMTN();
+consumer.saveConsumedUnSubscriptionDataMTN()

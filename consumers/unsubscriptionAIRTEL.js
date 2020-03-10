@@ -1,3 +1,3 @@
-const consumer = require('./');
+const consumer = require('./')
 
-consumer.saveConsumedUnsubscriptionDataAIRTEL();
+consumer.saveConsumedUnsubscriptionDataAIRTEL()

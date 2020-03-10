@@ -15,6 +15,7 @@ const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 	async subscribe(req, res) {
+		console.log('got here', req)
 		const auth = req.headers.authorization
 
 		if (auth) {
@@ -29,6 +30,7 @@ module.exports = {
 
 			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
 
+			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
 
 			if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
@@ -38,6 +40,7 @@ module.exports = {
 			}
 				return Utils.sendUserConsentSMS(msisdn, keyword, channel)
 		}
+		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
 	return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
  },
