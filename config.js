@@ -47,15 +47,21 @@ module.exports = {
 		user: process.env.RABBITMQ_USER,
 		pass: process.env.RABBITMQ_PASS,
 		vhost: process.env.RABBITMQ_VHOST,
-		airtel_log_queue: env.AIRTEL_SE_LOG_QUEUE_NAME,
 		mtn: {
-			subscription_queue: process.env.MTN_SUBSCRIPTION_QUEUE || 'MTN',
-			un_subscription_queue: process.env.MTN_UNSUBSCRIPTION_QUEUE || 'MTN',
-			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'MTN'
+			subscription_queue: process.env.MTN_SUBSCRIPTION_QUEUE || 'mtn_subscription_queue',
+			un_subscription_queue: process.env.MTN_UNSUBSCRIPTION_QUEUE || 'mtn_unsubscription_queue',
+			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
 		},
 		airtel: {
-
-		}
+			subscription_queue: process.env.AIRTEL_SUBSCRIPTION_QUEUE || 'AIRTEL',
+			un_subscription_queue: process.env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'AIRTEL',
+			postback_queue: process.env.AIRTEL_POSTBACK_QUEUE || 'AIRTEL',
+		},
+		nineMobile: {
+			subscription_queue: process.env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9MOBILE',
+			un_subscription_queue: process.env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9MOBILE',
+			postback_queue: process.env.NINE_MOBILE_POSTBACK_QUEUE || '9MOBILE',
+		},
 	},
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,
@@ -71,6 +77,7 @@ module.exports = {
 		},
 		allowed_channels: ['SMS', 'WEB', 'USSD', 'IVR', 'MAMO', 'WAP', 'OBD'],
 	},
+	keywordConfig: ['SOCCERTIPS', 'PLAYZONE', 'SRS'],
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	se_soap_wsdl_files: {
 		CallSubscription: 'CallSubscription.wsdl',
@@ -78,6 +85,8 @@ module.exports = {
 		TopUpService: 'TopUpService.wsdl',
 	},
 	blacklist_base_url: env.AIRTEL_SE_CLIENT_BLACKLIST_BASE_URL,
+	notification_service_url: env.NOTIFICATION_SERVICE_URL,
+	redisSecret: env.REDIS_SECRET,
 	user_status: {
 		new: 'new',
 		active: 'active',
