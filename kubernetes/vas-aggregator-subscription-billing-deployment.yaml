@@ -88,6 +88,21 @@ spec:
                           secretKeyRef: 
                             name: vas-aggregator-subscription-billing-secrets
                             key:  MONGODB_USER
+                      - name: REDIS_PORT
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: REDIS_PORT
+                      - name: REDIS_HOST
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: REDIS_HOST
+                      - name: REDIS_PASSWORD
+                        valueFrom:
+                          configMapKeyRef:
+                            name: vas-aggregator-secrets
+                            key: REDIS_PASSWORD
                       - name: AIRTEL_SE_LOG_QUEUE_NAME
                         valueFrom:
                           secretKeyRef: 
