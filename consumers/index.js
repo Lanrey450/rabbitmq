@@ -23,39 +23,46 @@ module.exports = {
 	// Some of the mongodb schemas are not ready, as we are not sure yet, what will be on their queue.
 	// MTN CONSUMERS
 	saveConsumedSubscriptionDataMTN() {
-		consumeHandler(config.rabbit_mq.mtn.subscription_queue, SubscriptionModelMTN)
+		const feedbackUrl = config.feedbackUrl.mtnFeedbackURL
+		consumeHandler(feedbackUrl, config.rabbit_mq.mtn.subscription_queue, SubscriptionModelMTN)
 	},
 	saveConsumedUnSubscriptionDataMTN() {
-		consumeHandler(config.rabbit_mq.mtn.un_subscription_queue, UnSubscriptionModelMTN)
+		consumeHandler(null, config.rabbit_mq.mtn.un_subscription_queue, UnSubscriptionModelMTN)
 	},
 	saveConsumedPostbackDataMTN() {
-		consumeHandler(config.rabbit_mq.mtn.postback_queue, PostbackModelMTN)
+		consumeHandler(null, config.rabbit_mq.mtn.postback_queue, PostbackModelMTN)
 	},
 
 	// AIRTEL CONSUMERS
 	saveConsumedSubscriptionDataAIRTEL() {
-		consumeHandler(config.rabbit_mq.airtel.postback_queue, SubscriptionModelAIRTEL)
+		const feedbackUrl = config.feedbackUrl.airtelFeedbackURL
+		consumeHandler(feedbackUrl, config.rabbit_mq.airtel.postback_queue, SubscriptionModelAIRTEL)
 	},
 	saveConsumedUnsubscriptionDataAIRTEL() {
-		consumeHandler(config.rabbit_mq.airtel.postback_queue, UnSubscriptionModelAIRTEL)
+		consumeHandler(null, config.rabbit_mq.airtel.postback_queue, UnSubscriptionModelAIRTEL)
 	},
 	saveConsumedPostbackDataAIRTEL() {
-		consumeHandler(config.rabbit_mq.airtel.postback_queue, PostbackModelAIRTEL)
+		consumeHandler(null, config.rabbit_mq.airtel.postback_queue, PostbackModelAIRTEL)
 	},
 
 	// NINE MOBILE CONSUMERS
 	saveConsumedSubscriptionData9Mobile() {
-		consumeHandler(config.rabbit_mq.nineMobile.postback_queue, SubscriptionModelNINE_MOBILE)
+		const feedbackUrl = config.feedbackUrl.ninemobilePostFeedbackURL
+		const queue = config.rabbit_mq.nineMobile.subscription_queue
+		consumeHandler(feedbackUrl, queue, SubscriptionModelNINE_MOBILE)
 	},
 	saveConsumedUnsubscriptionData9Mobile() {
-		consumeHandler(config.rabbit_mq.nineMobile.postback_queue, UnSubscriptionModelNINE_MOBILE)
+		const queue = config.rabbit_mq.nineMobile.un_subscription_queue
+		consumeHandler(null, queue, UnSubscriptionModelNINE_MOBILE)
 	},
 	saveConsumedPostbackData9Mobile() {
-		consumeHandler(config.rabbit_mq.nineMobile.postback_queue, PostbackModelNINE_MOBILE)
+		const feedbackUrl = config.feedbackUrl.ninemobilePostFeedbackURL
+		const queue = config.rabbit_mq.nineMobile.postback_queue
+		consumeHandler(feedbackUrl, queue, PostbackModelNINE_MOBILE)
 	},
 }
 
-function consumeHandler(queue, model) {
+function consumeHandler(feedbackUrl, queue, model) {
 	consume(queue, async (err, msg) => {
 		if (err) {
 			console.log(`rabbitmq connection failed! - ${err}`)
@@ -65,9 +72,9 @@ function consumeHandler(queue, model) {
 			console.log('the queue is empty at the moment ')
 			return
 		}
-		if (msg != null) {
+		if (msg != null && feedbackUrl != null) {
 			try {
-				const resp = await sendFeedbackToAggregator(msg)
+				const resp = await sendFeedbackToAggregator(feedbackUrl, msg)
 				if (resp) {
 					msg.feedbackStatus = true
 					try {
@@ -91,11 +98,22 @@ function consumeHandler(queue, model) {
 					console.log(`unable to save data to mongodb - ${error}`)
 				}
 			}
+			return
+		}
+		if (msg != null && feedbackUrl == null) {
+			try {
+				const data = await model.create(msg)
+				if (data) {
+					console.log(`Successfully saved to db! - ${data}`)
+				}
+			} catch (error) {
+				console.log(`unable to save data to mongodb - ${error}`)
+			}
 		}
 	})
 }
 
-async function sendFeedbackToAggregator(body) {
-	return (await axios.post(config.feedbackUrl, body, {
+async function sendFeedbackToAggregator(feedbackUrl, body) {
+	return (await axios.post(feedbackUrl, body, {
 	})).data
 }
