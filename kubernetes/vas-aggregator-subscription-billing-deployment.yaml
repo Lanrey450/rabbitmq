@@ -158,21 +158,6 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: MTN_SPPWD
-                      - name: AIRTEL_CPID
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: AIRTEL_CPID
-                      - name: AIRTEL_CPNAME
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: AIRTEL_CPNAME
-                      - name: AIRTEL_CP_PASSWORD
-                        valueFrom:
-                          secretKeyRef:
-                                name: vas-aggregator-subscription-billing-secrets
-                                key: AIRTEL_CP_PASSWORD
                       - name: MTN_USERNAME
                         valueFrom:
                           secretKeyRef:
