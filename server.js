@@ -19,7 +19,6 @@ const redisClient = require('./redis')
 
 
 const routes = require('./routes')
-const nineMobilePostbackRoutes = require('./controllers/9Mobile/notification')
 
 const app = express()
 
@@ -62,8 +61,6 @@ app.get('/', (req, res) => {
 
 // add routes here
 routes(app)
-nineMobilePostbackRoutes(app)
-
 
 app.listen(config.port, () => {
 	console.log(`${config.name} listening on port ${config.port}!`)
