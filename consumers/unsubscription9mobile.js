@@ -1,3 +1,3 @@
-const consumer = require('./');
+const consumer = require('./')
 
-consumer.saveConsumedUnsubscriptionData9Mobile();
+consumer.saveConsumedUnsubscriptionData9Mobile()
