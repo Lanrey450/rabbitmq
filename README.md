@@ -15,7 +15,7 @@ Action 1
         - once consent is done we make a sync call to 9mobile's subscription endpoint to subscribe user and then send the response we get to a queue (nineMobile_subscription_queue)
         - a consumer gets the response and sends to the nineMobile_aggregator_subscription_feedback_url, adds a new param to the data which tells us if the send to the url was successful and then saves the data to DB
 
-    - after AG gets their feedback on aggregator_subscription_feedback_url, they call our "/nineMobile/charge/sync" or "/nineMobile/charge/async" endpoint to charge user and then we call the 9mobile's charge endpoint
+    - after AG gets their feedback on aggregator_subscription_feedback_url, they call our "/nineMobile/billing/sync" or "/nineMobile/billing/async" endpoint to charge user and then we call the 9mobile's charge endpoint
         - when using "/nineMobile/charge/sync", an immediate response is given to AG from response gotten from 9mobile
         - when using "/nineMobile/charge/async", we make the call and give AG an initial feedback
             - 9mobile calls our "/nineMobilePostBack" endpoint, we send the data to a queue(nineMobile_postback_queue)

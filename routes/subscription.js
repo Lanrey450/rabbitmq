@@ -29,6 +29,9 @@ route.post('/nineMobile/charge/dob/', asyncHandler((req, res) => NineMobilePostb
 route.post('/nineMobile/charge/async/', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
 route.post('/nineMobile/consent/', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
 
+// charge sync and async
+route.post('/nineMobile/billing/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))
+route.post('/nineMobile/billing/async', asyncHandler((req, res) => NinemobileChargeController.chargeAsync(req, res)))
 
 
 // postabck 9Mobile (called by telco)
