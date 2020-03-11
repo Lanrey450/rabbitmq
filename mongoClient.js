@@ -17,14 +17,13 @@ const defaultConfig = {
 	password: config.databases.mongodb.password,
 	host: config.databases.mongodb.host,
 	port: config.databases.mongodb.port,
-	db: config.databases.mongodb.db,
+	db_name: config.databases.mongodb.db_name,
 	url: config.databases.mongodb.url,
 }
 
-console.log(defaultConfig.url, "default-config")
 
 // switch when deploying for production envs
-const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db}?retryWrites=true`
+const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
 
 // for local
 // const defaultUrl = defaultConfig.url
