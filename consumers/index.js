@@ -67,7 +67,7 @@ function consumeHandler(queue, model) {
 		}
 		if (msg != null) {
 			try {
-				const resp = await sendFeedbackToTelco(msg)
+				const resp = await sendFeedbackToAggregator(msg)
 				if (resp) {
 					msg.feedbackStatus = true
 					try {
@@ -95,7 +95,7 @@ function consumeHandler(queue, model) {
 	})
 }
 
-async function sendFeedbackToTelco(body) {
+async function sendFeedbackToAggregator(body) {
 	return (await axios.post(config.feedbackUrl, body, {
 	})).data
 }

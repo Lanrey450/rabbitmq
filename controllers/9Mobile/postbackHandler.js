@@ -1,12 +1,6 @@
 /* eslint-disable no-tabs */
 
 module.exports = {
-	async moRequest(req, res) {
-		console.log('mo request')
-		console.log(req.body)
-		res.send('ok')
-	},
-
 	async mtRequest(req, res) {
 		console.log('mt request')
 		console.log(req.body)

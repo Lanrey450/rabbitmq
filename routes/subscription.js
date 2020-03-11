@@ -20,7 +20,6 @@ route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscripti
 route.post('/nineMobile/sms/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
 
 // Nine mobile postback
-route.post('/nineMobile/mo/', asyncHandler((req, res) => NineMobilePostbackController.moRequest(req, res)))
 route.post('/nineMobile/mt/dn/', asyncHandler((req, res) => NineMobilePostbackController.mtRequest(req, res)))
 route.post('/nineMobile/optin/', asyncHandler((req, res) => NineMobilePostbackController.optinRequest(req, res)))
 route.post('/nineMobile/optout/', asyncHandler((req, res) => NineMobilePostbackController.optoutRequest(req, res)))
