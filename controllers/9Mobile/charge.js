@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const config = require('../../config')
+const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 	async chargeSync(req, res) {
@@ -21,10 +22,26 @@ module.exports = {
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
 			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+				const data = await NineMobileChargeApi.sync(req.body)
 				ResponseManager.sendResponse({
 					res,
-					responseBody: await NineMobileChargeApi.sync(req.body),
+					responseBody: data,
 				})
+				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+					.then((status) => {
+						console.log('successfully pushed charging data to queue')
+						ResponseManager.sendResponse({
+							res,
+							message: 'ok',
+							responseBody: status,
+						})
+					}).catch((err) => {
+						ResponseManager.sendErrorResponse({
+							res,
+							message: 'unable to push charging data to queue',
+							responseBody: err,
+						})
+					})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}
@@ -46,10 +63,26 @@ module.exports = {
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
 			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+				const data = await NineMobileChargeApi.async(req.body)
 				ResponseManager.sendResponse({
 					res,
-					responseBody: await NineMobileChargeApi.async(req.body),
+					responseBody: data,
 				})
+				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+					.then((status) => {
+						console.log('successfully pushed charging data to queue')
+						ResponseManager.sendResponse({
+							res,
+							message: 'ok',
+							responseBody: status,
+						})
+					}).catch((err) => {
+						ResponseManager.sendErrorResponse({
+							res,
+							message: 'unable to push charging data to queue',
+							responseBody: err,
+						})
+					})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}

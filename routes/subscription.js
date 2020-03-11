@@ -18,6 +18,10 @@ route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscripti
 
 route.post('/nineMobile/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
 
+
+// postabck 9Mobile (called by telco)
+route.post('/nineMobile/billing/feedback', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
+
 // Airtel sub
 route.post('/airtel/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribeRequest(req, res)))
 route.post('/airtel/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unSubscribeRequest(req, res)))

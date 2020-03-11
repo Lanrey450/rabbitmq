@@ -3,8 +3,8 @@
 /* eslint-disable space-in-parens */
 // eslint-disable-next-line no-unused-vars
 const config = require('../../config')
-const ResponseManager = require('../../commons/response')
-const publish = require('../../rabbitmq/producer')
+// const ResponseManager = require('../../commons/response')
+// const publish = require('../../rabbitmq/producer')
 
 module.exports = ( app => {
 	app.post('/mo/', (req, res) => {

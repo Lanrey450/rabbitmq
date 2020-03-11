@@ -29,8 +29,9 @@ async userConsent(req, res) {
 
    const existingSession = await redis.get(msisdn)
 
+     //  get user session cached
     if (existingSession === validKeyword) {
-        //  get user session cached
+       
      await Utils.sendUserSessionSMS(msisdn)
 
     if (keyword === '1') {
