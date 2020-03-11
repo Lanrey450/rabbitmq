@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 /* eslint-disable camelcase */
 const express = require('express')
 
@@ -6,9 +7,9 @@ const asyncHandler = require('express-async-handler')
 const NineMOBILESubscriptionController = require('../controllers/9Mobile/subscription')
 const AirtelSubscriptionController = require('../controllers/airtel/subscription')
 const MTNSubscriptionController = require('../controllers/mtn/subscription')
-
-
+const NineMobilePostbackController = require('../controllers/9Mobile/postbackHandler')
 const NineMOBILE_MO_Controller = require('../controllers/9Mobile/userConsentLayer')
+const NinemobileChargeController = require('../controllers/9Mobile/charge')
 
 
 // Nine mobile subscription
@@ -16,7 +17,20 @@ route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscri
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
 
-route.post('/nineMobile/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
+route.post('/nineMobile/sms/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
+
+// Nine mobile postback
+route.post('/nineMobile/mt/dn/', asyncHandler((req, res) => NineMobilePostbackController.mtRequest(req, res)))
+route.post('/nineMobile/optin/', asyncHandler((req, res) => NineMobilePostbackController.optinRequest(req, res)))
+route.post('/nineMobile/optout/', asyncHandler((req, res) => NineMobilePostbackController.optoutRequest(req, res)))
+route.post('/nineMobile/user-renewed/', asyncHandler((req, res) => NineMobilePostbackController.userRenewedRequest(req, res)))
+route.post('/nineMobile/charge/dob/', asyncHandler((req, res) => NineMobilePostbackController.chargeDOBRequest(req, res)))
+route.post('/nineMobile/charge/async/', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
+route.post('/nineMobile/consent/', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
+
+// charge sync and async
+route.post('/nineMobile/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))
+route.post('/nineMobile/async', asyncHandler((req, res) => NinemobileChargeController.chargeAsync(req, res)))
 
 
 // postabck 9Mobile (called by telco)
