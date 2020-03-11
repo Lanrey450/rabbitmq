@@ -24,16 +24,16 @@ const defaultConfig = {
 console.log(defaultConfig.url, "default-config")
 
 // switch when deploying for production envs
-// const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db}?retryWrites=true` || defaultConfig.url
+const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db}?retryWrites=true` || defaultConfig.url
 
 // for local
-const defaultUrl = defaultConfig.url
+// const defaultUrl = defaultConfig.url
 
 mongoose.set('debug', true)
 
 console.log("MONGO_DB_FULL_URL", defaultUrl)
 
-mongoose.connect('mongodb://localhost:27017/subscription_billing', { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => console.log(err))
+mongoose.connect(`${defaultUrl}`, { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => console.log(err)) 
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on("connected", () => {
