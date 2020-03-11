@@ -37,7 +37,7 @@ module.exports = {
 			password: env.MONGODB_PASSWORD,
 			host: env.MONGODB_HOST,
 			port: env.MONGODB_PORT,
-			db: env.MONGODB_DATABASE,
+			db_name: env.MONGODB_DATABASE_NAME,
 			url: env.MONGODB_URL,
 		},
 	},
