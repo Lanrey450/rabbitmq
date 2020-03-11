@@ -53,14 +53,14 @@ module.exports = {
 			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
 		},
 		airtel: {
-			subscription_queue: process.env.AIRTEL_SUBSCRIPTION_QUEUE || 'AIRTEL',
-			un_subscription_queue: process.env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'AIRTEL',
-			postback_queue: process.env.AIRTEL_POSTBACK_QUEUE || 'AIRTEL',
+			subscription_queue: process.env.AIRTEL_SUBSCRIPTION_QUEUE || 'airtel_subscription_queue',
+			un_subscription_queue: process.env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'airtel_unsubscription_queue',
+			postback_queue: process.env.AIRTEL_POSTBACK_QUEUE || 'airtel_postback_queue',
 		},
 		nineMobile: {
-			subscription_queue: process.env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9MOBILE',
-			un_subscription_queue: process.env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9MOBILE',
-			postback_queue: process.env.NINE_MOBILE_POSTBACK_QUEUE || '9MOBILE',
+			subscription_queue: process.env.NINE_MOBILE_SUBSCRIPTION_QUEUE || 'nineMobile_subscription_queue',
+			un_subscription_queue: process.env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || 'nineMobile_unsubscription_queue',
+			postback_queue: process.env.NINE_MOBILE_POSTBACK_QUEUE || 'nineMobile_postback_queue',
 		},
 	},
 	airtel_options: {
