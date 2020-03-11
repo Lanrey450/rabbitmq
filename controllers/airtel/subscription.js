@@ -70,16 +70,16 @@ module.exports = {
        */
 	subscribeUser(channel, msisdn, service) {
 		const response = {}
-		console.log(`Checking for ${msisdn} in Blacklist`)
+		// console.log(`Checking for ${msisdn} in Blacklist`)
 		// Check if MSISDN is blacklisted
-		return SubscriptionService.isInBlacklist(msisdn)
-			.then((blacklistResponse) => {
-				console.log(`Blacklist response for ${msisdn}: ${JSON.stringify(blacklistResponse)}`)
-				if (!blacklistResponse.error && !blacklistResponse.data) {
+		// return SubscriptionService.isInBlacklist(msisdn)
+			// .then((blacklistResponse) => {
+				// console.log(`Blacklist response for ${msisdn}: ${JSON.stringify(blacklistResponse)}`)
+				// if (!blacklistResponse.error && !blacklistResponse.data) {
 					// If subscription was successful, save in subscription collection and return success...
 					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
 						.then((subscriptionData) => {
-							console.log(subscriptionData, 'subscription data :)')
+							console.log(subscriptionData, 'subscription data')
 							response.error = false
 							response.data = subscriptionData
 							return response
@@ -91,15 +91,15 @@ module.exports = {
 							response.message = error.message
 							return response
 						})
-				}
-			}).catch((blackListError) => {
-				console.log(`Error attempting to check blacklist status for MSISDN = ${msisdn}`)
-				response.error = true
-				response.message = `Error attempting to check blacklist status for MSISDN = ${msisdn}`
-				response.data = blackListError
-				response.statusCode = blackListError.statusCode
-				return response
-			})
+				// }
+			// }).catch((blackListError) => {
+			// 	console.log(`Error attempting to check blacklist status for MSISDN = ${msisdn}`)
+			// 	response.error = true
+			// 	response.message = `Error attempting to check blacklist status for MSISDN = ${msisdn}`
+			// 	response.data = blackListError
+			// 	response.statusCode = blackListError.statusCode
+			// 	return response
+			// })
 	},
 
 

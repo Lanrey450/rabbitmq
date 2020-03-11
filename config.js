@@ -26,12 +26,6 @@ module.exports = {
 		spPwd: env.MTN_SPPWD,
 		username: env.MTN_USERNAME,
 	},
-	airtel: {
-		cpID: env.AIRTEL_CPID,
-		cpName: env.AIRTEL_CPNAME,
-		cpPassword: env.AIRTEL_CP_PASSWORD,
-
-	},
 	userAuth: {
 		username: env.PARTNER_USERNAME,
 		password: env.PARTNER_PASSWORD,
@@ -48,25 +42,25 @@ module.exports = {
 		},
 	},
 	rabbit_mq: {
-		host: process.env.RABBITMQ_HOST,
-		port: process.env.RABBITMQ_PORT,
-		user: process.env.RABBITMQ_USER,
-		pass: process.env.RABBITMQ_PASS,
-		vhost: process.env.RABBITMQ_VHOST,
+		host: env.RABBITMQ_HOST,
+		port: env.RABBITMQ_PORT,
+		user: env.RABBITMQ_USER,
+		pass: env.RABBITMQ_PASS,
+		vhost: env.RABBITMQ_VHOST,
 		mtn: {
-			subscription_queue: process.env.MTN_SUBSCRIPTION_QUEUE || 'mtn_subscription_queue',
-			un_subscription_queue: process.env.MTN_UNSUBSCRIPTION_QUEUE || 'mtn_unsubscription_queue',
-			postback_queue: process.env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
+			subscription_queue: env.MTN_SUBSCRIPTION_QUEUE || 'mtn_subscription_queue',
+			un_subscription_queue: env.MTN_UNSUBSCRIPTION_QUEUE || 'mtn_unsubscription_queue',
+			postback_queue: env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
 		},
 		airtel: {
-			subscription_queue: process.env.AIRTEL_SUBSCRIPTION_QUEUE || 'airtel_subscription_queue',
-			un_subscription_queue: process.env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'airtel_unsubscription_queue',
-			postback_queue: process.env.AIRTEL_POSTBACK_QUEUE || 'airtel_postback_queue',
+			subscription_queue: env.AIRTEL_SUBSCRIPTION_QUEUE || 'AIRTEL',
+			un_subscription_queue: env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'AIRTEL',
+			postback_queue: env.AIRTEL_POSTBACK_QUEUE || 'AIRTEL',
 		},
 		nineMobile: {
-			subscription_queue: process.env.NINE_MOBILE_SUBSCRIPTION_QUEUE || 'nineMobile_subscription_queue',
-			un_subscription_queue: process.env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || 'nineMobile_unsubscription_queue',
-			postback_queue: process.env.NINE_MOBILE_POSTBACK_QUEUE || 'nineMobile_postback_queue',
+			subscription_queue: env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9MOBILE',
+			un_subscription_queue: env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9MOBILE',
+			postback_queue: env.NINE_MOBILE_POSTBACK_QUEUE || '9MOBILE',
 		},
 	},
 	airtel_options: {
@@ -74,7 +68,7 @@ module.exports = {
 		port: env.AIRTEL_SE_AIRTEL_PORT,
 		timeout: env.AIRTEL_SE_CLIENT_TIMEOUT,
 		endpoints: {
-			subscription: 'http://51.141.239.120:8090/SchedulingEngineWeb/services/CallSubscription',
+			subscription: env.AIRTEL_SE_SUBSCRIPTION_BASE_URL,
 		},
 		soap_xml: {
 			subscription: '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sub="http://SubscriptionEngine.ibm.com"> <soapenv:Header/><soapenv:Body><sub:handleNewSubscription><custAttributesDTO><msisdn>[msisdn]</msisdn><cpId>[cp_id]</cpId><cpName>[cp_name]</cpName><cpPwd>[cp_password]</cpPwd><channelName>[channel_name]</channelName><productId>[product_id]</productId><aocMsg1>8</aocMsg1><aocMsg2>9</aocMsg2><firstConfirmationDTTM>[firstConfirmationDTTM]</firstConfirmationDTTM></custAttributesDTO></sub:handleNewSubscription></soapenv:Body></soapenv:Envelope>',

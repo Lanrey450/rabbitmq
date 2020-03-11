@@ -4,6 +4,8 @@ const express = require('express')
 
 const route = express.Router()
 const asyncHandler = require('express-async-handler')
+
+
 const NineMOBILESubscriptionController = require('../controllers/9Mobile/subscription')
 const AirtelSubscriptionController = require('../controllers/airtel/subscription')
 const MTNSubscriptionController = require('../controllers/mtn/subscription')
@@ -13,7 +15,6 @@ const NinemobileChargeController = require('../controllers/9Mobile/charge')
 
 
 // Nine mobile subscription
-// initiate verification endpoint (once called we send out a verification )
 route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.subscribe(req, res)))
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
@@ -29,20 +30,23 @@ route.post('/nineMobile/charge/dob/', asyncHandler((req, res) => NineMobilePostb
 route.post('/nineMobile/charge/async/', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
 route.post('/nineMobile/consent/', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
 
-// charge sync and async
-route.post('/nineMobile/charge/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))
-route.post('/nineMobile/charge/async', asyncHandler((req, res) => NinemobileChargeController.chargeAsync(req, res)))
 
 
-// postabck 9Mobile (called by telco)
+// billing sync and async
+route.post('/nineMobile/billing/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))
+route.post('/nineMobile/billing/async', asyncHandler((req, res) => NinemobileChargeController.chargeAsync(req, res)))
+
+
+// postback 9Mobile (called by telco)
 route.post('/nineMobile/billing/feedback', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
+
 
 // Airtel sub
 route.post('/airtel/subscribe', asyncHandler((req, res) => AirtelSubscriptionController.subscribeRequest(req, res)))
 route.post('/airtel/unsubscribe', asyncHandler((req, res) => AirtelSubscriptionController.unSubscribeRequest(req, res)))
 route.post('/airtel/status', asyncHandler((req, res) => AirtelSubscriptionController.getSubscriptionStatus(req, res)))
 
-
+// Airtel postback
 route.post('/airtelPostBack', asyncHandler((req, res) => AirtelSubscriptionController.airtelDataSyncPostBack(req, res)))
 
 // MTN sub
@@ -50,6 +54,8 @@ route.post('/mtn/subscribe', asyncHandler((req, res) => MTNSubscriptionControlle
 route.post('/mtn/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)))
 route.post('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
 
+
+// // mtn postback
 route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.MTNDataSyncPostBack(req, res)))
 
 
