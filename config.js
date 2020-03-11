@@ -15,6 +15,7 @@ module.exports = {
 		aggregatorId: env.NINE_MOBILE_AGGREGATOR_ID,
 		baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL,
 	},
+	feedbackUrl: env.FEEDBACK_URL,
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,

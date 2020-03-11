@@ -1,6 +1,8 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable camelcase */
 /* eslint-disable no-tabs */
+const axios = require('axios')
 // MTN
 const SubscriptionModelMTN = require('../models/mtn/subscription')
 const UnSubscriptionModelMTN = require('../models/mtn/subscription')
@@ -65,13 +67,35 @@ function consumeHandler(queue, model) {
 		}
 		if (msg != null) {
 			try {
-				const data = await model.create(msg)
-				if (data) {
-					console.log(`Successfully saved to db! - ${data}`)
+				const resp = await sendFeedbackToTelco(msg)
+				if (resp) {
+					msg.feedbackStatus = true
+					try {
+						const data = await model.create(msg)
+						if (data) {
+							console.log(`Successfully saved to db with flag TRUE! - ${data}`)
+						}
+					} catch (error) {
+						console.log(`unable to save data to mongodb - ${error}`)
+					}
 				}
-			} catch (error) {
-				console.log(`unable to save data to mongodb - ${error}`)
+			} catch (feedbackError) {
+				console.log(feedbackError)
+				msg.feedbackStatus = false
+				try {
+					const data = await model.create(msg)
+					if (data) {
+						console.log(`Successfully saved to db with flag FALSE! - ${data}`)
+					}
+				} catch (error) {
+					console.log(`unable to save data to mongodb - ${error}`)
+				}
 			}
 		}
 	})
+}
+
+async function sendFeedbackToTelco(body) {
+	return (await axios.post(config.feedbackUrl, body, {
+	})).data
 }

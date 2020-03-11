@@ -30,7 +30,6 @@ module.exports = {
 			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
 
 			if (username === config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
-
 			if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
 				return ResponseManager.sendErrorResponse({
 					res, message: 'Please pass all required parameters for request',
