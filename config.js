@@ -41,6 +41,12 @@ module.exports = {
 			url: env.MONGODB_URL,
 		},
 	},
+	redisClientConnection: {
+		host: env.REDIS_HOST,
+		password: env.REDIS_PASSWORD,
+		port: env.REDIS_PORT,
+
+	},
 	rabbit_mq: {
 		host: env.RABBITMQ_HOST,
 		port: env.RABBITMQ_PORT,
