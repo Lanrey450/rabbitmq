@@ -118,6 +118,11 @@ spec:
                           configMapKeyRef:
                               name: vas-aggregator-secrets
                               key: RABBITMQ_HOST
+                      - name: RABBITMQ_VHOST
+                        valueFrom:
+                          configMapKeyRef:
+                              name: vas-aggregator-secrets
+                              key: RABBITMQ_VHOST
                       - name: AIRTEL_SE_AIRTEL_HOST
                         valueFrom:
                           secretKeyRef:
@@ -182,7 +187,77 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: PARTNER_USERNAME                             
+                              key: PARTNER_USERNAME
+                      - name: REDIS_SECRET
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: REDIS_SECRET
+                      - name: NOTIFICATION_SERVICE_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: NOTIFICATION_SERVICE_URL 
+                      - name: AIRTEL_SE_SUBSCRIPTION_BASE_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_SE_SUBSCRIPTION_BASE_URL
+                      - name: PARTNER_PASSWORD
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: PARTNER_PASSWORD
+                      - name: PARTNER_USERNAME
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: PARTNER_USERNAME
+                      - name: NINE_MOBILE_POSTBACK_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: NINE_MOBILE_POSTBACK_QUEUE
+                      - name: NINE_MOBILE_UNSUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: NINE_MOBILE_UNSUBSCRIPTION_QUEUE
+                      - name: NINE_MOBILE_SUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: NINE_MOBILE_SUBSCRIPTION_QUEUE
+                      - name: AIRTEL_POSTBACK_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_POSTBACK_QUEUE
+                      - name: AIRTEL_UNSUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_UNSUBSCRIPTION_QUEUE
+                      - name: AIRTEL_SUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_SUBSCRIPTION_QUEUE
+                      - name: MTN_POSTBACK_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_POSTBACK_QUEUE
+                      - name: MTN_UNSUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_UNSUBSCRIPTION_QUEUE
+                      - name: MTN_SUBSCRIPTION_QUEUE
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_SUBSCRIPTION_QUEUE                                    
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337
