@@ -14,7 +14,6 @@ const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 	async subscribe(req, res) {
-		console.log('got here', req)
 		const auth = req.headers.authorization
 
 		if (auth) {
@@ -36,7 +35,12 @@ module.exports = {
 					res, message: 'Please pass all required parameters for request',
 				})
 			}
-				return Utils.sendUserConsentSMS(msisdn, keyword, channel)
+			try {
+				await Utils.sendUserConsentSMS(msisdn, keyword, channel)
+				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
+			} catch (error) {
+				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
+			}
 		}
 		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
@@ -58,29 +62,28 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(req.body)
 					if (unsubscriptionResponse) {
-						console.info('unsubscription engine called...')
+						console.info('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
 						try {
 							publish(config.rabbit_mq.nineMobile.un_subscription_queue, unsubscriptionResponse)
 								.then((status) => {
 									console.info(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
-									ResponseManager.sendResponse({
+								return ResponseManager.sendResponse({
 										res,
 										message: 'Unsubscription was successful',
 										responseBody: unsubscriptionResponse,
 									})
 								})
 						} catch (err) {
-							ResponseManager.sendErrorResponse({
+							return	ResponseManager.sendErrorResponse({
 								res,
 								message: 'unable to push unsubscription data to queue',
 								responseBody: err,
-							})
-							return
+							})	
 						}
 					}
 				} catch (error) {
@@ -106,11 +109,20 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
-				ResponseManager.sendResponse({
-					res,
-					responseBody: await NineMobileApi.status(req.body),
-				})
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+
+				try {
+					const response = await NineMobileApi.status(req.body)
+					return ResponseManager.sendResponse({
+						res,
+						responseBody: response,
+					})
+				} catch (error) {
+					return ResponseManager.sendResponse({
+						res,
+						responseBody: error,
+					})
+				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}
