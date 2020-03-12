@@ -1,6 +1,7 @@
 /* eslint-disable arrow-parens */
 /* eslint-disable indent */
 /* eslint-disable import/prefer-default-export */
+
 const redis = require('redis')
 const config = require('./config')
 
