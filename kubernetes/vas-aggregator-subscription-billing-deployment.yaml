@@ -103,11 +103,6 @@ spec:
                           configMapKeyRef:
                             name: vas-aggregator-secrets
                             key: REDIS_PASSWORD
-                      - name: AIRTEL_SE_LOG_QUEUE_NAME
-                        valueFrom:
-                          secretKeyRef: 
-                            name: vas-aggregator-subscription-billing-secrets
-                            key:  AIRTEL_SE_LOG_QUEUE_NAME
                       - name: RABBITMQ_HOST
                         valueFrom:
                           configMapKeyRef:
@@ -253,11 +248,6 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: MTN_SUBSCRIPTION_QUEUE
-                      - name: AIRTEL_SE_CLIENT_WSDL_PATH
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: AIRTEL_SE_CLIENT_WSDL_PATH
                       - name: AIRTEL_CP_ID
                         valueFrom:
                           secretKeyRef:
