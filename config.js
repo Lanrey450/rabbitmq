@@ -25,6 +25,12 @@ module.exports = {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
 	},
+	airtel: {
+		cpID: env.AIRTEL_CP_ID,
+		cpPassword: env.AIRTEL_CP_PASSWORD,
+		cpName: env.AIRTEL_CP_NAME,
+
+	},
 	userAuth: {
 		username: env.PARTNER_USERNAME,
 		password: env.PARTNER_PASSWORD,
@@ -71,7 +77,6 @@ module.exports = {
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,
 		port: env.AIRTEL_SE_AIRTEL_PORT,
-		timeout: env.AIRTEL_SE_CLIENT_TIMEOUT,
 		endpoints: {
 			subscription: env.AIRTEL_SE_SUBSCRIPTION_BASE_URL,
 		},
