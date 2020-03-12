@@ -173,11 +173,6 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: MTN_SPPWD
-                      - name: MTN_USERNAME
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: MTN_USERNAME
                       - name: PARTNER_PASSWORD
                         valueFrom:
                           secretKeyRef:
@@ -257,7 +252,27 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: MTN_SUBSCRIPTION_QUEUE                                    
+                              key: MTN_SUBSCRIPTION_QUEUE
+                      - name: AIRTEL_SE_CLIENT_WSDL_PATH
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_SE_CLIENT_WSDL_PATH
+                      - name: AIRTEL_CP_ID
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_CP_ID
+                      - name: AIRTEL_CP_NAME
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_CP_NAME
+                      - name: AIRTEL_CP_PASSWORD
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_CP_PASSWORD                                  
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337

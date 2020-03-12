@@ -4,8 +4,6 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
 
-
-const bcrypt = require('bcrypt')
 const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
@@ -23,13 +21,12 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, product_id } = req.body
 				if (!msisdn || !product_id) {
-					console.log('pass msisdn and product_id')
 					ResponseManager.sendErrorResponse({
 						res,
-						message: 'pass msisdn and product_id',
+						message: 'Please Pass msisdn and product_id',
 					})
 					return
 				}
@@ -95,7 +92,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, product_id } = req.body
 				console.log(req.body)
 
@@ -167,7 +164,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, serviceId } = req.query
 				if (!msisdn || !serviceId) {
 					ResponseManager.sendErrorResponse({

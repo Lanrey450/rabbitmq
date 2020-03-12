@@ -5,7 +5,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
 
-const bcrypt = require('bcrypt')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
 const Utils = require('../../lib/utils')
@@ -31,7 +30,7 @@ module.exports = {
 			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
 
 			// eslint-disable-next-line padded-blocks
-			if (username === config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 			if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
 				return ResponseManager.sendErrorResponse({
 					res, message: 'Please pass all required parameters for request',

@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
-const bcrypt = require('bcrypt')
 const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const config = require('../../config')
@@ -21,7 +20,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const data = await NineMobileChargeApi.sync(req.body)
 				ResponseManager.sendResponse({
 					res,
@@ -62,7 +61,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const data = await NineMobileChargeApi.async(req.body)
 				ResponseManager.sendResponse({
 					res,

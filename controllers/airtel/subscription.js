@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
-const bcrypt = require('bcrypt')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
@@ -31,9 +30,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			// eslint-disable-next-line eqeqeq
-			// eslint-disable-next-line max-len
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, channel, service } = req.body
 				if (!msisdn || !channel || !service) {
 					return ResponseManager.sendErrorResponse({ res, message: 'Please pass all required parameters!' })
@@ -123,7 +120,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, service, channel } = req.body
 				if (!msisdn || !service || !channel) {
 					return ResponseManager.sendErrorResponse({ res, message: 'Please pass all required params!' })
@@ -202,7 +199,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, serviceId } = req.query
 
 				if (msisdn && serviceId) {

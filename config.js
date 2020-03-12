@@ -25,6 +25,12 @@ module.exports = {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
 	},
+	airtel: {
+		cpID: env.cpPassword,
+		cpPassword: env.cpPassword,
+		cpName: env.cpName,
+
+	},
 	userAuth: {
 		username: env.PARTNER_USERNAME,
 		password: env.PARTNER_PASSWORD,
