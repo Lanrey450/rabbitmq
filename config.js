@@ -24,7 +24,6 @@ module.exports = {
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
-		username: env.MTN_USERNAME,
 	},
 	userAuth: {
 		username: env.PARTNER_USERNAME,
@@ -59,14 +58,14 @@ module.exports = {
 			postback_queue: env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
 		},
 		airtel: {
-			subscription_queue: env.AIRTEL_SUBSCRIPTION_QUEUE || 'AIRTEL',
-			un_subscription_queue: env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'AIRTEL',
-			postback_queue: env.AIRTEL_POSTBACK_QUEUE || 'AIRTEL',
+			subscription_queue: env.AIRTEL_SUBSCRIPTION_QUEUE || 'airtel_subscription_queue',
+			un_subscription_queue: env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'airtel_unsubscription_queue',
+			postback_queue: env.AIRTEL_POSTBACK_QUEUE || 'airtel_postback_queue',
 		},
 		nineMobile: {
-			subscription_queue: env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9MOBILE',
-			un_subscription_queue: env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9MOBILE',
-			postback_queue: env.NINE_MOBILE_POSTBACK_QUEUE || '9MOBILE',
+			subscription_queue: env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9Mobile_subscription_queue',
+			un_subscription_queue: env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9Mobile_unsubscription_queue',
+			postback_queue: env.NINE_MOBILE_POSTBACK_QUEUE || '9Mobile_postback_queue',
 		},
 	},
 	airtel_options: {
