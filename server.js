@@ -2,35 +2,23 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-tabs */
+
+
+/* eslint-disable no-tabs */
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const TerraLogger = require('terra-logger')
-
-
 const cors = require('cors')
-
-
-const session = require('express-session')
-
-const RedisStore = require('connect-redis')(session)
-
-const redisClient = require('./redis')
-
-
 const routes = require('./routes')
-
-const app = express()
-
-
 const config = require('./config')
-
+const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
+const redisClient = require('./redis')
 require('./mongoClient')
 
-app.use(TerraLogger.requestHandler)
 
-app.use(cors)
-
+const app = express()
 
 app.use(
 	session({
@@ -40,12 +28,12 @@ app.use(
 	  saveUninitialized: false,
 	})
   )
-
 // Print redis errors to the console
 redisClient.on('error', (err) => {
 	console.log(`Redis Client Error ${err}`)
 })
 
+app.use(TerraLogger.requestHandler)
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -61,6 +49,13 @@ app.get('/', (req, res) => {
 
 // add routes here
 routes(app)
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+	const err = new Error('Not Found')
+	err.status = 404
+	next(err)
+})
 
 app.listen(config.port, () => {
 	console.log(`${config.name} listening on port ${config.port}!`)

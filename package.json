@@ -18,8 +18,7 @@
     "airtel_postback": "node consumers/postbackAIRTEL.js",
     "nine_mobile_subscription": "node consumers/subscription9mobile.js",
     "nine_mobile_unsubscription": "node consumers/unsubscription9mobile.js",
-    "nine_mobile_postback": "node consumers/postback9mobile.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nine_mobile_postback": "node consumers/postback9mobile.js"
   },
   "repository": {
     "type": "git",
