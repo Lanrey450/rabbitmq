@@ -58,7 +58,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(req.body)
 					if (unsubscriptionResponse) {
@@ -106,7 +106,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && bcrypt.compareSync(rawPassword, config.userAuth.password)) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				ResponseManager.sendResponse({
 					res,
 					responseBody: await NineMobileApi.status(req.body),
