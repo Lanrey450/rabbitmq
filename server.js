@@ -10,10 +10,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const TerraLogger = require('terra-logger')
 const cors = require('cors')
-const routes = require('./routes')
-const config = require('./config')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
+const routes = require('./routes')
+const config = require('./config')
 const redisClient = require('./redis')
 require('./mongoClient')
 
@@ -32,6 +32,9 @@ app.use(
 redisClient.on('error', (err) => {
 	console.log(`Redis Client Error ${err}`)
 })
+
+
+app.use(cors)
 
 app.use(TerraLogger.requestHandler)
 
