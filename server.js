@@ -34,7 +34,7 @@ redisClient.on('error', (err) => {
 })
 
 
-app.use(cors)
+// app.use(cors)
 
 app.use(TerraLogger.requestHandler)
 
