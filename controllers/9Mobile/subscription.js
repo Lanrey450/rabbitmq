@@ -10,6 +10,7 @@ const NineMobileApi = require('../../lib/9Mobile/subscription')
 const Utils = require('../../lib/utils')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
+const redis = require('../../redis')
 
 
 module.exports = {
@@ -27,6 +28,8 @@ module.exports = {
 
 
 			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
+
+			await redis.set(msisdn, req.body)
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
