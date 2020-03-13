@@ -180,11 +180,10 @@ module.exports = {
 						message: 'status was succesfully fetched',
 					})
 				}
-				await MTNSDPAPIHandler.getSubscriptionStatus(req.query).catch((error) => ResponseManager.sendErrorResponse({
-					res,
-					responseBody: error,
-					message: 'Unable to get subscription',
-				}))
+					return ResponseManager.sendErrorResponse({
+						res,
+						message: 'Unable to get subscription status',
+					})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
@@ -201,13 +200,11 @@ module.exports = {
 					message: 'ok',
 					responseBody: status,
 				})
-			}).catch((err) => {
-				return ResponseManager.sendErrorResponse({
+			}).catch((err) => ResponseManager.sendErrorResponse({
 					res,
 					message: 'unable to push postback data to queue',
 					responseBody: err,
-				})
-			})
+				}))
 	},
 
 }
