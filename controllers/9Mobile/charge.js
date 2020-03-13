@@ -12,7 +12,7 @@ module.exports = {
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
-		const requiredParams = ['msisdn', 'context', 'serviceId']
+		const requiredParams = ['msisdn', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
@@ -28,7 +28,12 @@ module.exports = {
 		// eslint-disable-next-line eqeqeq
 		if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 			try {
-				const data = await NineMobileChargeApi.sync(req.body)
+				const nineMobileRequestBody = {
+					msisdn: req.body.msisdn,
+					serviceId: req.body.serviceId,
+					context: 'STATELESS',
+				}
+				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 				// const data = {sample:"sample"}
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 					.then((status) => {

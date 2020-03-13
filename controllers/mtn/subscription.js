@@ -35,7 +35,7 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {		
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
