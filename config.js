@@ -15,12 +15,13 @@ module.exports = {
 		aggregatorId: env.NINE_MOBILE_AGGREGATOR_ID,
 		baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL,
 	},
-	feedbackUrl: {
-		ninemobileSubFeedbackURL: env.NINE_MOBILE_SUB_FEEDBACK_URL,
-		ninemobilePostFeedbackURL: env.NINE_MOBILE_POST_FEEDBACK_URL,
-		airtelFeedbackURL: env.AIRTEL_FEEDBACK_URL,
-		mtnFeedbackURL: env.MTN_FEEDBACK_URL,
+
+	feedbackQueues: {
+		SubscriptionFeedbackQUEUE: 'subscription_feedback_queue',
+		BillingFeedbackQUEUE: 'billing_feedback_queue',
+		UnsubscriptionFeedbackQUEUE: 'unsubscription_feedback_queue',
 	},
+
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,

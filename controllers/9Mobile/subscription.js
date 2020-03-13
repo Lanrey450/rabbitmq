@@ -63,7 +63,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(req.body)
 					if (unsubscriptionResponse) {
@@ -84,7 +84,7 @@ module.exports = {
 								res,
 								message: 'unable to push unsubscription data to queue',
 								responseBody: err,
-							})	
+							})
 						}
 					}
 				} catch (error) {
