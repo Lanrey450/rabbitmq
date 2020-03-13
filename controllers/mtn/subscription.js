@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable prefer-template */
 /* eslint-disable consistent-return */
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
@@ -10,11 +12,23 @@ const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 
+
 module.exports = {
 	async subscribe(req, res) {
 		const auth = req.headers.authorization
 
-		if (auth) {
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['msisdn', 'product_id']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length != 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: 'Please pass the following parameters for request: ' + missingFields,
+			})
+		}
 			const authDetails = auth.split(' ')
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
 			const credentials = rawAuth.split(':')
@@ -22,14 +36,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, product_id } = req.body
-				if (!msisdn || !product_id) {
-					return ResponseManager.sendErrorResponse({
-						res,
-						message: 'Please pass msisdn and product_id',
-					})
-				}
-				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
+				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
@@ -71,15 +78,24 @@ module.exports = {
 				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 
 	async unsubscribe(req, res) {
 		const auth = req.headers.authorization
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
 
-		if (auth) {
+		const requiredParams = ['msisdn', 'product_id']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length != 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: 'Please pass the following parameters for request : ' + missingFields,
+			})
+		}
+
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -89,17 +105,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, product_id } = req.body
-				console.log(req.body)
-
-				if (!msisdn || !product_id) {
-					console.log('pass msisdn and product_id')
-					return ResponseManager.sendErrorResponse({
-						res,
-						message: 'pass msisdn and product_id',
-					})
-				}
-				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
+				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
@@ -141,14 +147,22 @@ module.exports = {
 				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 	async status(req, res) {
 		const auth = req.headers.authorization
 
-		if (auth) {
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+		const requiredParams = ['msisdn', 'serviceId']
+		const missingFields = Utils.authenticateParams(req.query, requiredParams)
+
+		if (missingFields.length != 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: 'Please pass the following parameters for request : ' + missingFields,
+			})
+		}
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -158,22 +172,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, serviceId } = req.query
-				if (!msisdn || !serviceId) {
-					return ResponseManager.sendErrorResponse({
-						res,
-						message: 'msisdn and serviceId are required in query param',
-					})
-				}
-
-				MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId).catch((error) => ResponseManager.sendErrorResponse({
-					res,
-					responseBody: error,
-					message: 'Unable to get subscription',
-				}))
-
-				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
-
+				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
 						res,
@@ -181,14 +180,13 @@ module.exports = {
 						message: 'status was succesfully fetched',
 					})
 				}
-				return ResponseManager.sendErrorResponse({
+				await MTNSDPAPIHandler.getSubscriptionStatus(req.query).catch((error) => ResponseManager.sendErrorResponse({
 					res,
-					message: 'Subscription does not exist',
-				})
+					responseBody: error,
+					message: 'Unable to get subscription',
+				}))
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 	async MTNDataSyncPostBack(req, res) {
