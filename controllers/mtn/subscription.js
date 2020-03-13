@@ -166,13 +166,11 @@ module.exports = {
 					})
 				}
 
-				MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId).catch((error) => {
-					return ResponseManager.sendErrorResponse({
-						res,
-						responseBody: error,
-						message: 'Unable to get subscription',
-					})
-				})
+				MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId).catch((error) => ResponseManager.sendErrorResponse({
+					res,
+					responseBody: error,
+					message: 'Unable to get subscription',
+				}))
 
 				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 

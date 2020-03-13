@@ -22,15 +22,10 @@ route.post('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscripti
 route.post('/nineMobile/sms/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
 
 // Nine mobile postback
-route.post('/nineMobile/mt/dn/', asyncHandler((req, res) => NineMobilePostbackController.mtRequest(req, res)))
-route.post('/nineMobile/optin/', asyncHandler((req, res) => NineMobilePostbackController.optinRequest(req, res)))
-route.post('/nineMobile/optout/', asyncHandler((req, res) => NineMobilePostbackController.optoutRequest(req, res)))
-route.post('/nineMobile/user-renewed/', asyncHandler((req, res) => NineMobilePostbackController.userRenewedRequest(req, res)))
-route.post('/nineMobile/charge/dob/', asyncHandler((req, res) => NineMobilePostbackController.chargeDOBRequest(req, res)))
-route.post('/nineMobile/charge/async/', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
-route.post('/nineMobile/consent/', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
-
-
+route.post('/nineMobile/subscription/optout', asyncHandler((req, res) => NineMobilePostbackController.optoutRequest(req, res)))
+route.post('/nineMobile/charge/async', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
+route.post('/nineMobile/subscription/optin', asyncHandler((req, res) => NineMobilePostbackController.optinRequest(req, res)))
+route.post('/nineMobile/consent', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
 
 // billing sync and async
 route.post('/nineMobile/billing/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))

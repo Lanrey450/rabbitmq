@@ -62,7 +62,7 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(req.body)
 					if (unsubscriptionResponse) {
@@ -83,7 +83,7 @@ module.exports = {
 								res,
 								message: 'unable to push unsubscription data to queue',
 								responseBody: err,
-							})	
+							})
 						}
 					}
 				} catch (error) {
@@ -109,20 +109,11 @@ module.exports = {
 
 			// eslint-disable-next-line max-len
 			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-
-				try {
-					const response = await NineMobileApi.status(req.body)
-					return ResponseManager.sendResponse({
-						res,
-						responseBody: response,
-					})
-				} catch (error) {
-					return ResponseManager.sendResponse({
-						res,
-						responseBody: error,
-					})
-				}
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
+				ResponseManager.sendResponse({
+					res,
+					responseBody: await NineMobileApi.status(req.body),
+				})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}

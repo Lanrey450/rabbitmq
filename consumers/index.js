@@ -2,7 +2,6 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable camelcase */
 /* eslint-disable no-tabs */
-const axios = require('axios')
 // MTN
 const SubscriptionModelMTN = require('../models/mtn/subscription')
 const UnSubscriptionModelMTN = require('../models/mtn/subscription')
@@ -18,13 +17,16 @@ const PostbackModelNINE_MOBILE = require('../models/mtn/subscription')
 
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
+const publish = require('../rabbitmq/producer')
 
 module.exports = {
 	// Some of the mongodb schemas are not ready, as we are not sure yet, what will be on their queue.
 	// MTN CONSUMERS
 	saveConsumedSubscriptionDataMTN() {
-		const feedbackUrl = config.feedbackUrl.mtnFeedbackURL
-		consumeHandler(feedbackUrl, config.rabbit_mq.mtn.subscription_queue, SubscriptionModelMTN)
+		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
+		const queue = config.rabbit_mq.mtn.subscription_queue
+		const type = 'MTN'
+		consumeHandler(feedbackQueue, queue, SubscriptionModelMTN, type)
 	},
 	saveConsumedUnSubscriptionDataMTN() {
 		consumeHandler(null, config.rabbit_mq.mtn.un_subscription_queue, UnSubscriptionModelMTN)
@@ -35,35 +37,45 @@ module.exports = {
 
 	// AIRTEL CONSUMERS
 	saveConsumedSubscriptionDataAIRTEL() {
-		const feedbackUrl = config.feedbackUrl.airtelFeedbackURL
-		consumeHandler(feedbackUrl, config.rabbit_mq.airtel.postback_queue, SubscriptionModelAIRTEL)
+		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
+		const queue = config.rabbit_mq.airtel.postback_queue
+		const type = 'AIRTEL'
+		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type)
 	},
 	saveConsumedUnsubscriptionDataAIRTEL() {
-		consumeHandler(null, config.rabbit_mq.airtel.postback_queue, UnSubscriptionModelAIRTEL)
+		const queue = config.rabbit_mq.airtel.postback_queue
+		consumeHandler(null, queue, UnSubscriptionModelAIRTEL)
 	},
 	saveConsumedPostbackDataAIRTEL() {
-		consumeHandler(null, config.rabbit_mq.airtel.postback_queue, PostbackModelAIRTEL)
+		const queue = config.rabbit_mq.airtel.postback_queue
+		consumeHandler(null, queue, PostbackModelAIRTEL)
 	},
 
 	// NINE MOBILE CONSUMERS
 	saveConsumedSubscriptionData9Mobile() {
-		const feedbackUrl = config.feedbackUrl.ninemobilePostFeedbackURL
+		console.log('!!!!!!!reaching consumer engine from 9mobile sub...!!!!!!!!!')
+		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.subscription_queue
-		consumeHandler(feedbackUrl, queue, SubscriptionModelNINE_MOBILE)
+		const type = '9MOBILE'
+		consumeHandler(feedbackQueue, queue, SubscriptionModelNINE_MOBILE, type)
 	},
 	saveConsumedUnsubscriptionData9Mobile() {
+		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.un_subscription_queue
-		consumeHandler(null, queue, UnSubscriptionModelNINE_MOBILE)
+		const type = '9MOBILE'
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelNINE_MOBILE, type)
 	},
 	saveConsumedPostbackData9Mobile() {
-		const feedbackUrl = config.feedbackUrl.ninemobilePostFeedbackURL
+		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.postback_queue
-		consumeHandler(feedbackUrl, queue, PostbackModelNINE_MOBILE)
+		const type = '9MOBILE'
+		consumeHandler(feedbackQueue, queue, PostbackModelNINE_MOBILE, type)
 	},
 }
 
-function consumeHandler(feedbackUrl, queue, model) {
-	consume(queue, async (err, msg) => {
+function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
+	consume(consumerQueue, async (err, msg) => {
+		console.log('!!!!!!!reaching consumer engine...!!!!!!!!!')
 		if (err) {
 			console.log(`rabbitmq connection failed! - ${err}`)
 			return
@@ -72,26 +84,30 @@ function consumeHandler(feedbackUrl, queue, model) {
 			console.log('the queue is empty at the moment ')
 			return
 		}
-		if (msg != null && feedbackUrl != null) {
+		if (msg != null && feedbackQueue != null) {
 			try {
-				const resp = await sendFeedbackToAggregator(feedbackUrl, msg)
-				if (resp) {
-					msg.feedbackStatus = true
-					try {
-						const data = await model.create(msg)
-						if (data) {
-							console.log(`Successfully saved to db with flag TRUE! - ${data}`)
-						}
-					} catch (error) {
-						console.log(`unable to save data to mongodb - ${error}`)
+				msg.type = _type
+				await publish(feedbackQueue, msg)
+				console.log('Successfully pushed to feedback queue')
+				msg.feedbackStatus = true
+				delete msg.type
+				try {
+					console.log(msg)
+					const data = await model.create(msg)
+					if (data) {
+						delete msg.feedbackStatus
+						console.log(`Successfully saved to db with flag TRUE! - ${data}`)
 					}
+				} catch (error) {
+					console.log(`unable to save data to mongodb - ${error}`)
 				}
-			} catch (feedbackError) {
-				console.log(feedbackError)
+			} catch (feedbackPublishError) {
+				console.log(`unable to push feedback to queue${feedbackPublishError}`)
 				msg.feedbackStatus = false
 				try {
 					const data = await model.create(msg)
 					if (data) {
+						delete msg.feedbackStatus
 						console.log(`Successfully saved to db with flag FALSE! - ${data}`)
 					}
 				} catch (error) {
@@ -100,20 +116,14 @@ function consumeHandler(feedbackUrl, queue, model) {
 			}
 			return
 		}
-		if (msg != null && feedbackUrl == null) {
+		if (msg != null && feedbackQueue == null) {
 			try {
+				msg.feedbackStatus = false
 				const data = await model.create(msg)
-				if (data) {
-					console.log(`Successfully saved to db! - ${data}`)
-				}
+				console.log(`Successfully saved to db! - ${data}`)
 			} catch (error) {
 				console.log(`unable to save data to mongodb - ${error}`)
 			}
 		}
 	})
-}
-
-async function sendFeedbackToAggregator(feedbackUrl, body) {
-	return (await axios.post(feedbackUrl, body, {
-	})).data
 }
