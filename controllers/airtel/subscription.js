@@ -9,6 +9,9 @@ const ResponseManager = require('../../commons/response')
 const publish = require('../../rabbitmq/producer')
 
 
+const Utils = require('../../lib/utils')
+
+
 module.exports = {
 
 	// eslint-disable-next-line no-tabs
@@ -22,7 +25,19 @@ module.exports = {
 	subscribeRequest(req, res) {
 		const auth = req.headers.authorization
 
-		if (auth) {
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['msisdn', 'channel', 'service']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length !== 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: `Please pass the following parameters for request:${missingFields}`,
+			})
+		}
+
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -32,16 +47,10 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, channel, service } = req.body
-
-				if (!msisdn || !channel || !service) {
-					return ResponseManager.sendErrorResponse({ res, message: 'Please pass all required parameters!' })
-				}
-
-				if (!config.airtel_options.allowed_channels.includes(channel.toUpperCase())) {
+				if (!config.airtel_options.allowed_channels.includes(req.body.channel.toUpperCase())) {
 					return ResponseManager.sendErrorResponse({ res, message: 'unavailable channel at this time!' })
 				}
-				return this.subscribeUser(channel, msisdn, service)
+				return this.subscribeUser(req.body)
 					.then((response) => {
 						console.log(`response ${JSON.stringify(response)}`)
 						if (response.error) {
@@ -57,8 +66,6 @@ module.exports = {
 					})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 	/**
@@ -113,7 +120,18 @@ module.exports = {
 	unSubscribeRequest(req, res) {
 		const auth = req.headers.authorization
 
-		if (auth) {
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['msisdn', 'channel', 'service']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length !== 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: `Please pass the following parameters for request:${missingFields}`,
+			})
+		}
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -123,14 +141,10 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, service, channel } = req.body
-				if (!msisdn || !service || !channel) {
-					return ResponseManager.sendErrorResponse({ res, message: 'Please pass all required params!' })
-				}
-				console.log(`Making a unsubscription request for ${msisdn}`)
+				console.log(`Making a unsubscription request for ${req.body.msisdn}`)
 				// If un-subscription was successful, update the status field of the record in
 				// subscription collection and return success...
-				return this.unSubscribeUser(msisdn, service, channel)
+				return this.unSubscribeUser(req.body)
 					.then((response) => {
 						console.info(`response ${response}`)
 						if (response.error) {
@@ -150,8 +164,6 @@ module.exports = {
 					})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 
@@ -191,7 +203,20 @@ module.exports = {
 	// get status of service subscription
 	async getSubscriptionStatus(req, res) {
 		const auth = req.headers.authorization
-		if (auth) {
+
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['msisdn', 'serviceId']
+		const missingFields = Utils.authenticateParams(req.query, requiredParams)
+
+		if (missingFields.length !== 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: `Please pass the following parameters for request:${missingFields}`,
+			})
+		}
+
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -201,11 +226,8 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				const { msisdn, serviceId } = req.query
-
-				if (msisdn && serviceId) {
-					const subscriptionDetails = await SubscriptionService.getSubscriptionStatus({ msisdn, serviceId })
-
+				try {
+					const subscriptionDetails = await SubscriptionService.getSubscriptionStatus(req.query)
 					if (subscriptionDetails) {
 						return ResponseManager.sendResponse({
 							res,
@@ -213,20 +235,15 @@ module.exports = {
 							data: subscriptionDetails,
 						})
 					}
+				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: 'The subscriber does not exist(invalid status)!',
+						message: error,
 						data: '',
 					})
 				}
-				return ResponseManager.sendErrorResponse({
-					res,
-					message: 'Please provide both msisdn and serviceId!',
-				})
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 
