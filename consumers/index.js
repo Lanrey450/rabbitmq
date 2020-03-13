@@ -87,19 +87,19 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 		if (msg != null && feedbackQueue != null) {
 			try {
 				msg.type = _type
-				const status = await publish(feedbackQueue, msg)
-				if (status) {
-					console.log(`Successfully pushed to feedback queue - ${status}`)
-					msg.feedbackStatus = true
-					try {
-						const data = await model.create(msg)
-						if (data) {
-							delete msg.feedbackStatus
-							console.log(`Successfully saved to db with flag TRUE! - ${data}`)
-						}
-					} catch (error) {
-						console.log(`unable to save data to mongodb - ${error}`)
+				await publish(feedbackQueue, msg)
+				console.log('Successfully pushed to feedback queue')
+				msg.feedbackStatus = true
+				delete msg.type
+				try {
+					console.log(msg)
+					const data = await model.create(msg)
+					if (data) {
+						delete msg.feedbackStatus
+						console.log(`Successfully saved to db with flag TRUE! - ${data}`)
 					}
+				} catch (error) {
+					console.log(`unable to save data to mongodb - ${error}`)
 				}
 			} catch (feedbackPublishError) {
 				console.log(`unable to push feedback to queue${feedbackPublishError}`)
@@ -120,9 +120,7 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 			try {
 				msg.feedbackStatus = false
 				const data = await model.create(msg)
-				if (data) {
-					console.log(`Successfully saved to db! - ${data}`)
-				}
+				console.log(`Successfully saved to db! - ${data}`)
 			} catch (error) {
 				console.log(`unable to save data to mongodb - ${error}`)
 			}

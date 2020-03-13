@@ -10,16 +10,12 @@ const consumeFromQueue = async (queue, callback) => {
 		const channel = await cluster.createChannel()
 		await channel.assertQueue(queue, { durable: true, noAck: false })
 		await channel.consume(queue, (msg) => {
-			console.log('we get here')
-			if (msg == null) {
-				console.log('message is empty***********')
-			}
+			console.log(`!!!!!!just consumed from queue: ${queue} !!!!!!!`)
 			channel.ack(msg)
 			const data = JSON.parse(msg.content)
 			console.log('*************')
 			return callback(null, data)
 		})
-		await channel.close()
 	} catch (error) {
 		// handle error response
 		console.log(error, 'Unable to connect to cluster!')
