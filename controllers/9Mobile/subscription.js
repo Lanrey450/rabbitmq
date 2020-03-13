@@ -36,7 +36,8 @@ module.exports = {
 			const requiredParams = ['msisdn', 'channel', 'keyword', 'shortCode', 'serviceId']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
-			await redis.set(msisdn, req.body)
+			// await redis.set(msisdn, req.body)
+			// TODO 
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {

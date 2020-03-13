@@ -29,7 +29,37 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'channel', 'service']
+		const requiredParams = ['msisdn', 'productId','channel']
+
+		// {
+		// 	"msisdn":"09020327785",
+		// 	"channel": "sms",
+		// 	"service": {
+		// 		"shortCode": "38240",
+		// 		"name": "Sports 5 Days",
+		// 		"cpID": "124",
+		// 		"cpName": "2394716_IYKEJORDAN_NG_SE",
+		// 		 "cpPassword": "$*K04s6/",
+		// 		 "product": {
+		// 		  "productId": "8202",
+		// 		  "duration": "2",
+		// 		  "amount": "20",
+		// 		  "isMaster": "false",
+		// 		  "productName": "playzone"
+		// 		}
+		// 	}
+		// }
+
+		airtel_req_body = {
+			"msisdn":req.body.msisdn,
+			"channel": req.body.channel,
+			"service": {
+				"product": {
+					"productId": req.body.productId,
+				}
+			}
+		}
+
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length !== 0) {
@@ -50,7 +80,7 @@ module.exports = {
 				if (!config.airtel_options.allowed_channels.includes(req.body.channel.toUpperCase())) {
 					return ResponseManager.sendErrorResponse({ res, message: 'unavailable channel at this time!' })
 				}
-				return this.subscribeUser(req.body)
+				return this.subscribeUser(airtel_req_body)
 					.then((response) => {
 						console.log(`response ${JSON.stringify(response)}`)
 						if (response.error) {
@@ -74,7 +104,8 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be subscribed
        * @param serviceObject this is the service config to be subscribed against
        */
-	subscribeUser(channel, msisdn, service) {
+	subscribeUser(req_body) {
+		const {channel, msisdn, service}= req_body;
 		const response = {}
 					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
 						.then((subscriptionData) => {
@@ -108,8 +139,18 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'channel', 'service']
+		const requiredParams = ['msisdn', 'channel', 'productId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		airtel_req_body = {
+			"msisdn":req.body.msisdn,
+			"channel": req.body.channel,
+			"service": {
+				"product": {
+					"productId": req.body.productId,
+				}
+			}
+		}
 
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
@@ -128,7 +169,7 @@ module.exports = {
 				console.log(`Making a unsubscription request for ${req.body.msisdn}`)
 				// If un-subscription was successful, update the status field of the record in
 				// subscription collection and return success...
-				return this.unSubscribeUser(req.body)
+				return this.unSubscribeUser(airtel_req_body)
 					.then((response) => {
 						console.info(`response ${response}`)
 						if (response.error) {
@@ -156,12 +197,13 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be unsubcribed from a service
        * @param serviceObject this is the serviceObject
        */
-	unSubscribeUser(msisdn, serviceObject, channel) {
+	unSubscribeUser(req_body) {
+		const {msisdn, service, channel} = req_body 
 		const response = {}
 		console.info(`Making a unsubscription request for ${msisdn}`)
 		// If un-subscription was successful, update the status field of the record in
 		// subscription collection and return success...
-		return SubscriptionService.sendUnSubscriptionRequest(msisdn, serviceObject, channel, 'API')
+		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, 'API')
 			.then((unsubscriptionData) => {
 				console.info(`message: ${unsubscriptionData}`)
 				response.error = false
