@@ -36,7 +36,11 @@ async userConsent(req, res) {
      await Utils.sendUserSessionSMS(msisdn)
 
     if (keyword === '1') {
-        const data = await subscribeUser.subscribe(msisdn, validKeyword, 'SMS', 1)
+        // TODO
+        // write function to get serviceId from keyword saved to redis in file (/controllers/9Mobile/subscription.js)
+        // let serviceId = getServiceIdFromKeyword(validKeyword)
+        let serviceId = 'temp'
+        const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 1)
         try {
             ResponseManager.sendResponse({
                 res,
