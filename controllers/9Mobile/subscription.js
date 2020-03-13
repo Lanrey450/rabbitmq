@@ -12,9 +12,16 @@ const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 
 
+
+
 module.exports = {
 	async subscribe(req, res) {
 		const auth = req.headers.authorization
+
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
 
 		if (auth) {
 			const authDetails = auth.split(' ')
@@ -26,32 +33,48 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 
-			const { msisdn, channel, serviceID, keyword, feedbackUrl, shortCode } = req.body
+			const { msisdn, channel, keyword, shortCode } = req.body
+
+			let required_params = ['msisdn', 'channel', 'keyword', 'shortCode', 'serviceId']
+			let missen_fields = Utils.auth_params(req.body,required_params)
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
-			if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
-				return ResponseManager.sendErrorResponse({
-					res, message: 'Please pass all required parameters for request',
-				})
+				// if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
+				if (missen_fields.length != 0){
+					return ResponseManager.sendErrorResponse({
+						res, message: 'Please pass the following parameters for request : ' + missen_fields,
+					})
+				}
+				try {
+					await Utils.sendUserConsentSMS(msisdn, keyword, channel)
+					return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
+				} catch (error) {
+					return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
+				}
 			}
-			try {
-				await Utils.sendUserConsentSMS(msisdn, keyword, channel)
-				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
-			} catch (error) {
-				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
-			}
+			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}
-		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-	}
-	return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
  },
 
 
 	async unsubscribe(req, res) {
 		const auth = req.headers.authorization
 
-		
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		let required_params = ['msisdn', 'channel', 'serviceId']
+		let missen_fields = Utils.auth_params(req.body,required_params)
+
+		if (missen_fields.length != 0){
+			return ResponseManager.sendErrorResponse({
+				res, message: 'Please pass the following parameters for request : ' + missen_fields,
+			})
+		}
+
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
@@ -65,7 +88,13 @@ module.exports = {
 			// eslint-disable-next-line eqeqeq
 			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
-					const unsubscriptionResponse = await NineMobileApi.unsubscribe(req.body)
+					const nine_mobile_req_body = {
+						userIdentifier : req.body.msisdn,
+						entryChannel: req.body.channel,
+						serviceId: req.body.serviceId
+					}
+					console.log(nine_mobile_req_body)
+					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nine_mobile_req_body)
 					if (unsubscriptionResponse) {
 						console.info('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
@@ -95,14 +124,27 @@ module.exports = {
 						message: error.message,
 					} })
 				}
-			}
-			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+		}
+		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 		}
 		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 	async status(req, res) {
 		const auth = req.headers.authorization
+
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		let required_params = ['msisdn', 'channel', 'serviceId']
+		let missen_fields = Utils.auth_params(req.query,required_params)
+
+		if (missen_fields.length != 0){
+			return ResponseManager.sendErrorResponse({
+				res, message: 'Please pass the following parameters for request : ' + missen_fields,
+			})
+		}
 
 		if (auth) {
 			const authDetails = auth.split(' ')
@@ -118,7 +160,7 @@ module.exports = {
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 
 				try {
-					const response = await NineMobileApi.status(req.body)
+					const response = await NineMobileApi.status(req.query)
 					console.log(response.data)
 					return ResponseManager.sendResponse({
 						res,

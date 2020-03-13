@@ -181,7 +181,7 @@ module.exports = {
 						message: 'status was succesfully fetched',
 					})
 				}
-				ResponseManager.sendErrorResponse({
+				return ResponseManager.sendErrorResponse({
 					res,
 					message: 'Subscription does not exist',
 				})
@@ -198,7 +198,7 @@ module.exports = {
 		publish(config.rabbit_mq.mtn.postback_queue, data)
 			.then((status) => {
 				console.log('successfully pushed postback data to queue')
-				ResponseManager.sendResponse({
+				return ResponseManager.sendResponse({
 					res,
 					message: 'ok',
 					responseBody: status,
