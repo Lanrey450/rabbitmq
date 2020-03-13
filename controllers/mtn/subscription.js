@@ -175,12 +175,11 @@ module.exports = {
 				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 
 				if (subscriptionDetail) {
-					ResponseManager.sendResponse({
+					return ResponseManager.sendResponse({
 						res,
 						responseBody: subscriptionDetail,
 						message: 'status was succesfully fetched',
 					})
-					return
 				}
 				ResponseManager.sendErrorResponse({
 					res,
@@ -205,7 +204,7 @@ module.exports = {
 					responseBody: status,
 				})
 			}).catch((err) => {
-				ResponseManager.sendErrorResponse({
+				return ResponseManager.sendErrorResponse({
 					res,
 					message: 'unable to push postback data to queue',
 					responseBody: err,
