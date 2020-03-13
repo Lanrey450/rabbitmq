@@ -38,6 +38,8 @@ module.exports = {
 
 			// await redis.set(msisdn, req.body)
 			// TODO 
+			// save to redis (rediskey = keyword, and redisValue = serviceId)
+			
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
