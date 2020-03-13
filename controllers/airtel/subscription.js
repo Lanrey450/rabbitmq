@@ -1,3 +1,4 @@
+/* eslint-disable valid-typeof */
 /* eslint-disable indent */
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
@@ -32,6 +33,7 @@ module.exports = {
 
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, channel, service } = req.body
+
 				if (!msisdn || !channel || !service) {
 					return ResponseManager.sendErrorResponse({ res, message: 'Please pass all required parameters!' })
 				}
@@ -189,7 +191,6 @@ module.exports = {
 	// get status of service subscription
 	async getSubscriptionStatus(req, res) {
 		const auth = req.headers.authorization
-
 		if (auth) {
 			const authDetails = auth.split(' ')
 

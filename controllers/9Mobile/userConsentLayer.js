@@ -22,10 +22,11 @@ async userConsent(req, res) {
 
     const { msisdn, keyword } = req.body
 
-
     await redis.set(msisdn, keyword.trim(), 'ex', 60 * 5) // 5 mins expiration
 
    const validKeyword = config.keywordConfig.find((configs) => configs === redis.get(msisdn))
+
+   console.log(validKeyword, 'validKeyword')
 
    const existingSession = await redis.get(msisdn)
 
@@ -46,13 +47,13 @@ async userConsent(req, res) {
             return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 		    .then((status) => {
 			console.log('successfully pushed subscription data to queue')
-			ResponseManager.sendResponse({
+			return ResponseManager.sendResponse({
 				res,
 				message: 'ok',
 				responseBody: status,
 			})
 		    }).catch((err) => {
-			ResponseManager.sendErrorResponse({
+			return ResponseManager.sendErrorResponse({
 				res,
 				message: 'unable to push subscription data to queue',
 				responseBody: err,
@@ -91,7 +92,7 @@ async userConsent(req, res) {
         }
     }
 } else {
-            return Utils.sendUserErrorSMS(msisdn)
+    return Utils.sendUserErrorSMS(msisdn)
      }
 },
 }

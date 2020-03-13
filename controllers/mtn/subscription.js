@@ -24,11 +24,10 @@ module.exports = {
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, product_id } = req.body
 				if (!msisdn || !product_id) {
-					ResponseManager.sendErrorResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
-						message: 'Please Pass msisdn and product_id',
+						message: 'Please pass msisdn and product_id',
 					})
-					return
 				}
 				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
 				const data = {
@@ -40,38 +39,35 @@ module.exports = {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
 					if (subscribedResponse.ResultCode == 1) {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'subscription call failed!',
 							responseBody: subscribedResponse,
 						})
-						return
 					}
 					try {
 						publish(config.rabbit_mq.mtn.subscription_queue, subscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
-								ResponseManager.sendResponse({
+								return ResponseManager.sendResponse({
 									res,
 									message: 'Subscription was successful',
 									responseBody: subscribedResponse,
 								})
 							})
 					} catch (err) {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unable to push subscription data to queue',
 							responseBody: err,
 						})
-						return
 					}
 				} catch (error) {
-					ResponseManager.sendErrorResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'subscription call failed!',
 						responseBody: error,
 					})
-					return
 				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -98,11 +94,10 @@ module.exports = {
 
 				if (!msisdn || !product_id) {
 					console.log('pass msisdn and product_id')
-					ResponseManager.sendErrorResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'pass msisdn and product_id',
 					})
-					return
 				}
 				const sanitized_msisdn = Utils.msisdnSanitizer(msisdn, false)
 				const data = {
@@ -115,32 +110,30 @@ module.exports = {
 					const UnSubscribedResponse = await MTNSDPAPIHandler.unsubscribe(sanitized_msisdn, data)
 
 					if (UnSubscribedResponse.ResultCode == 1) {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unsubscription call failed!',
 						})
-						return
 					}
 					try {
 						publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN unsubscription data queue: ${status}`)
-								ResponseManager.sendResponse({
+								return ResponseManager.sendResponse({
 									res,
 									message: 'Subscription was successfully removed',
 									responseBody: UnSubscribedResponse,
 								})
 							})
 					} catch (err) {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unable to push unsubscription request data to queue',
 							responseBody: err,
 						})
-						return
 					}
 				} catch (error) {
-					ResponseManager.sendErrorResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'unsubscription call failed!',
 						responseBody: error,
@@ -167,20 +160,17 @@ module.exports = {
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				const { msisdn, serviceId } = req.query
 				if (!msisdn || !serviceId) {
-					ResponseManager.sendErrorResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'msisdn and serviceId are required in query param',
 					})
-					return
 				}
 
-				MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId).catch((error) => {
-					ResponseManager.sendErrorResponse({
-						res,
-						responseBody: error,
-						message: 'Unable to get subscription',
-					})
-				})
+				MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId).catch((error) => ResponseManager.sendErrorResponse({
+					res,
+					responseBody: error,
+					message: 'Unable to get subscription',
+				}))
 
 				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 
