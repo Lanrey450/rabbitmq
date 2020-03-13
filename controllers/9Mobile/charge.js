@@ -29,13 +29,13 @@ module.exports = {
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 					.then((status) => {
 						console.log('successfully pushed charging data to queue')
-						ResponseManager.sendResponse({
+						return ResponseManager.sendResponse({
 							res,
 							message: 'ok',
 							responseBody: status,
 						})
 					}).catch((err) => {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unable to push charging data to queue',
 							responseBody: err,
@@ -70,13 +70,13 @@ module.exports = {
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 					.then((status) => {
 						console.log('successfully pushed charging data to queue')
-						ResponseManager.sendResponse({
+						return ResponseManager.sendResponse({
 							res,
 							message: 'ok',
 							responseBody: status,
 						})
 					}).catch((err) => {
-						ResponseManager.sendErrorResponse({
+						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unable to push charging data to queue',
 							responseBody: err,
