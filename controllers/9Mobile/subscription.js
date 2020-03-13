@@ -51,10 +51,11 @@ module.exports = {
 	async unsubscribe(req, res) {
 		const auth = req.headers.authorization
 
-		if (auth) {
+		
 			const authDetails = auth.split(' ')
 
 			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
+			if (rawAuth) {
 
 			const credentials = rawAuth.split(':')
 			const username = credentials[0]
@@ -87,7 +88,12 @@ module.exports = {
 						}
 					}
 				} catch (error) {
-					return ResponseManager.sendErrorResponse({ res, message: 'unsubscription failed', responseBody: error })
+					return ResponseManager.sendErrorResponse({ res, 
+					message: 'unsubscription failed', 
+					responseBody: {
+						error: true,
+						message: error.message,
+					} })
 				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -113,14 +119,18 @@ module.exports = {
 
 				try {
 					const response = await NineMobileApi.status(req.body)
+					console.log(response.data)
 					return ResponseManager.sendResponse({
 						res,
-						responseBody: response,
+						responseBody: response.data,
 					})
 				} catch (error) {
-					return ResponseManager.sendResponse({
+					return ResponseManager.sendErrorResponse({
 						res,
-						responseBody: error,
+						responseBody: {
+                            error: true,
+                            message: error.message,
+                        },
 					})
 				}
 			}
