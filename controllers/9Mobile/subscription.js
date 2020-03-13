@@ -65,7 +65,7 @@ module.exports = {
 		}
 
 		const requiredParams = ['msisdn', 'channel', 'serviceId']
-		const missingFields = Utils.enticateParams(req.body, requiredParams)
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length !== 0){
 			return ResponseManager.sendErrorResponse({
