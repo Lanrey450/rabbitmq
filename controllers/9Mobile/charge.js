@@ -79,7 +79,10 @@ module.exports = {
 						return ResponseManager.sendErrorResponse({
 							res,
 							message: 'unable to push charging data to queue',
-							responseBody: err,
+							responseBody: {
+								error: true,
+								message: err.message,
+							},
 						})
 					})
 			}
