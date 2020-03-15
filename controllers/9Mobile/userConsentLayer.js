@@ -22,8 +22,12 @@ async userConsent(req, res) {
 
     const { msisdn, keyword } = req.body
 
-    await redis.set(msisdn, keyword.trim(), 'ex', 60 * 5) // 5 mins expiration
+    const keywordTrimmed = keyword.trim()
 
+    await redis.set(msisdn, keywordTrimmed, 'ex', 60 * 5) // 5 mins expiration
+
+    // TODO (still to fix)
+    // currently checking for the valid keyword from config
    const validKeyword = config.keywordConfig.find((configs) => configs === redis.get(msisdn))
 
    console.log(validKeyword, 'validKeyword')
@@ -35,11 +39,11 @@ async userConsent(req, res) {
        
      await Utils.sendUserSessionSMS(msisdn)
 
+     //  get serviceId from keyword saved to redis (to be used for subscription request)
+     const serviceId = Utils.getServiceIdFromKeyword(validKeyword)
+
     if (keyword === '1') {
-        // TODO
-        // write function to get serviceId from keyword saved to redis in file (/controllers/9Mobile/subscription.js)
-        // let serviceId = getServiceIdFromKeyword(validKeyword)
-        let serviceId = 'temp'
+
         const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 1)
         try {
             ResponseManager.sendResponse({
@@ -68,7 +72,7 @@ async userConsent(req, res) {
             return Utils.sendUserErrorSMS(msisdn)
         }
     } else if (keyword === '2') {
-        const data = await subscribeUser.subscribe(msisdn, validKeyword, 'SMS', 2)
+        const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 2)
         try {
             ResponseManager.sendResponse({
                 res,
@@ -97,6 +101,6 @@ async userConsent(req, res) {
     }
 } else {
     return Utils.sendUserErrorSMS(msisdn)
-     }
+    }
 },
 }

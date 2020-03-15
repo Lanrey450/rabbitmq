@@ -31,19 +31,17 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 
-			const { msisdn, channel, keyword, shortCode } = req.body
+			const { msisdn, channel, keyword, shortCode, serviceId } = req.body
 
 			const requiredParams = ['msisdn', 'channel', 'keyword', 'shortCode', 'serviceId']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
-			// await redis.set(msisdn, req.body)
-			// TODO 
-			// save to redis (rediskey = keyword, and redisValue = serviceId)
-			
+			// save to redis(rediskey = keyword, and redisValue = serviceId)
+			await redis.set(keyword, serviceId, 'ex', 60 * 60 * 24) // save keyword for 24 hours
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
-				// if (!msisdn || !channel || !serviceID || !keyword || !feedbackUrl || !shortCode){
+
 				if (missingFields.length !== 0){
 					return ResponseManager.sendErrorResponse({
 						res, message: `Please pass the following parameters for request ${missingFields}`,
