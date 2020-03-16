@@ -7,12 +7,9 @@ module.exports = {
 	name: env.APP_NAME,
 	port: env.PORT,
 	nineMobile: {
-		partnerRoleId: env.NINE_MOBILE_PARTNER_ROLE_ID,
-		preSharedKey: env.NINE_MOBILE_PRESHARED_KEY,
 		apiSubscriptionKey: env.NINE_MOBILE_SUBSCRIPTION_KEY,
 		username: env.NINE_MOBILE_AGGREGATOR_USERNAME,
-		password: env.NINE_MOBILE_AGGREGATOR_PASSWORD,
-		aggregatorId: env.NINE_MOBILE_AGGREGATOR_ID,
+		authorization: env.NINE_MOBILE_AGGREGATOR_PASSWORD,
 		baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL,
 	},
 
@@ -60,19 +57,19 @@ module.exports = {
 		pass: env.RABBITMQ_PASS,
 		vhost: env.RABBITMQ_VHOST,
 		mtn: {
-			subscription_queue: env.MTN_SUBSCRIPTION_QUEUE || 'mtn_subscription_queue',
-			un_subscription_queue: env.MTN_UNSUBSCRIPTION_QUEUE || 'mtn_unsubscription_queue',
-			postback_queue: env.MTN_POSTBACK_QUEUE || 'mtn_postback_queue',
+			subscription_queue: 'mtn_subscription_queue',
+			un_subscription_queue: 'mtn_unsubscription_queue',
+			postback_queue: 'mtn_postback_queue',
 		},
 		airtel: {
-			subscription_queue: env.AIRTEL_SUBSCRIPTION_QUEUE || 'airtel_subscription_queue',
-			un_subscription_queue: env.AIRTEL_UNSUBSCRIPTION_QUEUE || 'airtel_unsubscription_queue',
-			postback_queue: env.AIRTEL_POSTBACK_QUEUE || 'airtel_postback_queue',
+			subscription_queue: 'airtel_subscription_queue',
+			un_subscription_queue: 'airtel_unsubscription_queue',
+			postback_queue: 'airtel_postback_queue',
 		},
 		nineMobile: {
-			subscription_queue: env.NINE_MOBILE_SUBSCRIPTION_QUEUE || '9Mobile_subscription_queue',
-			un_subscription_queue: env.NINE_MOBILE_UNSUBSCRIPTION_QUEUE || '9Mobile_unsubscription_queue',
-			postback_queue: env.NINE_MOBILE_POSTBACK_QUEUE || '9Mobile_postback_queue',
+			subscription_queue: '9Mobile_subscription_queue',
+			un_subscription_queue: '9Mobile_unsubscription_queue',
+			postback_queue: '9Mobile_postback_queue',
 		},
 	},
 	airtel_options: {
