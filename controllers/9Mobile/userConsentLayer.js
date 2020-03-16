@@ -22,6 +22,15 @@ async userConsent(req, res) {
 
     const { msisdn, keyword } = req.body
 
+    const requiredParams = ['msisdn', 'keyword']
+    const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+    if (missingFields.length !== 0) {
+        return ResponseManager.sendErrorResponse({
+            res, message: `Please pass the following parameters for request ${missingFields}`,
+        })
+    }
+
     const keywordTrimmed = keyword.trim()
 
     await redis.set(msisdn, keywordTrimmed, 'ex', 60 * 5) // 5 mins expiration
@@ -39,66 +48,78 @@ async userConsent(req, res) {
        
      await Utils.sendUserSessionSMS(msisdn)
 
-     //  get serviceId from keyword saved to redis (to be used for subscription request)
+     try {
+          //  get serviceId from keyword saved to redis (to be used for subscription request)
      const serviceId = Utils.getServiceIdFromKeyword(validKeyword)
 
-    if (keyword === '1') {
-
+     if (keyword === '1') {
+ 
+         try {
         const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 1)
-        try {
+        
             ResponseManager.sendResponse({
-                res,
-                responseBody: data,
-            })
-            await Utils.sendUserSuccessSMS(msisdn)
+                 res,
+                 responseBody: data,
+             })
+             await Utils.sendUserSuccessSMS(msisdn)
+ 
+             return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+             .then((status) => {
+             console.log('successfully pushed subscription data to queue')
+             return ResponseManager.sendResponse({
+                 res,
+                 message: 'ok',
+                 responseBody: status,
+             })
+             }).catch((err) => {
+             return ResponseManager.sendErrorResponse({
+                 res,
+                 message: 'unable to push subscription data to queue',
+                 responseBody: err,
+             })
+         })
+         } catch (error) {
+             console.error(error)
+             return Utils.sendUserErrorSMS(msisdn)
+         }
+     } else if (keyword === '2') {
+         const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 2)
+         try {
+             ResponseManager.sendResponse({
+                 res,
+                 responseBody: data,
+             })
+             await Utils.sendUserSuccessSMS(msisdn)
+             return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+             .then((status) => {
+             console.log('successfully pushed postback data to queue')
+             return ResponseManager.sendResponse({
+                 res,
+                 message: 'ok',
+                 responseBody: status,
+             })
+             }).catch((err) => {
+             return ResponseManager.sendErrorResponse({
+                 res,
+                 message: 'unable to push postback data to queue',
+                 responseBody: err,
+             })
+         }) 
+         } catch (error) {
+             console.error(error)
+             return Utils.sendUserErrorSMS(msisdn)
+         }
+     }
+         
+     } catch (error) {
+         return ResponseManager.sendErrorResponse({
+            res,
+            message: 'unable to get serviceId from Redis',
+            responseBody: error,
+         })
+     }
 
-            return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
-		    .then((status) => {
-			console.log('successfully pushed subscription data to queue')
-			return ResponseManager.sendResponse({
-				res,
-				message: 'ok',
-				responseBody: status,
-			})
-		    }).catch((err) => {
-			return ResponseManager.sendErrorResponse({
-				res,
-				message: 'unable to push subscription data to queue',
-				responseBody: err,
-			})
-		})
-        } catch (error) {
-            console.error(error)
-            return Utils.sendUserErrorSMS(msisdn)
-        }
-    } else if (keyword === '2') {
-        const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 2)
-        try {
-            ResponseManager.sendResponse({
-                res,
-                responseBody: data,
-            })
-            await Utils.sendUserSuccessSMS(msisdn)
-            return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
-		    .then((status) => {
-			console.log('successfully pushed postback data to queue')
-			return ResponseManager.sendResponse({
-				res,
-				message: 'ok',
-				responseBody: status,
-			})
-		    }).catch((err) => {
-			return ResponseManager.sendErrorResponse({
-				res,
-				message: 'unable to push postback data to queue',
-				responseBody: err,
-			})
-		}) 
-        } catch (error) {
-            console.error(error)
-            return Utils.sendUserErrorSMS(msisdn)
-        }
-    }
+    
 } else {
     return Utils.sendUserErrorSMS(msisdn)
     }
