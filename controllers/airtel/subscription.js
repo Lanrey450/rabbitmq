@@ -29,7 +29,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'productId','channel']
+		const requiredParams = ['msisdn', 'productId', 'channel']
 
 		// {
 		// 	"msisdn":"09020327785",
@@ -50,14 +50,14 @@ module.exports = {
 		// 	}
 		// }
 
-		airtel_req_body = {
-			"msisdn":req.body.msisdn,
-			"channel": req.body.channel,
-			"service": {
-				"product": {
-					"productId": req.body.productId,
-				}
-			}
+		const airtelReqBody = {
+			msisdn: req.body.msisdn,
+			channel: req.body.channel,
+			service: {
+				product: {
+					productId: req.body.productId,
+				},
+			},
 		}
 
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
@@ -80,7 +80,7 @@ module.exports = {
 				if (!config.airtel_options.allowed_channels.includes(req.body.channel.toUpperCase())) {
 					return ResponseManager.sendErrorResponse({ res, message: 'unavailable channel at this time!' })
 				}
-				return this.subscribeUser(airtel_req_body)
+				return this.subscribeUser(airtelReqBody)
 					.then((response) => {
 						console.log(`response ${JSON.stringify(response)}`)
 						if (response.error) {
@@ -104,8 +104,8 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be subscribed
        * @param serviceObject this is the service config to be subscribed against
        */
-	subscribeUser(req_body) {
-		const {channel, msisdn, service}= req_body;
+	subscribeUser(reqBody) {
+		const { channel, msisdn, service } = reqBody
 		const response = {}
 					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
 						.then((subscriptionData) => {
@@ -142,14 +142,14 @@ module.exports = {
 		const requiredParams = ['msisdn', 'channel', 'productId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
-		airtel_req_body = {
-			"msisdn":req.body.msisdn,
-			"channel": req.body.channel,
-			"service": {
-				"product": {
-					"productId": req.body.productId,
-				}
-			}
+		const airtelReqBody = {
+			msisdn: req.body.msisdn,
+			channel: req.body.channel,
+			service: {
+				product: {
+					productId: req.body.productId,
+				},
+			},
 		}
 
 		if (missingFields.length !== 0) {
@@ -169,7 +169,7 @@ module.exports = {
 				console.log(`Making a unsubscription request for ${req.body.msisdn}`)
 				// If un-subscription was successful, update the status field of the record in
 				// subscription collection and return success...
-				return this.unSubscribeUser(airtel_req_body)
+				return this.unSubscribeUser(airtelReqBody)
 					.then((response) => {
 						console.info(`response ${response}`)
 						if (response.error) {
@@ -197,8 +197,8 @@ module.exports = {
        * @param msisdn this is the mobile number of user to be unsubcribed from a service
        * @param serviceObject this is the serviceObject
        */
-	unSubscribeUser(req_body) {
-		const {msisdn, service, channel} = req_body 
+	unSubscribeUser(reqBody) {
+		const { msisdn, service, channel } = reqBody
 		const response = {}
 		console.info(`Making a unsubscription request for ${msisdn}`)
 		// If un-subscription was successful, update the status field of the record in
