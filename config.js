@@ -7,12 +7,9 @@ module.exports = {
 	name: env.APP_NAME,
 	port: env.PORT,
 	nineMobile: {
-		partnerRoleId: env.NINE_MOBILE_PARTNER_ROLE_ID,
-		preSharedKey: env.NINE_MOBILE_PRESHARED_KEY,
 		apiSubscriptionKey: env.NINE_MOBILE_SUBSCRIPTION_KEY,
 		username: env.NINE_MOBILE_AGGREGATOR_USERNAME,
-		password: env.NINE_MOBILE_AGGREGATOR_PASSWORD,
-		aggregatorId: env.NINE_MOBILE_AGGREGATOR_ID,
+		authorization: env.NINE_MOBILE_AGGREGATOR_PASSWORD,
 		baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL,
 	},
 
