@@ -8,6 +8,7 @@
 /* eslint-disable indent */
 /* eslint-disable no-undef */
 
+const TerraLogger = require('terra-logger')
 const config = require('../../config')
 const redis = require('../../redis')
 const Utils = require('../../lib/utils')
@@ -31,15 +32,15 @@ async userConsent(req, res) {
         })
     }
 
-    const keywordTrimmed = keyword.trim()
+    const keywordSanitized = Utils.keywordSanitizer(keyword)
 
-    await redis.set(msisdn, keywordTrimmed, 'ex', 60 * 5) // 5 mins expiration
+    await redis.set(msisdn, keywordSanitized, 'ex', 60 * 5) // 5 mins expiration
 
     // TODO (still to fix)
     // currently checking for the valid keyword from config
    const validKeyword = config.keywordConfig.find((configs) => configs === redis.get(msisdn))
 
-   console.log(validKeyword, 'validKeyword')
+   TerraLogger.debug(validKeyword, 'validKeyword')
 
    const existingSession = await redis.get(msisdn)
 
@@ -49,7 +50,7 @@ async userConsent(req, res) {
      await Utils.sendUserSessionSMS(msisdn)
 
      try {
-          //  get serviceId from keyword saved to redis (to be used for subscription request)
+          // get serviceId from keyword saved to redis (to be used for subscription request)
      const serviceId = Utils.getServiceIdFromKeyword(validKeyword)
 
      if (keyword === '1') {
@@ -65,7 +66,7 @@ async userConsent(req, res) {
  
              return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
              .then((status) => {
-             console.log('successfully pushed subscription data to queue')
+             TerraLogger.debug('successfully pushed subscription data to queue')
              return ResponseManager.sendResponse({
                  res,
                  message: 'ok',
@@ -79,7 +80,7 @@ async userConsent(req, res) {
              })
          })
          } catch (error) {
-             console.error(error)
+             TerraLogger.debug(error)
              return Utils.sendUserErrorSMS(msisdn)
          }
      } else if (keyword === '2') {
@@ -92,7 +93,7 @@ async userConsent(req, res) {
              await Utils.sendUserSuccessSMS(msisdn)
              return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
              .then((status) => {
-             console.log('successfully pushed postback data to queue')
+             TerraLogger.debug('successfully pushed postback data to queue')
              return ResponseManager.sendResponse({
                  res,
                  message: 'ok',
@@ -106,7 +107,7 @@ async userConsent(req, res) {
              })
          }) 
          } catch (error) {
-             console.error(error)
+             TerraLogger.debug(error)
              return Utils.sendUserErrorSMS(msisdn)
          }
      }

@@ -29,12 +29,12 @@ app.use(
 	})
   )
 // Print redis errors to the console
-redisClient.on('error', (err) => {
-	console.log(`Redis Client Error ${err}`)
+redisClient.on('error', (error) => {
+	TerraLogger.debug(`Redis Client Error => ${error}`)
 })
 
 
-// app.use(cors)
+app.use(cors())
 
 app.use(TerraLogger.requestHandler)
 
@@ -56,12 +56,13 @@ routes(app)
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
 	const err = new Error('Not Found')
+	TerraLogger.debug(err)
 	err.status = 404
 	next(err)
 })
 
 app.listen(config.port, () => {
-	console.log(`${config.name} listening on port ${config.port}!`)
+	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
 })
 
 module.exports = app

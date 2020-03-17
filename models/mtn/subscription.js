@@ -9,7 +9,7 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	service_id: {
+	product_id: {
 		type: String,
 		required: true,
 	},
@@ -39,6 +39,7 @@ const subscriptionSchema = new Schema({
 	},
 	status: {
 		type: String,
+		enum: ['pending', 'active', 'inactive'],
 		required: true,
 	},
 })

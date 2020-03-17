@@ -86,13 +86,11 @@ module.exports = {
 		allowed_channels: ['SMS', 'WEB', 'USSD', 'IVR', 'MAMO', 'WAP', 'OBD'],
 	},
 	keywordConfig: ['SOCCERTIPS', 'PLAYZONE', 'SRS'],
-	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	se_soap_wsdl_files: {
 		CallSubscription: 'CallSubscription.wsdl',
 		HTSubscriptionServices: 'HTSubscriptionServices.wsdl',
 		TopUpService: 'TopUpService.wsdl',
 	},
-	blacklist_base_url: env.AIRTEL_SE_CLIENT_BLACKLIST_BASE_URL,
 	notification_service_url: env.NOTIFICATION_SERVICE_URL,
 	redisSecret: env.REDIS_SECRET,
 	user_status: {

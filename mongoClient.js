@@ -7,6 +7,7 @@
 /* eslint-disable-next-line no-unused-vars */
 /* eslint-disable no-tabs */
 const mongoose = require('mongoose')
+const TerraLogger = require('terra-logger')
 const debug = require('debug')('mongodb')
 const config = require('./config')
 
@@ -25,29 +26,29 @@ const defaultConfig = {
 // switch when deploying for production envs
 const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
 
-// for local
-//  const defaultUrl = defaultConfig.url
+//  local dev
+// const defaultUrl = defaultConfig.url
 
 mongoose.set('debug', true)
 
-console.log("MONGO_DB_FULL_URL", defaultUrl)
+TerraLogger.debug("MONGO_DB_FULL_URL", defaultUrl)
 
-mongoose.connect(defaultUrl, { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => console.log(err)) 
+mongoose.connect(defaultUrl, { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => TerraLogger.debug(err)) 
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on("connected", () => {
-	console.log("mongodb connected")
+	TerraLogger.debug("mongodb connected")
 })
 db.on('error', (error) => {
-	console.error("An error occurred", JSON.stringify(error))
-	console.log(error.message, new Error(error.message), { defaultUrl }, true)
+	TerraLogger.debug("An error occurred", JSON.stringify(error))
+	TerraLogger.debug(error.message, new Error(error.message), { defaultUrl }, true)
 	process.exit(0)
 })
 
 global.db = db
 process.on('SIGINT', function () {
 	mongoose.connection.close(function () {
-		console.log('Mongoose disconnected on app termination')
+		TerraLogger.debug('Mongoose disconnected on app termination')
 		process.exit(0)
 	})
 })

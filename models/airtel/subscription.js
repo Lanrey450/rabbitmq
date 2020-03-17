@@ -20,16 +20,16 @@ const subscriptionSchemaAirtel = new Schema({
   chargingTime: {
     type: Date,
   },
-  response: {
-    type: String,
-    required: true,
-  },
   transactionId: {
     type: String,
     sparse: true,
     unique: true,
   },
   channel: {
+    type: String,
+    required: true,
+  },
+  type: {
     type: String,
     required: true,
   },

@@ -20,10 +20,6 @@ const unsubscriptionSchemaAirtel = new Schema({
   chargingTime: {
     type: Date,
   },
-  response: {
-    type: String,
-    required: true,
-  },
   transactionId: {
     type: String,
     sparse: true,
@@ -35,6 +31,10 @@ const unsubscriptionSchemaAirtel = new Schema({
   },
   type: {
     type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
   },
 }, {
   timestamps: true,

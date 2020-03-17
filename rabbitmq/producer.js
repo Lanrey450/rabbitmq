@@ -1,7 +1,9 @@
 /* eslint-disable eol-last */
 /* eslint-disable no-tabs */
 const amqp = require('amqplib')
+const TerraLogger = require('terra-logger')
 const config = require('../config')
+
 
 const publishToQueue = async (queue, message) => {
 	try {
@@ -10,12 +12,12 @@ const publishToQueue = async (queue, message) => {
 		await channel.assertQueue(queue, { durable: true, noAck: false })
 		await channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)))
 
-		console.info(' [x] Sending message to queue', queue, message)
+		TerraLogger.debug(' [x] Sending message to queue', queue, message)
 
 		await channel.close()
 	} catch (error) {
 		// handle error response
-		console.error(error, 'Unable to connect to cluster!')
+		TerraLogger.debug(error, 'Unable to connect to cluster!')
 		process.exit(1)
 	}
 }
