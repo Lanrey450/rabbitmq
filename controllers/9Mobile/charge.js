@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
+
+const TerraLogger = require('terra-logger')
 const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const Utils = require('../../lib/utils')
@@ -37,7 +39,7 @@ module.exports = {
 				// const data = {sample:"sample"}
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 					.then((status) => {
-						console.log('successfully pushed charging data to queue')
+						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
 							message: data,
@@ -51,7 +53,6 @@ module.exports = {
 							message: err.message,
 						},
 					}))
-					// return ResponseManager.sendResponse({ res, message: data })
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({ res, message: `Unable reach 9mobile server - ${error}` })
 			}
@@ -86,10 +87,10 @@ module.exports = {
 					context: 'RENEW',
 				}
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
-				// const data = {sample:"sample"}
+
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
 					.then((status) => {
-						console.log('successfully pushed charging data to queue')
+						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
 							message: data,
@@ -103,9 +104,8 @@ module.exports = {
 							message: err.message,
 						},
 					}))
-					// return ResponseManager.sendResponse({ res, message: data })
 			} catch (error) {
-				return ResponseManager.sendErrorResponse({ res, message: `Unable reach 9mobile server - ${error}` })
+				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach 9mobile server - ${error}` })
 			}
 		}
 		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })

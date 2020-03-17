@@ -5,11 +5,30 @@ const { Schema } = mongoose
 
 
 const subscriptionSchema = new Schema({
-	username: {
+	service_name: {
 		type: String,
 		required: true,
 	},
-	password: {
+	msisdn: {
+		type: String,
+		required: true,
+	},
+	transactionId: {
+		type: Date,
+		required: true,
+	},
+	operator: {
+		type: String,
+		required: true,
+	},
+	subscriptionResult: {
+		type: String,
+	},
+	subscription_date: {
+		type: Date,
+		required: true,
+	},
+	status: {
 		type: String,
 		required: true,
 	},

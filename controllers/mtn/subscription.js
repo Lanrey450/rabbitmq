@@ -6,6 +6,7 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
 
+const TerraLogger = require('terra-logger')
 const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
@@ -36,6 +37,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+
 				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
@@ -53,7 +55,7 @@ module.exports = {
 						})
 					}
 					try {
-						publish(config.rabbit_mq.mtn.subscription_queue, subscribedResponse)
+						await publish(config.rabbit_mq.mtn.subscription_queue, subscribedResponse)
 							.then((status) => {
 								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
@@ -105,6 +107,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+
 				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
@@ -122,9 +125,9 @@ module.exports = {
 						})
 					}
 					try {
-						publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
+						await publish(config.rabbit_mq.mtn.un_subscription_queue, UnSubscribedResponse)
 							.then((status) => {
-								console.info(`successfully pushed to the MTN unsubscription data queue: ${status}`)
+								TerraLogger.debug(`successfully pushed to the MTN unsubscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
 									res,
 									message: 'Subscription was successfully removed',
@@ -155,12 +158,12 @@ module.exports = {
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
-		const requiredParams = ['msisdn', 'serviceId']
+		const requiredParams = ['msisdn', 'productId']
 		const missingFields = Utils.authenticateParams(req.query, requiredParams)
 
 		if (missingFields.length != 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: 'Please pass the following parameters for request : ' + missingFields,
+				res, message: `Please pass the following parameters for request:${missingFields}`
 			})
 		}
 			const authDetails = auth.split(' ')
@@ -172,6 +175,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+
 				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
@@ -189,12 +193,12 @@ module.exports = {
 	},
 
 	async MTNDataSyncPostBack(req, res) {
-		console.log('getting data sync feedback from mtn')
+		TerraLogger.debug('getting data sync feedback from mtn')
 		const data = req.body
-		console.log(data)
-		publish(config.rabbit_mq.mtn.postback_queue, data)
+		TerraLogger.debug(data)
+		await publish(config.rabbit_mq.mtn.postback_queue, data)
 			.then((status) => {
-				console.log('successfully pushed postback data to queue')
+				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({
 					res,
 					message: 'ok',

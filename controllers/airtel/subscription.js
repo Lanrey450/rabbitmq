@@ -3,6 +3,7 @@
 /* eslint-disable max-len */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-tabs */
+const TerraLogger = require('terra-logger')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
@@ -63,7 +64,7 @@ module.exports = {
 				}
 				return this.subscribeUser(airtelReqBody)
 					.then((response) => {
-						console.log(`response ${JSON.stringify(response)}`)
+						TerraLogger.debug(response)
 						if (response.error) {
 							// eslint-disable-next-line max-len
 							return ResponseManager.sendErrorResponse({ res, message: response.message, responseBody: response.data })
@@ -71,9 +72,7 @@ module.exports = {
 						if (response.data) {
 							return ResponseManager.sendResponse({ res, responseBody: response.data })
 						}
-					}).catch((error) => {
-						return ResponseManager.sendErrorResponse({ res, message: error.message })
-					})
+					}).catch((error) => ResponseManager.sendErrorResponse({ res, message: error.message }))
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
@@ -89,12 +88,12 @@ module.exports = {
 		const response = {}
 					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
 						.then((subscriptionData) => {
-							console.log(subscriptionData, 'subscription data')
+							TerraLogger.debug(subscriptionData, 'subscription data')
 							response.error = false
 							response.data = subscriptionData
 							return response
 						}).catch((error) => {
-							console.log(`message: ${error.message}`)
+							TerraLogger.debug(`message: ${error.message}`)
 							response.error = true
 							response.data = error.response
 							response.statusCode = error.statusCode
@@ -146,12 +145,12 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-				console.log(`Making a unsubscription request for ${req.body.msisdn}`)
+				TerraLogger.debug(`Making a unsubscription request for ${req.body.msisdn}`)
 				// If un-subscription was successful, update the status field of the record in
 				// subscription collection and return success...
 				return this.unSubscribeUser(airtelReqBody)
 					.then((response) => {
-						console.info(`response ${response}`)
+						TerraLogger.debug(`response ${response}`)
 						if (response.error) {
 							return ResponseManager.sendErrorResponse({
 								res,
@@ -164,7 +163,7 @@ module.exports = {
 							return ResponseManager.sendResponse({ res, responseBody: response.data })
 						}
 					}).catch((error) => {
-						console.info(error)
+						TerraLogger.debug(error)
 						return ResponseManager.sendErrorResponse({ res, message: error.message })
 					})
 			}
@@ -175,17 +174,16 @@ module.exports = {
 	/**
        * This is a method use to unsubcribe user from the queue
        * @param msisdn this is the mobile number of user to be unsubcribed from a service
-       * @param serviceObject this is the serviceObject
+       * @param service this is the service object - contains the productId
+	   * @param channel channel for the request
        */
 	unSubscribeUser(reqBody) {
 		const { msisdn, service, channel } = reqBody
 		const response = {}
-		console.info(`Making a unsubscription request for ${msisdn}`)
-		// If un-subscription was successful, update the status field of the record in
-		// subscription collection and return success...
+		TerraLogger.debug(`Making a unsubscription request for ${msisdn}`)
 		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, 'API')
 			.then((unsubscriptionData) => {
-				console.info(`message: ${unsubscriptionData}`)
+				TerraLogger.debug(`message: ${unsubscriptionData}`)
 				response.error = false
 				response.data = unsubscriptionData
 				return response
@@ -202,9 +200,9 @@ module.exports = {
 
 
 	/**
-       * This is a method use to get the statua of a user subscription to a service
+       * This is a method use to get the status of a user subscription to a service
        * @param msisdn this is the mobile number of user subscribed to a service
-       * @param serviceID this is the serviceID
+       * @param productId this is the productID
     */
 	// get status of service subscription
 	async getSubscriptionStatus(req, res) {
@@ -214,7 +212,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'serviceId']
+		const requiredParams = ['msisdn', 'productId']
 		const missingFields = Utils.authenticateParams(req.query, requiredParams)
 
 		if (missingFields.length !== 0) {
@@ -254,12 +252,12 @@ module.exports = {
 
 
 	async airtelDataSyncPostBack(req, res) {
-		console.log('getting data sync feedback from airtel')
+		TerraLogger.debug('getting data sync feedback from airtel')
 		const data = req.body
-		console.log(data)
+		TerraLogger.debug(data)
 		publish(config.rabbit_mq.airtel.postback_queue, data)
 			.then((status) => {
-				console.log('successfully pushed postback data to queue')
+				TerraLogger.debug('successfully pushed postback data to queue')
 				ResponseManager.sendResponse({
 					res,
 					message: 'ok',

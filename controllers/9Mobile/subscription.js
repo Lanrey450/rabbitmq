@@ -6,6 +6,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-tabs */
 
+const TerraLogger = require('terra-logger')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
 const Utils = require('../../lib/utils')
@@ -93,12 +94,12 @@ module.exports = {
 					}
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nine_mobile_req_body)
 					if (unsubscriptionResponse) {
-						console.info('unsubscription engine for 9Mobile called...')
+						TerraLogger.debug('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
 						try {
-							publish(config.rabbit_mq.nineMobile.un_subscription_queue, unsubscriptionResponse)
+							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, unsubscriptionResponse)
 								.then((status) => {
-									console.info(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
+									TerraLogger.debug(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
 										res,
 										message: 'Unsubscription was successful',

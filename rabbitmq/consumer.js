@@ -1,24 +1,25 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-tabs */
 const amqp = require('amqplib')
+const TerraLogger = require('terra-logger')
 const config = require('../config')
 
 const consumeFromQueue = async (queue, callback) => {
 	try {
-		console.log('!!!!!!consumer engine itself!!!!!!')
+		TerraLogger.debug('Welcome to the consumer engine')
 		const cluster = await amqp.connect(`amqp://${config.rabbit_mq.user}:${config.rabbit_mq.pass}@${config.rabbit_mq.host}:${config.rabbit_mq.port}/${config.rabbit_mq.vhost}`)
 		const channel = await cluster.createChannel()
 		await channel.assertQueue(queue, { durable: true, noAck: false })
 		await channel.consume(queue, (msg) => {
-			console.log(`!!!!!!just consumed from queue: ${queue} !!!!!!!`)
+			TerraLogger.debug(`just consumed from queue: ${queue}`)
 			channel.ack(msg)
 			const data = JSON.parse(msg.content)
-			console.log('*************')
+			TerraLogger.debug('*************')
 			return callback(null, data)
 		})
 	} catch (error) {
 		// handle error response
-		console.log(error, 'Unable to connect to cluster!')
+		TerraLogger.debug(error, 'Unable to connect to cluster!')
 		return callback(error, null)
 	}
 }
