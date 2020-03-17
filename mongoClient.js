@@ -23,10 +23,10 @@ const defaultConfig = {
 
 
 // switch when deploying for production envs
-// const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
+const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
 
 // for local
- const defaultUrl = defaultConfig.url
+//  const defaultUrl = defaultConfig.url
 
 mongoose.set('debug', true)
 
