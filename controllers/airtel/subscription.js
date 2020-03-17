@@ -31,25 +31,6 @@ module.exports = {
 
 		const requiredParams = ['msisdn', 'productId', 'channel']
 
-		// {
-		// 	"msisdn":"09020327785",
-		// 	"channel": "sms",
-		// 	"service": {
-		// 		"shortCode": "38240",
-		// 		"name": "Sports 5 Days",
-		// 		"cpID": "124",
-		// 		"cpName": "2394716_IYKEJORDAN_NG_SE",
-		// 		 "cpPassword": "$*K04s6/",
-		// 		 "product": {
-		// 		  "productId": "8202",
-		// 		  "duration": "2",
-		// 		  "amount": "20",
-		// 		  "isMaster": "false",
-		// 		  "productName": "playzone"
-		// 		}
-		// 	}
-		// }
-
 		const airtelReqBody = {
 			msisdn: req.body.msisdn,
 			channel: req.body.channel,
@@ -91,7 +72,6 @@ module.exports = {
 							return ResponseManager.sendResponse({ res, responseBody: response.data })
 						}
 					}).catch((error) => {
-						console.log(error)
 						return ResponseManager.sendErrorResponse({ res, message: error.message })
 					})
 			}
