@@ -87,12 +87,13 @@ module.exports = {
 			// eslint-disable-next-line eqeqeq
 			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
-					const nine_mobile_req_body = {
+					const nineMobileReqBody = {
 						userIdentifier: req.body.msisdn,
 						entryChannel: req.body.channel,
 						serviceId: req.body.serviceId,
 					}
-					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nine_mobile_req_body)
+
+					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nineMobileReqBody)
 					if (unsubscriptionResponse) {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
@@ -154,7 +155,12 @@ module.exports = {
 			// eslint-disable-next-line eqeqeq
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
-					const response = await NineMobileApi.status(req.query)
+					const nineMobileReqQuery = {
+						userIdentifier: req.query.msisdn,
+						entryChannel: req.query.channel,
+						serviceId: req.query.serviceId,
+					}
+					const response = await NineMobileApi.status(nineMobileReqQuery)
 					return ResponseManager.sendResponse({
 						res,
 						responseBody: response.data,
