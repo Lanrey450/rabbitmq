@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable indent */
 /* eslint-disable comma-dangle */
 /* eslint-disable no-mixed-spaces-and-tabs */
@@ -6,33 +7,36 @@
 
 /* eslint-disable no-tabs */
 require('dotenv').config()
-const soap = require('soap');
+const soap = require('soap')
 const express = require('express')
 const bodyParser = require('body-parser')
 const TerraLogger = require('terra-logger')
 const cors = require('cors')
 const session = require('express-session')
+
+const wsdl_path = process.env.AIRTEL_SE_CLIENT_WSDL_PATH
 const RedisStore = require('connect-redis')(session)
+const xml = require('fs').readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
 const routes = require('./routes')
 const config = require('./config')
 const redisClient = require('./redis')
+const AirtelService = require('./lib/airtel/subscription')
 require('./mongoClient')
+
 const app = express()
-const wsdl_path = "/Users/Terra-Ariyo/Documents/CODE/Aggregator/Backend/aggregator_subscription_and_billing/wsdl"  //TODO move to env var
-const xml = require('fs').readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8');
 
 
 const myService = {
 	NotificationToCPService: {
 	  NotificationToCP: {
-		notificationToCP(args, cb) {
-		  // TODO Abass this args is exactly what we need to be pushed to queue (dont push from this file, send to a new func in controller layer and push from there)
-		  console.log('notificationToCP', args);
-		  cb({});
+		async notificationToCP(args, cb) {
+		  console.log('notificationToCP', args)
+		  await AirtelService.pushAirtelFeedbackToQueue(args)
+		  cb({})
 		},
 	  },
 	},
-  };
+  }
 
 app.use(
 	session({
@@ -78,12 +82,12 @@ routes(app)
 app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
 	// Airtel postback endpoint(INCOMING FROM TELCO)
-	const soapUrl = '/airtelPostback';
-	console.log(`Airtel SOAP postback endpoint is : ${soapUrl}`);
-	const soapServer = soap.listen(app, soapUrl, myService, xml);
+	const soapUrl = '/airtelPostback'
+	console.log(`Airtel SOAP postback endpoint is : ${soapUrl}`)
+	const soapServer = soap.listen(app, soapUrl, myService, xml)
 	soapServer.log = function soapLog(type, data) {
-	  console.log(type, data);
-	};
+	  console.log(type, data)
+	}
 })
 
 module.exports = app
