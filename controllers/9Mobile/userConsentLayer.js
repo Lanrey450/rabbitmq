@@ -12,6 +12,7 @@ const TerraLogger = require('terra-logger')
 const config = require('../../config')
 const redis = require('../../redis')
 const Utils = require('../../lib/utils')
+const ResponseManager = require('../../commons/response')
 
 const subscribeUser = require('../../lib/9Mobile/subscription')
 const publish = require('../../rabbitmq/producer')
@@ -34,29 +35,52 @@ async userConsent(req, res) {
 
     const keywordSanitized = Utils.keywordSanitizer(keyword)
 
+    TerraLogger.debug(keywordSanitized, 'keyword')
+
+    //  save keyword from (request body) in redis - - for user session persistence
     await redis.set(msisdn, keywordSanitized, 'ex', 60 * 5) // 5 mins expiration
+
+
+    // get the keyword from redis to compare against what we have in config - for validation
+    const keywordFromRedis = await redis.getAsync(msisdn).then((rkeyword) => {
+        TerraLogger.debug(rkeyword, 'keyword from redis')
+         return rkeyword
+    }).catch((error) => TerraLogger.debug(error, 'Error getting keyword from redis')) 
+
 
     // TODO (still to fix)
     // currently checking for the valid keyword from config
-   const validKeyword = config.keywordConfig.find((configs) => configs === redis.get(msisdn))
+    const validKeyword = config.keywordConfig.find((configs) => {
+        if (configs === keywordFromRedis) {
+          return true
+        }
+        return false
+      })
 
    TerraLogger.debug(validKeyword, 'validKeyword')
 
-   const existingSession = await redis.get(msisdn)
+    // get existing user session from redis to validate user request
+    const existingSession = await redis.getAsync(msisdn).then((session) => {
+        TerraLogger.debug(session, 'keyword from redis')
+        return session
+    }).catch((error) => TerraLogger.debug(error, 'Error fetching user session from redis'))
 
-     //  get user session cached
+ 
+     // compare the keyword in the current user session against the valid keyword 
+    // (checked from user input as against keyword in the config)
     if (existingSession === validKeyword) {
        
      await Utils.sendUserSessionSMS(msisdn)
 
      try {
-          // get serviceId from keyword saved to redis (to be used for subscription request)
-     const serviceId = Utils.getServiceIdFromKeyword(validKeyword)
+        // get serviceId from keyword saved to redis (to be used for subscription request)
+     const serviceId = await Utils.getServiceIdFromKeyword(validKeyword)
 
      if (keyword === '1') {
  
-         try {
-        const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 1)
+        try {
+    
+        const data = await subscribeUser.subscribe({userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 1 })
         
             ResponseManager.sendResponse({
                  res,
@@ -64,14 +88,9 @@ async userConsent(req, res) {
              })
              await Utils.sendUserSuccessSMS(msisdn)
  
-             return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+             await publish(config.rabbit_mq.nineMobile.subscription_queue, data)
              .then((status) => {
-             TerraLogger.debug('successfully pushed subscription data to queue')
-             return ResponseManager.sendResponse({
-                 res,
-                 message: 'ok',
-                 responseBody: status,
-             })
+             TerraLogger.debug('successfully pushed subscription data to queue', status)
              }).catch((err) => {
              return ResponseManager.sendErrorResponse({
                  res,
@@ -81,11 +100,16 @@ async userConsent(req, res) {
          })
          } catch (error) {
              TerraLogger.debug(error)
-             return Utils.sendUserErrorSMS(msisdn)
+             await Utils.sendUserErrorSMS(msisdn)
+             return ResponseManager.sendErrorResponse({
+                res,
+                message: 'Problem calling the NineMobile subscription engine',
+                responseBody: error,
+            })        
          }
      } else if (keyword === '2') {
-         const data = await subscribeUser.subscribe(msisdn, serviceId, 'SMS', 2)
-         try {
+        try {
+         const data = await subscribeUser.subscribe({userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2 })
              ResponseManager.sendResponse({
                  res,
                  responseBody: data,
@@ -93,12 +117,7 @@ async userConsent(req, res) {
              await Utils.sendUserSuccessSMS(msisdn)
              return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
              .then((status) => {
-             TerraLogger.debug('successfully pushed postback data to queue')
-             return ResponseManager.sendResponse({
-                 res,
-                 message: 'ok',
-                 responseBody: status,
-             })
+             TerraLogger.debug('successfully pushed postback data to queue', status)
              }).catch((err) => {
              return ResponseManager.sendErrorResponse({
                  res,
@@ -108,21 +127,22 @@ async userConsent(req, res) {
          }) 
          } catch (error) {
              TerraLogger.debug(error)
-             return Utils.sendUserErrorSMS(msisdn)
+             await Utils.sendUserErrorSMS(msisdn)
+             return ResponseManager.sendErrorResponse({
+                res,
+                message: 'Problem calling the NineMobile subscription engine',
+                responseBody: error,
+            })  
          }
-     }
-         
+     }    
      } catch (error) {
          return ResponseManager.sendErrorResponse({
             res,
-            message: 'unable to get serviceId from Redis',
-            responseBody: error,
+            message: `unable to get serviceId from Redis,   ${error.message}`,
          })
-     }
-
-    
+     }  
 } else {
     return Utils.sendUserErrorSMS(msisdn)
-    }
+}
 },
 }
