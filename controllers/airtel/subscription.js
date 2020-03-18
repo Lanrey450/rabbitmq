@@ -236,13 +236,13 @@ module.exports = {
 						return ResponseManager.sendResponse({
 							res,
 							message: 'Subscription status successfully fetched',
-							data: subscriptionDetails,
+							data: subscriptionDetails.data.response.status,
 						})
 					}
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: error,
+						message: 'The subscriber does not exist(invalid status)!',
 						data: '',
 					})
 				}

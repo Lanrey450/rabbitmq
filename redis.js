@@ -4,7 +4,10 @@
 
 const redis = require('redis')
 const TerraLogger = require('terra-logger')
+const bluebird = require('bluebird')
 const config = require('./config')
+
+bluebird.promisifyAll(redis.RedisClient.prototype)
 
 const Redis = redis.createClient(config.redisClientConnection.port,
     config.redisClientConnection.host, { no_ready_check: true })

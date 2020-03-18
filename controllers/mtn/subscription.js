@@ -180,7 +180,7 @@ module.exports = {
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
 						res,
-						responseBody: subscriptionDetail,
+						responseBody: subscriptionDetail.data.response.status,
 						message: 'status was succesfully fetched',
 					})
 				}

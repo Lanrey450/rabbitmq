@@ -11,6 +11,7 @@ module.exports = {
 		username: env.NINE_MOBILE_AGGREGATOR_USERNAME,
 		authorization: env.NINE_MOBILE_AGGREGATOR_PASSWORD,
 		baseUrl: env.NINE_MOBILE_AGGREGATOR_BASEURL,
+		aggregatorId: env.NINE_MOBILE_AGGREGATOR_ID,
 	},
 
 	feedbackQueues: {
