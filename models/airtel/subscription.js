@@ -41,6 +41,6 @@ const subscriptionSchemaAirtel = new Schema({
 })
 
 
-const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel)
+const SubscriptionModel = mongoose.model('airtelsubscription', subscriptionSchemaAirtel)
 
 module.exports = SubscriptionModel

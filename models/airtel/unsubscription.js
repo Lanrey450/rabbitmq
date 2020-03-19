@@ -41,6 +41,6 @@ const unsubscriptionSchemaAirtel = new Schema({
 })
 
 
-const UnsubscriptionModel = mongoose.model('unsubscription', unsubscriptionSchemaAirtel)
+const UnsubscriptionModel = mongoose.model('airtelunsubscription', unsubscriptionSchemaAirtel)
 
 module.exports = UnsubscriptionModel

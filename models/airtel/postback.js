@@ -50,6 +50,6 @@ const postbackSchema = new Schema({
 		required: true,
 	},
 })
-const PostbackModel = mongoose.model('airtel', postbackSchema)
+const PostbackModel = mongoose.model('airtelpostback', postbackSchema)
 
 module.exports = PostbackModel
