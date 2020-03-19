@@ -55,7 +55,7 @@ module.exports = {
 		host: env.RABBITMQ_HOST,
 		port: env.RABBITMQ_PORT,
 		user: env.RABBITMQ_USER,
-		pass: env.RABBITMQ_PASS,
+		pass: env.RABBITMQ_PASSWORD,
 		vhost: env.RABBITMQ_VHOST,
 		mtn: {
 			subscription_queue: 'mtn_subscription_queue',
