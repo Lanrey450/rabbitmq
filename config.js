@@ -73,7 +73,6 @@ module.exports = {
 			postback_queue: '9Mobile_postback_queue',
 		},
 	},
-	airtel_feeback_queue: 'airtel_feedback',
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,
 		port: env.AIRTEL_SE_AIRTEL_PORT,

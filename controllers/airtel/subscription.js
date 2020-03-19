@@ -255,7 +255,7 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from airtel')
 		const data = req.body
 		TerraLogger.debug(data)
-		publish(config.rabbit_mq.airtel.postback_queue, { ...data.data, networ: 'Airtel' })
+		publish(config.rabbit_mq.airtel.postback_queue, { ...data.data, network: 'Airtel' })
 			.then((status) => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				ResponseManager.sendResponse({

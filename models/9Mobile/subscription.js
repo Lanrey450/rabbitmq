@@ -36,6 +36,6 @@ const subscriptionSchema = new Schema({
 	timestamps: true,
 })
 
-const SubscriptionModel = mongoose.model('nineMobile', subscriptionSchema)
+const SubscriptionModel = mongoose.model('nineMobilesubscription', subscriptionSchema)
 
 module.exports = SubscriptionModel
