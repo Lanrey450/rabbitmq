@@ -87,7 +87,7 @@ Name                                         | Endpoint
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - `http://localhost:{{port}}/subscription/airtel/subscribe`
+sample subscription call - ```http://localhost:{{port}}/subscription/airtel/subscribe```
 
 ***sample request***
 
@@ -110,7 +110,7 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - `http://localhost:{{port}}/subscription/airtel/unsubscribe`
+sample unsubscription call - ```http://localhost:{{port}}/subscription/airtel/unsubscribe```
 
 ***sample request***
 
@@ -261,7 +261,7 @@ Name                                         | Endpoint
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - `http://localhost:{{port}}/subscription/mtn/subscribe`
+sample subscription call - ```http://localhost:{{port}}/subscription/mtn/subscribe```
 
 ***sample request***
 
@@ -283,7 +283,7 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - `http://localhost:{{port}}/subscription/mtn/unsubscribe`
+sample unsubscription call - ```http://localhost:{{port}}/subscription/mtn/unsubscribe```
 
 ***sample request***
 
@@ -345,7 +345,7 @@ Name                                         | Endpoint
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - `http://localhost:{{port}}/subscription/airtel/subscribe`
+sample subscription call - ```http://localhost:{{port}}/subscription/airtel/subscribe```
 
 ***sample request***
 
@@ -368,7 +368,7 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - `http://localhost:{{port}}/subscription/airtel/unsubscribe`
+sample unsubscription call - ```http://localhost:{{port}}/subscription/airtel/unsubscribe```
 
 ***sample request***
 
