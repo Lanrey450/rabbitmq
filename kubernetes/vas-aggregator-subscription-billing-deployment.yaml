@@ -108,11 +108,11 @@ spec:
                           configMapKeyRef:
                               name: vas-aggregator-secrets
                               key: RABBITMQ_PORT
-                      - name: RABBITMQ_PASS
+                      - name: RABBITMQ_PASSWORD
                         valueFrom:
                           configMapKeyRef:
                               name: vas-aggregator-secrets
-                              key: RABBITMQ_PASS
+                              key: RABBITMQ_PASSWORD
                       - name: RABBITMQ_USER
                         valueFrom:
                           configMapKeyRef:
