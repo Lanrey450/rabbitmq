@@ -2,18 +2,19 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable camelcase */
 /* eslint-disable no-tabs */
+const TerraLogger = require('terra-logger')
 // MTN
 const SubscriptionModelMTN = require('../models/mtn/subscription')
 const UnSubscriptionModelMTN = require('../models/mtn/subscription')
 const PostbackModelMTN = require('../models/mtn/subscription')
 // AIRTEL
 const SubscriptionModelAIRTEL = require('../models/airtel/subscription')
-const UnSubscriptionModelAIRTEL = require('../models/airtel/unsubscription')
+const UnSubscriptionModelAIRTEL = require('../models/airtel/subscription')
 const PostbackModelAIRTEL = require('../models/airtel/postback')
 // NINE MOBILE
-const SubscriptionModelNINE_MOBILE = require('../models/mtn/subscription')
-const UnSubscriptionModelNINE_MOBILE = require('../models/mtn/subscription')
-const PostbackModelNINE_MOBILE = require('../models/mtn/subscription')
+const SubscriptionModelNINE_MOBILE = require('../models/9Mobile/subscription')
+const UnSubscriptionModelNINE_MOBILE = require('../models/9Mobile/subscription')
+const PostbackModelNINE_MOBILE = require('../models/9Mobile/subscription')
 
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
@@ -53,7 +54,6 @@ module.exports = {
 
 	// NINE MOBILE CONSUMERS
 	saveConsumedSubscriptionData9Mobile() {
-		console.log('!!!!!!!reaching consumer engine from 9mobile sub...!!!!!!!!!')
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.subscription_queue
 		const type = '9MOBILE'
@@ -75,43 +75,43 @@ module.exports = {
 
 function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 	consume(consumerQueue, async (err, msg) => {
-		console.log('!!!!!!!reaching consumer engine...!!!!!!!!!')
+		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
 		if (err) {
-			console.log(`rabbitmq connection failed! - ${err}`)
+			TerraLogger.debug(`rabbitmq connection failed! - ${err}`)
 			return
 		}
 		if (msg == null) {
-			console.log('the queue is empty at the moment ')
+			TerraLogger.debug('the queue is empty at the moment ')
 			return
 		}
 		if (msg != null && feedbackQueue != null) {
 			try {
 				msg.type = _type
 				await publish(feedbackQueue, msg)
-				console.log('Successfully pushed to feedback queue')
+				TerraLogger.debug('Successfully pushed to feedback queue')
 				msg.feedbackStatus = true
 				delete msg.type
 				try {
-					console.log(msg)
+					TerraLogger.debug(msg)
 					const data = await model.create(msg)
 					if (data) {
 						delete msg.feedbackStatus
-						console.log(`Successfully saved to db with flag TRUE! - ${data}`)
+						TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 					}
 				} catch (error) {
-					console.log(`unable to save data to mongodb - ${error}`)
+					TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 				}
 			} catch (feedbackPublishError) {
-				console.log(`unable to push feedback to queue${feedbackPublishError}`)
+				TerraLogger.debug(`unable to push feedback to queue${feedbackPublishError}`)
 				msg.feedbackStatus = false
 				try {
 					const data = await model.create(msg)
 					if (data) {
 						delete msg.feedbackStatus
-						console.log(`Successfully saved to db with flag FALSE! - ${data}`)
+						TerraLogger.debug(`Successfully saved to db with flag FALSE! - ${data}`)
 					}
 				} catch (error) {
-					console.log(`unable to save data to mongodb - ${error}`)
+					TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 				}
 			}
 			return
@@ -120,9 +120,9 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 			try {
 				msg.feedbackStatus = false
 				const data = await model.create(msg)
-				console.log(`Successfully saved to db! - ${data}`)
+				TerraLogger.debug(`Successfully saved to db! - ${data}`)
 			} catch (error) {
-				console.log(`unable to save data to mongodb - ${error}`)
+				TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 			}
 		}
 	})

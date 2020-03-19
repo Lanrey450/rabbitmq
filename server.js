@@ -35,7 +35,7 @@ const myService = {
 	NotificationToCPService: {
 	  NotificationToCP: {
 		async notificationToCP(args, cb) {
-		  console.log('notificationToCP', args)
+		  TerraLogger.debug('notificationToCP', args)
 		  await AirtelService.pushAirtelFeedbackToQueue(args)
 		  cb({})
 		},
@@ -88,10 +88,10 @@ app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
 	// Airtel postback endpoint(INCOMING FROM TELCO)
 	const soapUrl = '/airtelPostback'
-	console.log(`Airtel SOAP postback endpoint is : ${soapUrl}`)
+	TerraLogger.debug(`Airtel SOAP postback endpoint is : ${soapUrl}`)
 	const soapServer = soap.listen(app, soapUrl, myService, xml)
 	soapServer.log = function soapLog(type, data) {
-	  console.log(type, data)
+	TerraLogger.debug(type, data)
 	}
 })
 
