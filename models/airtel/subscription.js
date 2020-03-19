@@ -36,11 +36,20 @@ const subscriptionSchemaAirtel = new Schema({
   amount: {
     type: Number,
   },
+  lowBalance: {
+    type: String,
+  },
+  temp1: {
+    type: String,
+  },
+  temp2: {
+    type: String,
+  },
 }, {
   timestamps: true,
 })
 
 
-const SubscriptionModel = mongoose.model('subscription', subscriptionSchemaAirtel)
+const SubscriptionModel = mongoose.model('airtelsubscription', subscriptionSchemaAirtel)
 
 module.exports = SubscriptionModel
