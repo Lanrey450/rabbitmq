@@ -53,6 +53,11 @@ spec:
                           secretKeyRef:
                             name: vas-aggregator-subscription-billing-secrets
                             key: NINE_MOBILE_AGGREGATOR_PASSWORD
+                      - name: NINE_MOBILE_AGGREGATOR_ID
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: NINE_MOBILE_AGGREGATOR_ID
                       - name: MONGODB_DATABASE_NAME
                         valueFrom:
                           secretKeyRef:
@@ -103,11 +108,11 @@ spec:
                           configMapKeyRef:
                               name: vas-aggregator-secrets
                               key: RABBITMQ_PORT
-                      - name: RABBITMQ_PASS
+                      - name: RABBITMQ_PASSWORD
                         valueFrom:
                           configMapKeyRef:
                               name: vas-aggregator-secrets
-                              key: RABBITMQ_PASS
+                              key: RABBITMQ_PASSWORD
                       - name: RABBITMQ_USER
                         valueFrom:
                           configMapKeyRef:
