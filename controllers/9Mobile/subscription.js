@@ -38,10 +38,10 @@ module.exports = {
 			const requiredParams = ['msisdn', 'shortCode', 'serviceId']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
-			// save to redis(rediskey = keyword, and redisValue = serviceId)
-			  redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, serviceId, 'ex', 60 * 60 * 24) // save keyword for 24 hours
+			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
+			  redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, serviceId, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			  redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10)
+			  redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
@@ -53,7 +53,7 @@ module.exports = {
 				}
 				try {
 				Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
-				.then(console.log).catch(console.log)
+				.then(TerraLogger.debug).catch(TerraLogger.debug)
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
 				} catch (error) {
@@ -103,7 +103,7 @@ module.exports = {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
 						try {
-							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse.data })
+							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse.data, network: '9Mobile' })
 								.then((status) => {
 									TerraLogger.debug(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
 								return ResponseManager.sendResponse({

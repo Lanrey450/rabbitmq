@@ -189,7 +189,7 @@ module.exports = {
 				return response
 			})
 			.catch((error) => {
-				console.error(`Error attempting to unsubscribe user msisdn - ${msisdn}`, error)
+				TerraLogger.debug(`Error attempting to unsubscribe user msisdn - ${msisdn}`, error)
 				response.error = true
 				response.data = error
 				response.statusCode = error.statusCode
@@ -255,7 +255,7 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from airtel')
 		const data = req.body
 		TerraLogger.debug(data)
-		publish(config.rabbit_mq.airtel.postback_queue, data)
+		publish(config.rabbit_mq.airtel.postback_queue, { ...data.data, networ: 'Airtel' })
 			.then((status) => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				ResponseManager.sendResponse({

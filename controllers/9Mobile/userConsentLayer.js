@@ -26,7 +26,7 @@ async userConsent(req, res) {
 
     ResponseManager.sendResponse({
         res, 
-        message: 'Thank you!',
+        message: 'Thank you! Now go forth',
     })
 
     const requiredParams = ['msisdn', 'keyword', 'shortCode']
@@ -65,11 +65,11 @@ async userConsent(req, res) {
      } else if (keyword === '2') {
         try {
          const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2, network: '9Mobile'})
-         
+
             Utils.sendUserSuccessSMS(msisdn, '9Mobile').then(TerraLogger.debug).catch(TerraLogger.debug)
 
             if (data.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
-              await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data.data, renewable: false })
+              await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data.data, renewable: false, newtork: '9Mobile' })
              .then((status) => {
              TerraLogger.debug('successfully pushed postback data to queue', status)
              }).catch((err) => {

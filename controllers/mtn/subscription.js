@@ -57,7 +57,7 @@ module.exports = {
 					try {
 						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse.data, network: 'MTN'})
 							.then((status) => {
-								console.info(`successfully pushed to the MTN subscription data queue: ${status}`)
+								TerraLogger.debug(`successfully pushed to the MTN subscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
 									res,
 									message: 'Subscription was successful',
@@ -94,7 +94,7 @@ module.exports = {
 
 		if (missingFields.length != 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: 'Please pass the following parameters for request : ' + missingFields,
+				res, message: `Please pass the following parameters for request: ${missingFields}`,
 			})
 		}
 
