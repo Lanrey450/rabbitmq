@@ -9,7 +9,7 @@ const PostbackModelMTN = require('../models/mtn/subscription')
 // AIRTEL
 const SubscriptionModelAIRTEL = require('../models/airtel/subscription')
 const UnSubscriptionModelAIRTEL = require('../models/airtel/unsubscription')
-const PostbackModelAIRTEL = require('../models/mtn/subscription')
+const PostbackModelAIRTEL = require('../models/airtel/postback')
 // NINE MOBILE
 const SubscriptionModelNINE_MOBILE = require('../models/mtn/subscription')
 const UnSubscriptionModelNINE_MOBILE = require('../models/mtn/subscription')
