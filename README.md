@@ -5,6 +5,168 @@ Entities
 - global_subscription_and_billing_engine (GSBE) : that is this application
 - telcos (9mobile, Airtel and MTN)
 
+## Installation
+
+Ensure you have the below required softwares installed before you can configure aggregator_subscription_and_billing locally.
+
+- **Node** version >= 12.0.0
+- **npm** version >= 6.13.4
+- **mongodb**
+- **redis**
+---
+## Configuration
+After a successful installation of the above stated softwares, copy the below command to your terminal to clone the project 
+
+```bash
+git clone git@bitbucket.org:terragonengineering/aggregator_subscription_and_billing.git
+```
+After cloning the project, run the command below to install all the required node modules.
+
+```bash
+npm install
+```
+---
+## Contributors 
+**(Abass Makinde)** - <madekunle@terragonltd.com>
+
+**(Alex Alex)** - <alex@terragonltd.com>
+
+**(King Ariyo)** - <ariyo@terragonltd.com>
+
+---
+
+## Operating instruction
+To start this software, run the first command below, and to run in development mode you can run the second command.
+
+```bash
+npm start
+npm dev
+```
+In this project, there are several consumers, to run them, simply run the appropriate one with the commands below
+```bash
+npm run mtn_subscription
+npm run mtn_unsubscription
+npm run mtn_postback
+npm run airtel_subscription
+npm run airtel_unsubscription
+npm run airtel_postback
+npm run nine_mobile_subscription
+npm run nine_mobile_unsubscription
+npm run nine_mobile_postback
+```
+---
+### Known bugs
+- Some mongodb schemas for MTN are not known yet, it will be fixed as at due time.
+- Concurrent running of consumers is yet to be implemented.
+- MTN subscription part has not been fully tested, due to some telco configs to be done.
+
+---
+### Subscription & Billing Routes (They are all HTTP)
+Name                                         | Endpoint
+------------------------------------------- | -------------------------------------------
+(**GET**) Base endpoint                             | /subscription
+
+***sample response***
+```json
+Welcome to the Aggregator subscription and billing Engine
+```
+---
+
+#### Telco - Airtel
+
+Name                                         | Endpoint
+------------------------------------------- | -------------------------------------------
+(**POST**) Subscription request                             | /subscription/airtel/subscribe
+(**POST**) Unsubscription request                             | /subscription/airtel/unsubscribe
+(**GET**) Check Subscrition status                             | /subscription/airtel/status
+(**GET**) Postback call                             | /airtelPostback
+
+**Subscription request**
+
+Aggregator platform makes a subscription call to this API to subscribe for a product.
+
+***sample request***
+
+```json
+request goes here
+```
+
+***sample response***
+
+```json
+response goes here
+```
+
+
+**Unsubscription request**
+
+Aggregator platform makes a subscription call to this API to subscribe for a product.
+
+***sample request***
+
+```json
+request goes here
+```
+
+***sample response***
+
+```json
+response goes here
+```
+
+**Subscription status**
+
+Aggregator platform makes a subscription call to this API to subscribe for a product.
+
+***sample request***
+
+```json
+request goes here
+```
+
+***sample response***
+
+```json
+response goes here
+```
+
+**Postback call**
+
+Aggregator platform makes a subscription call to this API to subscribe for a product.
+
+***sample request***
+
+```json
+request goes here
+```
+
+***sample response***
+
+```json
+response goes here
+```
+---
+
+#### Telco - MTN
+
+Name                                         | Endpoint
+------------------------------------------- | -------------------------------------------
+(**POST**) Subscription request                             | /subscription/mtn/subscribe
+(**POST**) Unsubscription request                             | /subscription/mtn/unsubscribe
+(**GET**) Check Subscription request                             | /subscription/mtn/status
+(**POST**) Postback call                             | /subscription/mtnPostBack
+
+---
+
+#### Telco - 9Mobile
+
+Name                                         | Endpoint
+------------------------------------------- | -------------------------------------------
+(**GET**) Base endpoint                             | /subscription
+(**GET**) Base endpoint                             | /subscription
+(**GET**) Base endpoint                             | /subscription
+
+
 
 9Mobile Flow
 Action 1
