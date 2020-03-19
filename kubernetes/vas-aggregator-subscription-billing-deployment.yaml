@@ -53,6 +53,11 @@ spec:
                           secretKeyRef:
                             name: vas-aggregator-subscription-billing-secrets
                             key: NINE_MOBILE_AGGREGATOR_PASSWORD
+                      - name: NINE_MOBILE_AGGREGATOR_ID
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: NINE_MOBILE_AGGREGATOR_ID
                       - name: MONGODB_DATABASE_NAME
                         valueFrom:
                           secretKeyRef:
