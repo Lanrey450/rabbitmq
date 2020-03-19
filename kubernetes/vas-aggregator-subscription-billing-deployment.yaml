@@ -133,6 +133,11 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: AIRTEL_SE_AIRTEL_PORT
+                      - name: AIRTEL_SE_CLIENT_WSDL_PATH
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: AIRTEL_SE_CLIENT_WSDL_PATH
                       - name: MTN_SPID
                         valueFrom:
                           secretKeyRef:

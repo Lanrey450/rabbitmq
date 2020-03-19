@@ -101,6 +101,7 @@ module.exports = {
 		renew: 'renew',
 		suspended: 'suspended',
 	},
+	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	airtel_request_type: {
 		sub: 'sub',
 		unsub: 'unsub',

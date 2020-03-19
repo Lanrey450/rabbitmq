@@ -13,12 +13,17 @@ const bodyParser = require('body-parser')
 const TerraLogger = require('terra-logger')
 const cors = require('cors')
 const session = require('express-session')
+const fs = require('fs')
 
-const wsdl_path = process.env.AIRTEL_SE_CLIENT_WSDL_PATH
 const RedisStore = require('connect-redis')(session)
-const xml = require('fs').readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
-const routes = require('./routes')
+
 const config = require('./config')
+
+const { wsdl_path } = config
+
+const xml = fs.readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
+const routes = require('./routes')
+
 const redisClient = require('./redis')
 const AirtelService = require('./lib/airtel/subscription')
 require('./mongoClient')
