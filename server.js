@@ -78,13 +78,13 @@ app.get('/', (req, res) => {
 // add routes here
 routes(app)
 
-// // catch 404 and forward to error handler
-// app.use((req, res, next) => {
-// 	const err = new Error('Not Found')
-// 	TerraLogger.debug(err)
-// 	err.status = 404
-// 	next(err)
-// })
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+	const err = new Error('Not Found')
+	TerraLogger.debug(err)
+	err.status = 404
+	next(err)
+})
 
 app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
