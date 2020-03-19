@@ -28,6 +28,8 @@ const redisClient = require('./redis')
 const AirtelService = require('./lib/airtel/subscription')
 require('./mongoClient')
 
+require('./customHandler')
+
 const app = express()
 
 

@@ -102,6 +102,8 @@ module.exports = {
 		renew: 'renew',
 		suspended: 'suspended',
 	},
+	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
+	baseURL: env.ENGINE_BASE_URL,
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	airtel_request_type: {
 		sub: 'sub',
