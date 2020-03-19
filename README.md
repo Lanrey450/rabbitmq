@@ -36,7 +36,8 @@ npm install
 ---
 
 ## Operating instruction
-To start this software, run the first command below, and to run in development mode you can run the second command.
+- Dont't forget to create a `.env` file, update it with the content of `.env.example` file in the project   directory.
+- To start this software, run the first command below, and to run in development mode you can run the second command.
 
 ```bash
 npm start
