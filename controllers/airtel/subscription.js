@@ -251,25 +251,25 @@ module.exports = {
 	},
 
 
-	async airtelDataSyncPostBack(req, res) {
-		TerraLogger.debug('getting data sync feedback from airtel')
-		const data = req.body
-		TerraLogger.debug(data)
-		publish(config.rabbit_mq.airtel.postback_queue, data)
-			.then((status) => {
-				TerraLogger.debug('successfully pushed postback data to queue')
-				ResponseManager.sendResponse({
-					res,
-					message: 'ok',
-					responseBody: status,
-				})
-			}).catch((err) => {
-				ResponseManager.sendErrorResponse({
-					res,
-					message: 'unable to push postback data to queue',
-					responseBody: err,
-				})
-			})
-	},
+	// async airtelDataSyncPostBack(req, res) {
+	// 	TerraLogger.debug('getting data sync feedback from airtel')
+	// 	const data = req.body
+	// 	TerraLogger.debug(data)
+	// 	publish(config.rabbit_mq.airtel.postback_queue, data)
+	// 		.then((status) => {
+	// 			TerraLogger.debug('successfully pushed postback data to queue')
+	// 			ResponseManager.sendResponse({
+	// 				res,
+	// 				message: 'ok',
+	// 				responseBody: status,
+	// 			})
+	// 		}).catch((err) => {
+	// 			ResponseManager.sendErrorResponse({
+	// 				res,
+	// 				message: 'unable to push postback data to queue',
+	// 				responseBody: err,
+	// 			})
+	// 		})
+	// },
 
 }
