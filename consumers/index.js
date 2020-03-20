@@ -58,13 +58,8 @@ module.exports = {
 	saveConsumedPostbackDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.postback_queue
-<<<<<<< HEAD
 		const type = 'AIRTEL'
 		consumeHandler(feedbackQueue, queue, PostbackModelAIRTEL, type)
-=======
-		consumeHandler(null, queue, PostbackModelAIRTEL)
-		// TODO
->>>>>>> 4cb408e4f6aba95e701d614bf1e7cff5d032d651
 	},
 
 	// NINE MOBILE CONSUMERS
