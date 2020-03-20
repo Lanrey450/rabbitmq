@@ -103,7 +103,7 @@ module.exports = {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
 						try {
-							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse.data })
+							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse })
 								.then((status) => {
 									TerraLogger.debug(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
 								return ResponseManager.sendResponse({

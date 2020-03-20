@@ -55,7 +55,7 @@ module.exports = {
 						})
 					}
 					try {
-						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse.data })
+						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
 							.then((status) => {
 								TerraLogger.debug(`successfully pushed to the MTN subscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
@@ -125,7 +125,7 @@ module.exports = {
 						})
 					}
 					try {
-						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...UnSubscribedResponse.data })
+						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...UnSubscribedResponse })
 							.then((status) => {
 								TerraLogger.debug(`successfully pushed to the MTN unsubscription data queue: ${status}`)
 								return ResponseManager.sendResponse({
@@ -196,7 +196,7 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from mtn')
 		const data = req.body
 		TerraLogger.debug(data)
-		await publish(config.rabbit_mq.mtn.postback_queue, { ...data.data })
+		await publish(config.rabbit_mq.mtn.postback_queue, { ...data })
 			.then((status) => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({
