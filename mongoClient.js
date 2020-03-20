@@ -33,7 +33,7 @@ mongoose.set('debug', true)
 
 TerraLogger.debug("MONGO_DB_FULL_URL", defaultUrl)
 
-mongoose.connect('mongodb://localhost:27017/subscription_billing', { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => TerraLogger.debug(err)) 
+mongoose.connect(defaultConfig, { useNewUrlParser: true, useCreateIndex: true }).catch( (err) => TerraLogger.debug(err)) 
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on("connected", () => {
