@@ -28,6 +28,8 @@ const redisClient = require('./redis')
 const AirtelService = require('./lib/airtel/subscription')
 require('./mongoClient')
 
+require('./customHandler')
+
 const app = express()
 
 
@@ -35,9 +37,15 @@ const myService = {
 	NotificationToCPService: {
 	  NotificationToCP: {
 		async notificationToCP(args, cb) {
+<<<<<<< HEAD
 			TerraLogger.debug('Feedback from Airtel = ', args)
 			await AirtelService.pushAirtelFeedbackToQueue(args)
 			cb({})
+=======
+		  TerraLogger.debug('Feedback from Airtel = ', args)
+		  await AirtelService.pushAirtelPostbackToQueue(args)
+		  cb({})
+>>>>>>> 4cb408e4f6aba95e701d614bf1e7cff5d032d651
 		},
 	  },
 	},
@@ -76,13 +84,13 @@ app.get('/', (req, res) => {
 // add routes here
 routes(app)
 
-// // catch 404 and forward to error handler
-// app.use((req, res, next) => {
-// 	const err = new Error('Not Found')
-// 	TerraLogger.debug(err)
-// 	err.status = 404
-// 	next(err)
-// })
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+	const err = new Error('Not Found')
+	TerraLogger.debug(err)
+	err.status = 404
+	next(err)
+})
 
 app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)

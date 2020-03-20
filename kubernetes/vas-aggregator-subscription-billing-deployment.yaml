@@ -33,6 +33,16 @@ spec:
                           secretKeyRef:
                             name: vas-aggregator-subscription-billing-secrets
                             key: NINE_MOBILE_AGGREGATOR_BASEURL
+                      - name: APP_BASE_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: APP_BASE_URL
+                      - name: INTERNAL_SECURITY_TOKEN
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: INTERNAL_SECURITY_TOKEN
                       - name: APP_NAME
                         valueFrom:
                           secretKeyRef:
