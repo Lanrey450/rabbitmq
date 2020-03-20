@@ -64,7 +64,7 @@ async userConsent(req, res) {
          }
      } else if (keyword === '2') {
         try {
-         const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2, network: '9Mobile'})
+         const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2 })
 
             Utils.sendUserSuccessSMS(msisdn, '9Mobile').then(TerraLogger.debug).catch(TerraLogger.debug)
 
