@@ -30,10 +30,16 @@ module.exports = {
 		consumeHandler(feedbackQueue, queue, SubscriptionModelMTN, type)
 	},
 	saveConsumedUnSubscriptionDataMTN() {
-		consumeHandler(null, config.rabbit_mq.mtn.un_subscription_queue, UnSubscriptionModelMTN)
+		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
+		const type = 'MTN'
+		const queue = config.rabbit_mq.mtn.un_subscription_queue
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelMTN, type)
 	},
 	saveConsumedPostbackDataMTN() {
-		consumeHandler(null, config.rabbit_mq.mtn.postback_queue, PostbackModelMTN)
+		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
+		const type = 'MTN'
+		const queue = config.rabbit_mq.mtn.postback_queue
+		consumeHandler(feedbackQueue, queue, PostbackModelMTN, type)
 	},
 
 	// AIRTEL CONSUMERS
@@ -44,12 +50,16 @@ module.exports = {
 		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type)
 	},
 	saveConsumedUnsubscriptionDataAIRTEL() {
-		const queue = config.rabbit_mq.airtel.postback_queue
-		consumeHandler(null, queue, UnSubscriptionModelAIRTEL)
+		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
+		const queue = config.rabbit_mq.airtel.un_subscription_queue
+		const type = 'AIRTEL'
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelAIRTEL, type)
 	},
 	saveConsumedPostbackDataAIRTEL() {
+		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.postback_queue
-		consumeHandler(null, queue, PostbackModelAIRTEL)
+		const type = 'AIRTEL'
+		consumeHandler(feedbackQueue, queue, PostbackModelAIRTEL, type)
 	},
 
 	// NINE MOBILE CONSUMERS

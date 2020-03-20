@@ -35,9 +35,9 @@ const myService = {
 	NotificationToCPService: {
 	  NotificationToCP: {
 		async notificationToCP(args, cb) {
-		  TerraLogger.debug('Feedback from Airtel = ', args)
-		  await AirtelService.pushAirtelFeedbackToQueue(args)
-		  cb({})
+			TerraLogger.debug('Feedback from Airtel = ', args)
+			await AirtelService.pushAirtelFeedbackToQueue(args)
+			cb({})
 		},
 	  },
 	},
