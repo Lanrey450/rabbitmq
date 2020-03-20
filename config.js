@@ -86,7 +86,6 @@ module.exports = {
 		},
 		allowed_channels: ['SMS', 'WEB', 'USSD', 'IVR', 'MAMO', 'WAP', 'OBD'],
 	},
-	keywordConfig: ['SOCCERTIPS', 'PLAYZONE', 'SRS'],
 	se_soap_wsdl_files: {
 		CallSubscription: 'CallSubscription.wsdl',
 		HTSubscriptionServices: 'HTSubscriptionServices.wsdl',
