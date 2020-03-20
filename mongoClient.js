@@ -8,7 +8,7 @@
 /* eslint-disable no-tabs */
 const mongoose = require('mongoose')
 const TerraLogger = require('terra-logger')
-const debug = require('debug')('mongodb')
+
 const config = require('./config')
 
 

@@ -7,7 +7,6 @@ const TerraLogger = require('terra-logger')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
-const publish = require('../../rabbitmq/producer')
 
 
 const Utils = require('../../lib/utils')
@@ -189,7 +188,7 @@ module.exports = {
 				return response
 			})
 			.catch((error) => {
-				console.error(`Error attempting to unsubscribe user msisdn - ${msisdn}`, error)
+				TerraLogger.debug(`Error attempting to unsubscribe user msisdn - ${msisdn}`, error)
 				response.error = true
 				response.data = error
 				response.statusCode = error.statusCode
@@ -249,27 +248,4 @@ module.exports = {
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
-
-
-	// async airtelDataSyncPostBack(req, res) {
-	// 	TerraLogger.debug('getting data sync feedback from airtel')
-	// 	const data = req.body
-	// 	TerraLogger.debug(data)
-	// 	publish(config.rabbit_mq.airtel.postback_queue, data)
-	// 		.then((status) => {
-	// 			TerraLogger.debug('successfully pushed postback data to queue')
-	// 			ResponseManager.sendResponse({
-	// 				res,
-	// 				message: 'ok',
-	// 				responseBody: status,
-	// 			})
-	// 		}).catch((err) => {
-	// 			ResponseManager.sendErrorResponse({
-	// 				res,
-	// 				message: 'unable to push postback data to queue',
-	// 				responseBody: err,
-	// 			})
-	// 		})
-	// },
-
 }

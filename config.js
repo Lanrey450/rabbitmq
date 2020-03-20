@@ -86,7 +86,6 @@ module.exports = {
 		},
 		allowed_channels: ['SMS', 'WEB', 'USSD', 'IVR', 'MAMO', 'WAP', 'OBD'],
 	},
-	keywordConfig: ['SOCCERTIPS', 'PLAYZONE', 'SRS'],
 	se_soap_wsdl_files: {
 		CallSubscription: 'CallSubscription.wsdl',
 		HTSubscriptionServices: 'HTSubscriptionServices.wsdl',
@@ -101,6 +100,8 @@ module.exports = {
 		renew: 'renew',
 		suspended: 'suspended',
 	},
+	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
+	baseURL: env.APP_BASE_URL,
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	airtel_request_type: {
 		sub: 'sub',

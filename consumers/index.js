@@ -50,6 +50,7 @@ module.exports = {
 	saveConsumedPostbackDataAIRTEL() {
 		const queue = config.rabbit_mq.airtel.postback_queue
 		consumeHandler(null, queue, PostbackModelAIRTEL)
+		// TODO
 	},
 
 	// NINE MOBILE CONSUMERS
