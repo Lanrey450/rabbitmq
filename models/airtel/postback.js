@@ -34,7 +34,7 @@ const postbackSchema = new Schema({
 		required: true,
 	},
 	amount: {
-		type: Float64Array,
+		type: String,
 		required: true,
 	},
 	chargigTime: {
