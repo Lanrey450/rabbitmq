@@ -21,11 +21,13 @@ const config = require('./config')
 
 const { wsdl_path } = config
 
+const publish = require('./rabbitmq/producer')
+
 const xml = fs.readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
 const routes = require('./routes')
 
 const redisClient = require('./redis')
-const AirtelService = require('./lib/airtel/subscription')
+
 require('./mongoClient')
 
 require('./customHandler')
@@ -36,10 +38,12 @@ const app = express()
 const myService = {
 	NotificationToCPService: {
 	  NotificationToCP: {
-		async notificationToCP(args, cb) {
-			TerraLogger.debug('Feedback from Airtel = ', args)
-			await AirtelService.pushAirtelPostbackToQueue(args)
-			cb({})
+		async notificationToCP(args) {
+			TerraLogger.debug('Feedback from Airtel = ', args.notificationRespDTO)
+			return publish(config.rabbit_mq.airtel.postback_queue, { ...args.notificationRespDTO, network: 'Airtel' })
+				.then(() => {
+					TerraLogger.debug(`pushed feedback data to queue: ${config.rabbit_mq.airtel.postback_queue}  `)
+				})
 		},
 	  },
 	},
@@ -66,6 +70,8 @@ app.use(TerraLogger.requestHandler)
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
+// app.use(bodyParser.raw({ type() { return true }, limit: '5mb' }))
+
 // parse application/json
 app.use(bodyParser.json())
 
@@ -74,6 +80,8 @@ app.get('/', (req, res) => {
 	// eslint-disable-next-line no-tabs
 	res.status(200).send('Welcome to the Aggregator subscription and billing Engine')
 })
+
+// const soapUrl = app.post('/airtelPostback')
 
 // add routes here
 routes(app)
@@ -86,15 +94,24 @@ app.use((req, res, next) => {
 	next(err)
 })
 
-app.listen(config.port, () => {
+const server = app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
-	// Airtel postback endpoint(INCOMING FROM TELCO)
-	const soapUrl = '/airtelPostback'
-	TerraLogger.debug(`Airtel SOAP postback endpoint is : ${soapUrl}`)
-	const soapServer = soap.listen(app, soapUrl, myService, xml)
-	soapServer.log = function soapLog(type, data) {
-	TerraLogger.debug(type, data)
-	}
 })
+
+app.use(bodyParser.raw({
+	type() {
+	  return true
+	},
+	// limit: config.body_parser_limit,
+  }))
+
+
+// Airtel postback endpoint(INCOMING FROM TELCO)
+const soapUrl = '/airtelPostback'
+TerraLogger.debug(`Airtel SOAP postback endpoint is : ${soapUrl}`)
+const soapServer = soap.listen(server, soapUrl, myService, xml)
+soapServer.log = (type, data) => {
+TerraLogger.debug(type, data)
+}
 
 module.exports = app
