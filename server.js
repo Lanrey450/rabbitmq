@@ -70,7 +70,6 @@ app.use(TerraLogger.requestHandler)
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// app.use(bodyParser.raw({ type() { return true }, limit: '5mb' }))
 
 // parse application/json
 app.use(bodyParser.json())
@@ -81,7 +80,6 @@ app.get('/', (req, res) => {
 	res.status(200).send('Welcome to the Aggregator subscription and billing Engine')
 })
 
-// const soapUrl = app.post('/airtelPostback')
 
 // add routes here
 routes(app)
