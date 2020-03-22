@@ -100,7 +100,6 @@ app.use(bodyParser.raw({
 	type() {
 	  return true
 	},
-	// limit: config.body_parser_limit,
   }))
 
 
