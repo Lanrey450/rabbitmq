@@ -103,10 +103,14 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 				delete msg.type
 				try {
 					TerraLogger.debug(msg)
+					// TODO
 					const data = await model.create(msg)
+					// fix saving to DB
 					if (data) {
 						delete msg.feedbackStatus
 						TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
+					}else{
+						TerraLogger.debug('Failed to save to db')
 					}
 				} catch (error) {
 					TerraLogger.debug(`unable to save data to mongodb - ${error}`)
