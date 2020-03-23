@@ -24,16 +24,16 @@ const defaultConfig = {
 
 
 // switch when deploying for production envs
-const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
+// const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
 
 //  local dev
-// const defaultUrl = defaultConfig.url
+const defaultUrl = defaultConfig.url
 
 mongoose.set('debug', true)
 
 TerraLogger.debug("MONGO_DB_FULL_URL", defaultUrl)
 
-mongoose.connect(defaultUrl, { useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology: true }).catch( (err) => TerraLogger.debug(err)) 
+mongoose.connect(defaultUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).catch( (err) => TerraLogger.debug(err)) 
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on("connected", () => {

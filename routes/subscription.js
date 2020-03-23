@@ -45,7 +45,7 @@ route.get('/airtel/status', asyncHandler((req, res) => AirtelSubscriptionControl
 
 
 // Airtel postback (INCOMING FROM TELCO)
-// A soap request postback endpoint '/airtelPostback' being handled in server.js file
+// Airtel soap request postback endpoint '/airtelPostback' being handled in server.js file
 
 // MTN sub
 route.post('/mtn/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)))
