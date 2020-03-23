@@ -63,7 +63,7 @@ module.exports = {
 				}
 				return this.subscribeUser(airtelReqBody)
 					.then((response) => {
-						TerraLogger.slack(response)
+						TerraLogger.debug(response)
 						if (response.error) {
 							return ResponseManager.sendErrorResponse({ res, message: response.message })
 						}
