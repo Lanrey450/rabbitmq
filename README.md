@@ -378,7 +378,7 @@ response goes here
 
 **Postback call**
 
-Postback feedback incoming from TELCO -Airtel
+Postback feedback incoming from TELCO -MTN
 
 ***sample request***
 
