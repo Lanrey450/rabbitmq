@@ -413,9 +413,9 @@ sample subscription call - ```http://staging-vas-aggregator-subscription-billing
 
 ```json
 {
-	"msisdn":"09020327785",
-	"channel": "sms",
-	"productId": "8202"
+    "msisdn": "2348094195020",
+    "shortCode": "64602",
+    "serviceId": "NOVAJI_05-9JADEC20"
 }
 ```
 
@@ -439,9 +439,9 @@ sample unsubscription call - ```http://staging-vas-aggregator-subscription-billi
 
 ```json
 {
-	"msisdn":"09020327785",
-	"channel": "sms",
-	"productId": "8202"
+	"msisdn":"2349098633488",
+	"channel": "USSD",
+	"serviceId": "TERRAGON_05-SBOU2"
 }
 ```
 
