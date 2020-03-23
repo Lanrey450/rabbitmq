@@ -10,7 +10,6 @@
 
 const TerraLogger = require('terra-logger')
 const config = require('../../config')
-const redis = require('../../redis')
 const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
 
@@ -46,14 +45,14 @@ async userConsent(req, res) {
  
         try {
     
-        const data = await subscribeUser.subscribe({userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 1 })
+        const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 1 })
         
-             Utils.sendUserSuccessSMS(msisdn, '9Mobile').then(TerraLogger.debug).catch(TerraLogger.debug)
+             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
 
              if (data.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
                 await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, renewable: true })
-                .then((status) => {
-                TerraLogger.debug('successfully pushed subscription data to queue', status)
+                .then(() => {
+                TerraLogger.debug('successfully pushed subscription data to queue')
             }).catch((err) => {
                 TerraLogger.debug(err)
             })
@@ -66,19 +65,19 @@ async userConsent(req, res) {
         try {
          const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2 })
 
-            Utils.sendUserSuccessSMS(msisdn, '9Mobile').then(TerraLogger.debug).catch(TerraLogger.debug)
+            Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
 
             if (data.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
-              await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, renewable: false })
-             .then((status) => {
-             TerraLogger.debug('successfully pushed postback data to queue', status)
+              return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, renewable: false })
+             .then(() => {
+             TerraLogger.debug('successfully pushed postback data to queue')
              }).catch((err) => {
              TerraLogger.debug(err)
          }) 
         }
          } catch (error) {
              TerraLogger.debug(error)
-            Utils.sendUserErrorSMS(msisdn, '9Mobile').then(TerraLogger.debug).catch(TerraLogger.debug)
+            Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
          }
      }    
      } catch (error) {

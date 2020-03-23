@@ -48,7 +48,7 @@ module.exports = {
 
 				if (missingFields.length !== 0){
 					return ResponseManager.sendErrorResponse({
-						res, message: `Please pass the following parameters for request ${missingFields}`,
+						res, message: `Please pass the following parameters for post request ${missingFields}`,
 					})
 				}
 				try {
@@ -76,7 +76,7 @@ module.exports = {
 
 		if (missingFields.length !== 0){
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for post request:  ${missingFields}`,
 			})
 		}
 
@@ -88,9 +88,8 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			// eslint-disable-next-line max-len
-			// eslint-disable-next-line eqeqeq
-			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
+
+			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
 					const nineMobileReqBody = {
 						userIdentifier: req.body.msisdn,
@@ -103,30 +102,27 @@ module.exports = {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
 						// push subscription data to queue
 						try {
-							await publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse })
-								.then((status) => {
-									TerraLogger.debug(`successfully pushed to the 9MOBILE unsubscription data queue: ${status}`)
+							return publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse })
+								.then(() => {
+									TerraLogger.debug('successfully pushed to the 9MOBILE unsubscription data queue')
 								return ResponseManager.sendResponse({
 										res,
-										message: 'Unsubscription was successful',
 										responseBody: unsubscriptionResponse,
 									})
 								})
 						} catch (err) {
+							TerraLogger.debug(err)
 							return	ResponseManager.sendErrorResponse({
 								res,
-								message: 'unable to push unsubscription data to queue',
-								responseBody: err,
+								message: `unable to push unsubscription data to queue :: ${err}`,
 							})
 						}
 					}
 				} catch (error) {
+					TerraLogger.debug(error)
 					return ResponseManager.sendErrorResponse({ res,
-					message: 'unsubscription failed',
-					responseBody: {
-						error: true,
 						message: error.message,
-					} })
+					 })
 				}
 		}
 		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -144,7 +140,7 @@ module.exports = {
 
 		if (missingFields.length !== 0){
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for query request: ${missingFields}`,
 			})
 		}
 
@@ -168,15 +164,13 @@ module.exports = {
 					const response = await NineMobileApi.status(nineMobileReqQuery)
 					return ResponseManager.sendResponse({
 						res,
-						responseBody: response.data,
+						responseBody: response,
 					})
 				} catch (error) {
+					TerraLogger.debug(error)
 					return ResponseManager.sendErrorResponse({
 						res,
-						responseBody: {
-                            error: true,
-                            message: error.message,
-                        },
+                        message: error.message,
 					})
 				}
 			}

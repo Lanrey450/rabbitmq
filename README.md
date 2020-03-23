@@ -1,7 +1,7 @@
 ## AGGREGATOR BILLING AND CHARGING API
 
 Entities
-- aggregator_platform (AG) : this calls our endpoints to subscribe users and bill
+- aggregator_platform (AG) :  This calls our endpoints to subscribe and charge users on MTN, Airtel and 9Mobile
 - global_subscription_and_billing_engine (GSBE) : that is this application
 - telcos (9mobile, Airtel and MTN)
 
@@ -37,7 +37,7 @@ npm install
 
 ## Operating instruction
 - Authorization is needed for this software, it can be found in postman collection (username & password)
-- Dont't forget to create a `.env` file, update it with the content of `.env.example` file in the project   directory.
+- Dont't forget to create a `.env` file, update it with the content of `.env.example` file in the project directory.
 - To start this software, run the first command below, and to run in development mode you can run the second command.
 
 ```bash
@@ -87,7 +87,7 @@ Name                                         | Endpoint
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - ```http://localhost:{{port}}/subscription/airtel/subscribe```
+Sample subscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/airtel/subscribe```
 
 ***sample request***
 
@@ -102,7 +102,23 @@ sample subscription call - ```http://localhost:{{port}}/subscription/airtel/subs
 ***sample response***
 
 ```json
-response goes here
+{
+    "data": {
+        "error": false,
+        "response": {
+            "msisdn": "09020327785",
+            "productId": "8202",
+            "amount": 50,
+            "status": "active",
+            "type": "sub",
+            "chargingTime": "2020-03-23T03:27:18.000Z",
+            "transactionId": "-96824512",
+            "channel": "sms"
+        }
+    },
+    "status": true,
+    "message": "success"
+}
 ```
 
 
@@ -110,7 +126,7 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - ```http://localhost:{{port}}/subscription/airtel/unsubscribe```
+sample unsubscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/airtel/unsubscribe```
 
 ***sample request***
 
@@ -125,23 +141,47 @@ sample unsubscription call - ```http://localhost:{{port}}/subscription/airtel/un
 ***sample response***
 
 ```json
-response goes here
+{
+    "data": {
+        "error": false,
+        "message": "Unsubscription was successful",
+        "response": {
+            "msisdn": "09020327785",
+            "productId": "8202",
+            "status": "inactive",
+            "type": "unsub",
+            "chargingTime": "2020-03-23T03:36:42.000Z",
+            "amount": "0.0",
+            "transactionId": "-96821323",
+            "message": "Successful Deprovisioning",
+            "lowBalance": "0.0",
+            "temp1": "124",
+            "temp2": "12788080565",
+            "channel": "sms"
+        }
+    },
+    "status": true,
+    "message": "success"
+}
 ```
 
 **Subscription status**
 
-Aggregator platform makes a subscription call to this API to subscribe for a product.
+Aggregator platform makes a subscription call to this API to check the status of a user subsription for a product.
 
 ***sample request***
 
 ```json
-request goes here
+`http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/airtel/status?msisdn=09020327785&productId=8202`
 ```
 
 ***sample response***
 
 ```json
-response goes here
+{
+    "data": "active,
+    "status": true,
+}
 ```
 
 **Postback call**
@@ -244,7 +284,27 @@ Postback feedback incoming from TELCO -Airtel
 ***sample response***
 
 ```json
-response goes here
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:name="ariyo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sub="http://SubscriptionEngine.ibm.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sub:notificationToCP>
+         <notificationRespDTO>
+            <xactionId>0</xactionId>
+            <errorCode>1</errorCode>
+            <errorMsg>Success</errorMsg>
+            <temp1>33</temp1>
+            <temp2>0</temp2>
+            <temp3>0</temp3>
+            <lowBalance>0.0</lowBalance>
+            <amount>1.0</amount>
+            <chargigTime>2011-10-04T15:45:40.890Z</chargigTime>
+            <msisdn>9999999999</msisdn>
+            <productId>111</productId>
+         </notificationRespDTO>
+      </sub:notificationToCP>
+   </soapenv:Body>
+</soapenv:Envelope>
 ```
 ---
 
@@ -261,14 +321,14 @@ Name                                         | Endpoint
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - ```http://localhost:{{port}}/subscription/mtn/subscribe```
+sample subscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/mtn/subscribe```
 
 ***sample request***
 
 ```json
 {
-	"msisdn": "2348066441262",
-	"product_id": "wsdzfcszfedfafewa"
+	"msisdn": "07064235801",
+	"product_id": "23401220000028103"
 }
 ```
 
@@ -283,14 +343,14 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - ```http://localhost:{{port}}/subscription/mtn/unsubscribe```
+sample unsubscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/mtn/unsubscribe```
 
 ***sample request***
 
 ```json
 {
-	"msisdn": "2348066441262",
-	"product_id": "wsdzfcszfedfafewa"
+	"msisdn": "07064235801",
+	"product_id": "23401220000028103"
 }
 ```
 
@@ -307,7 +367,7 @@ Aggregator platform makes a subscription call to this API to subscribe for a pro
 ***sample request***
 
 ```json
-request goes here
+`http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/mtn/status?msisdn=07064235801&productId=23401220000028103`
 ```
 
 ***sample response***
@@ -318,7 +378,7 @@ response goes here
 
 **Postback call**
 
-Postback feedback incoming from TELCO -Airtel
+Postback feedback incoming from TELCO -MTN
 
 ***sample request***
 
@@ -335,32 +395,37 @@ response goes here
 
 #### Telco - 9Mobile
 
+
 Name                                         | Endpoint
 ------------------------------------------- | -------------------------------------------
-(**GET**) Base endpoint                             | /subscription
-(**GET**) Base endpoint                             | /subscription
-(**GET**) Base endpoint                             | /subscription
+(**POST**) Subscription request                             | subscription/nineMobile/subscribe
+(**POST**) Unsubscription request                             | subscription/nineMobile/unsubscribe
+(**POST**) Charge(sync/async) request                         |  /subscription/nineMobile/billing/async
+(**GET**) Check Subscription status                             | /subscription/nineMobile/status
 
 **Subscription request**
 
 Aggregator platform makes a subscription call to this API to subscribe for a product.
 
-sample subscription call - ```http://localhost:{{port}}/subscription/airtel/subscribe```
+sample subscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/nineMobile/subscribe```
 
 ***sample request***
 
 ```json
 {
-	"msisdn":"09020327785",
-	"channel": "sms",
-	"productId": "8202"
+    "msisdn": "2348094195020",
+    "shortCode": "64602",
+    "serviceId": "NOVAJI_05-9JADEC20"
 }
 ```
 
 ***sample response***
 
 ```json
-response goes here
+{
+    "status": true,
+    "message": "Consent message successfully sent to the user with msisdn, 2348094195020"
+}
 ```
 
 
@@ -368,22 +433,36 @@ response goes here
 
 Aggregator platform makes a unsubscription call to this API to unsubscribe for a product.
 
-sample unsubscription call - ```http://localhost:{{port}}/subscription/airtel/unsubscribe```
+sample unsubscription call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/nineMobile/unsubscribe```
 
 ***sample request***
 
 ```json
 {
-	"msisdn":"09020327785",
-	"channel": "sms",
-	"productId": "8202"
+	"msisdn":"2349098633488",
+	"channel": "USSD",
+	"serviceId": "TERRAGON_05-SBOU2"
 }
 ```
 
 ***sample response***
 
-```json
-response goes here
+```{
+    "data": {
+        "message": "null",
+        "inError": false,
+        "requestId": "26:1584940767418",
+        "code": "SUCCESS",
+        "responseData": {
+            "transactionId": "ijordan2020203620260000023",
+            "externalTxId": "ijordan2020203620260000023",
+            "subscriptionResult": "OPTOUT_CANCELED_OK",
+            "subscriptionError": "Optout one success"
+        }
+    },
+    "status": true,
+    "message": "success"
+}
 ```
 
 **Subscription status**
@@ -393,13 +472,46 @@ Aggregator platform makes a subscription call to this API to subscribe for a pro
 ***sample request***
 
 ```json
-request goes here
+`http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/nineMobile/status?msisdn=2349098633488&channel=USSD&serviceId=TERRAGON_05-SBOU20`
 ```
 
 ***sample response***
 
 ```json
-response goes here
+{
+    "data": {
+        "inError": false,
+        "code": "SUCCESS",
+        "responseData": {
+            "subStartDate": "2020-03-23 06:15:09.91",
+            "subscriptionStatus": "CANCELED"
+        }
+    },
+    "status": true,
+    "message": "success"
+}
+```
+
+**Charging request**
+
+Aggregator platform makes a charging call to this API to charge a user after successful subscription to a product.
+
+sample charging call - ```http://staging-vas-aggregator-subscription-billing.terragonbase.com/subscription/nineMobile/billing/async```
+
+***sample request***
+
+```json
+{
+    "msisdin": "2348093597076",
+    "serviceId": "TERRAGON_05-FBALL20"
+}
+
+
+```
+***sample response***
+
+```json
+
 ```
 
 **Postback call**
@@ -422,21 +534,20 @@ response goes here
 9Mobile Flow
 Action 1
     - AG calls "/nineMobile/subscribe" to initiate a subscription
-        - we send out an sms MT to the user via the shortcode telling the user the keyword to reply with to start the process
+        - we send out an sms MT to the user via the shortcode telling the user the keyword (either 1 for auto-renewal or 2 for one-off) to reply with, for the subscription to happen
 
-    - 9Mobile calls "/nineMobile/sms/mo" with the message sent by the user to the shortcode and we reply by sending sms MT messages to the user. This process is iterrative till consent portion is done
+    - 9Mobile then calls "/nineMobile/sms/mo" vai the gateway with the message sent by the user to the shortcode...This process is iterrative till consent portion is done
         - once consent is done we make a sync call to 9mobile's subscription endpoint to subscribe user and then send the response we get to a queue (nineMobile_subscription_queue)
-        - a consumer gets the response and sends to the ******aggregator_subscription_feedback_queue, adds a new param to the data which tells us if the send to the url was successful and then saves the data to DB
+        - a consumer gets the response and sends to the ******aggregator_subscription_feedback_queue, adds a flag to the data which tells us if the send to the url was successful and then saves the data to DB
 
     - after AG gets their feedback on aggregator_subscription_feedback_url, they call our "/nineMobile/billing/sync" or "/nineMobile/billing/async" endpoint to charge user and then we call the 9mobile's charge endpoint
         - when using "/nineMobile/charge/sync", an immediate response is given to AG from response gotten from 9mobile
         - when using "/nineMobile/charge/async", we make the call and give AG an initial feedback
             - 9mobile calls our "/nineMobilePostBack" endpoint, we send the data to a queue(nineMobile_postback_queue)
-            - a consumer gets the data from the queue and sends to the ******aggregator_billing_feedback_queue, adds a new param to the data which tells us if the send to the url was successful and then saves the data to DB
+            - a consumer gets the data from the queue and sends to the ******aggregator_billing_feedback_queue, adds a flag to the data which tells us if the send to the url was successful and then saves the data to DB
 
 
-Airtel Flow
 
-NB - All feedbacks for subscription across all telcos go to a queue(aggregator_subscription_feedback_queue) with a new param in data eg "telco : MTN"
+NB - All feedback for subscription and unsubscription across all telcos goes to a queue (aggregator_subscription_feedback_queue) with a new param in the payload - "Network": "Airtel". Same goes for the billing queue (aggregator_billing_feedback_queue).
 
-same goes for billing queue (aggregator_billing_feedback_queue)
+For a more indept description of this API, please check the wiki...

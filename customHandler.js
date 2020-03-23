@@ -17,5 +17,5 @@ const INTERNAL_SECURITY_TOKEN = config.internalSecurityToken;
 	axios.defaults.headers.common['internal-security-token'] = secKey
 	global.alphaToken = secKey
 	return secKey
-})().catch(console.log)
-	.then(console.log)
+})().catch(TerraLogger.debug)
+	.then(TerraLogger.debug)

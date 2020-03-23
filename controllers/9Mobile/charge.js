@@ -18,7 +18,7 @@ module.exports = {
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for post request: ${missingFields}`,
 			})
 		}
 		const authDetails = auth.split(' ')
@@ -36,29 +36,27 @@ module.exports = {
 					context: 'STATELESS',
 				}
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
-				// const data = {sample:"sample"}
-				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
-					.then((status) => {
+
+				await publish(config.rabbit_mq.nineMobile.subscription_queue, data)
+					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
-							message: data,
-							responseBody: status,
+							responseBody: data,
 						})
 					}).catch((err) => ResponseManager.sendErrorResponse({
 						res,
-						message: 'unable to push charging data to queue',
-						responseBody: {
-							error: true,
-							message: err.message,
-						},
+						message: err.message,
 					}))
 			} catch (error) {
-				return ResponseManager.sendErrorResponse({ res, message: `Unable reach 9mobile server - ${error}` })
+				TerraLogger.debug(error)
+				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach the 9mobile server - ${error}` })
 			}
 		}
 		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
+
+
 	async chargeAsync(req, res) {
 		const auth = req.headers.authorization
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
@@ -68,7 +66,7 @@ module.exports = {
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for post request:   ${missingFields}`,
 			})
 		}
 
@@ -89,22 +87,18 @@ module.exports = {
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
 
 				return publish(config.rabbit_mq.nineMobile.subscription_queue, data)
-					.then((status) => {
+					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
-							message: data,
-							responseBody: status,
+							responseBody: data,
 						})
 					}).catch((err) => ResponseManager.sendErrorResponse({
 						res,
-						message: 'unable to push charging data to queue',
-						responseBody: {
-							error: true,
-							message: err.message,
-						},
+						message: err.message,
 					}))
 			} catch (error) {
+				TerraLogger.debug(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach 9mobile server - ${error}` })
 			}
 		}

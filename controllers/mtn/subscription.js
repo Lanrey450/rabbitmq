@@ -27,7 +27,7 @@ module.exports = {
 
 		if (missingFields.length != 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: 'Please pass the following parameters for request: ' + missingFields,
+				res, message: `Please pass the following parameters for post request: ${missingFields}`,
 			})
 		}
 			const authDetails = auth.split(' ')
@@ -37,7 +37,6 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-
 				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
@@ -47,34 +46,25 @@ module.exports = {
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
-					if (subscribedResponse.ResultCode == 1) {
-						return ResponseManager.sendErrorResponse({
-							res,
-							message: 'subscription call failed!',
-							responseBody: subscribedResponse,
-						})
-					}
 					try {
 						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
-							.then((status) => {
-								TerraLogger.debug(`successfully pushed to the MTN subscription data queue: ${status}`)
+							.then(() => {
+								TerraLogger.debug('successfully pushed to the MTN subscription data queue')
 								return ResponseManager.sendResponse({
 									res,
-									message: 'Subscription was successful',
 									responseBody: subscribedResponse,
 								})
 							})
 					} catch (err) {
 						return ResponseManager.sendErrorResponse({
 							res,
-							message: 'unable to push subscription data to queue',
-							responseBody: err,
+							message: `Unable to push subscription data to queue, :: ${err}`,
 						})
 					}
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: 'subscription call failed!',
+						message: 'Subscription request failed',
 						responseBody: error,
 					})
 				}
@@ -94,7 +84,7 @@ module.exports = {
 
 		if (missingFields.length != 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request: ${missingFields}`,
+				res, message: `Please pass the following parameters for post request: ${missingFields}`,
 			})
 		}
 
@@ -107,7 +97,6 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-
 				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
 				const data = {
 					spId: config.mtn.spID,
@@ -118,33 +107,25 @@ module.exports = {
 				try {
 					const UnSubscribedResponse = await MTNSDPAPIHandler.unsubscribe(sanitized_msisdn, data)
 
-					if (UnSubscribedResponse.ResultCode == 1) {
-						return ResponseManager.sendErrorResponse({
-							res,
-							message: 'unsubscription call failed!',
-						})
-					}
 					try {
 						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...UnSubscribedResponse })
-							.then((status) => {
-								TerraLogger.debug(`successfully pushed to the MTN unsubscription data queue: ${status}`)
+							.then(() => {
+								TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
 								return ResponseManager.sendResponse({
 									res,
-									message: 'Subscription was successfully removed',
 									responseBody: UnSubscribedResponse,
 								})
 							})
 					} catch (err) {
 						return ResponseManager.sendErrorResponse({
 							res,
-							message: 'unable to push unsubscription request data to queue',
-							responseBody: err,
+							message: `Unable to push unsubscription request data to queue, ${err}`,
 						})
 					}
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: 'unsubscription call failed!',
+						message: 'Unsubscription request failed',
 						responseBody: error,
 					})
 				}
@@ -163,7 +144,7 @@ module.exports = {
 
 		if (missingFields.length != 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`
+				res, message: `Please pass the following parameters for query request:  ${missingFields}`,
 			})
 		}
 			const authDetails = auth.split(' ')
@@ -175,20 +156,21 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
-
-				const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
+				try {
+					const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
 						res,
 						responseBody: subscriptionDetail.data.response.status,
-						message: 'status was succesfully fetched',
 					})
 				}
+				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: 'Unable to get subscription status',
+						message: `Unable to get subscription status for user with error,  ${error}`,
 					})
 			}
+				}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
@@ -196,18 +178,18 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from mtn')
 		const data = req.body
 		TerraLogger.debug(data)
+		// process mtn feedback here
+
 		await publish(config.rabbit_mq.mtn.postback_queue, { ...data })
-			.then((status) => {
+			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({
 					res,
-					message: 'ok',
-					responseBody: status,
+					message: 'successfully pushed MTN-Postback data to queue',
 				})
 			}).catch((err) => ResponseManager.sendErrorResponse({
 					res,
-					message: 'unable to push postback data to queue',
-					responseBody: err,
+					message: `Unable to push postback data to queue, ${err}`,
 				}))
 	},
 

@@ -45,7 +45,7 @@ module.exports = {
 
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for request:  ${missingFields}`,
 			})
 		}
 
@@ -65,8 +65,7 @@ module.exports = {
 					.then((response) => {
 						TerraLogger.debug(response)
 						if (response.error) {
-							// eslint-disable-next-line max-len
-							return ResponseManager.sendErrorResponse({ res, message: response.message, responseBody: response.data })
+							return ResponseManager.sendErrorResponse({ res, message: response.message })
 						}
 						if (response.data) {
 							return ResponseManager.sendResponse({ res, responseBody: response.data })
@@ -216,7 +215,7 @@ module.exports = {
 
 		if (missingFields.length !== 0) {
 			return ResponseManager.sendErrorResponse({
-				res, message: `Please pass the following parameters for request:${missingFields}`,
+				res, message: `Please pass the following parameters for query request:  ${missingFields}`,
 			})
 		}
 
@@ -234,15 +233,14 @@ module.exports = {
 					if (subscriptionDetails) {
 						return ResponseManager.sendResponse({
 							res,
-							message: 'Subscription status successfully fetched',
-							data: subscriptionDetails.data.response.status,
+							responseBody: subscriptionDetails.data.response.status,
 						})
 					}
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'The subscriber does not exist(invalid status)!',
-						data: '',
+						responseBody: '',
 					})
 				}
 			}

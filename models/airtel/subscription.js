@@ -25,6 +25,9 @@ const subscriptionSchemaAirtel = new Schema({
     sparse: true,
     unique: true,
   },
+  message: {
+    type: String,
+  },
   channel: {
     type: String,
     required: true,
