@@ -192,93 +192,26 @@ Postback feedback incoming from TELCO -Airtel
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://SubscriptionEngine.ibm.com" xmlns:impl="http://SubscriptionEngine.ibm.com" xmlns:intf="http://SubscriptionEngine.ibm.com" xmlns:tns2="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsi="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
- <wsdl:types>
-  <schema targetNamespace="http://dto.engine.subs.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-   <complexType name="CPNotificationRespDTO">
-    <sequence>
-     <element name="xactionId" type="xsd:int"/>
-     <element name="errorCode" type="xsd:int"/>
-     <element name="errorMsg" nillable="true" type="xsd:string"/>
-     <element name="temp1" nillable="true" type="xsd:string"/>
-     <element name="temp2" nillable="true" type="xsd:string"/>
-     <element name="temp3" nillable="true" type="xsd:string"/>
-     <element name="lowBalance" type="xsd:double"/>
-     <element name="amount" type="xsd:double"/>
-     <element name="chargigTime" nillable="true" type="xsd:dateTime"/>
-     <element name="msisdn" nillable="true" type="xsd:string"/>
-     <element name="productId" type="xsd:int"/>
-    </sequence>
-   </complexType>
-  </schema>
-  <schema targetNamespace="http://SubscriptionEngine.ibm.com" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://dto.engine.subs.ibm.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-   <import namespace="http://dto.engine.subs.ibm.com"/>
-   <element name="notificationToCPResponse">
-    <complexType>
-     <sequence/>
-    </complexType>
-   </element>
-   <element name="notificationToCP">
-    <complexType>
-     <sequence>
-      <element name="notificationRespDTO" nillable="true" type="tns2:CPNotificationRespDTO"/>
-     </sequence>
-    </complexType>
-   </element>
-  </schema>
- </wsdl:types>
-
-   <wsdl:message name="notificationToCPResponse">
-     <wsdl:part element="intf:notificationToCPResponse" name="parameters"/>
-
-  </wsdl:message>
-
-   <wsdl:message name="notificationToCPRequest">
-     <wsdl:part element="intf:notificationToCP" name="parameters"/>
-
-  </wsdl:message>
-
-   <wsdl:portType name="NotificationToCP">
-     <wsdl:operation name="notificationToCP">
-       <wsdl:input message="intf:notificationToCPRequest" name="notificationToCPRequest"/>
-
-       <wsdl:output message="intf:notificationToCPResponse" name="notificationToCPResponse"/>
-
-    </wsdl:operation>
-
-  </wsdl:portType>
-
-   <wsdl:binding name="NotificationToCPSoapBinding" type="intf:NotificationToCP">
- <wsaw:UsingAddressing wsdl:required="false" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"/>
-
-     <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-
-     <wsdl:operation name="notificationToCP">
-       <wsdlsoap:operation soapAction="notificationToCP"/>
-
-       <wsdl:input name="notificationToCPRequest">
-         <wsdlsoap:body use="literal"/>
-
-      </wsdl:input>
-
-       <wsdl:output name="notificationToCPResponse">
-         <wsdlsoap:body use="literal"/>
-
-      </wsdl:output>
-
-    </wsdl:operation>
-
-  </wsdl:binding>
-
-   <wsdl:service name="NotificationToCPService">
-     <wsdl:port binding="intf:NotificationToCPSoapBinding" name="NotificationToCP">
-       <wsdlsoap:address location="http://localhost:9080/SchedulingEngineWeb/services/NotificationToCP"/>
-
-    </wsdl:port>
-
-  </wsdl:service>
-
-</wsdl:definitions>
+<soapenv:Envelope xmlns:name="ariyo" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sub="http://SubscriptionEngine.ibm.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <sub:notificationToCP>
+         <notificationRespDTO>
+            <xactionId>0</xactionId>
+            <errorCode>1</errorCode>
+            <errorMsg>Success</errorMsg>
+            <temp1>33</temp1>
+            <temp2>0</temp2>
+            <temp3>0</temp3>
+            <lowBalance>0.0</lowBalance>
+            <amount>1.0</amount>
+            <chargigTime>2011-10-04T15:45:40.890Z</chargigTime>
+            <msisdn>9999999999</msisdn>
+            <productId>111</productId>
+         </notificationRespDTO>
+      </sub:notificationToCP>
+   </soapenv:Body>
+</soapenv:Envelope>
 ```
 
 ***sample response***
