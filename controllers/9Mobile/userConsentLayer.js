@@ -45,11 +45,12 @@ async userConsent(req, res) {
  
         try {
     
-        const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 1 })
-        
-             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+        const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: 'SMS', userConsent: 1 })
+
+        TerraLogger.debug(data, '9Mobile subscription data')
 
              if (data.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
+             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
                 await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, renewable: true })
                 .then(() => {
                 TerraLogger.debug('successfully pushed subscription data to queue')
@@ -58,12 +59,12 @@ async userConsent(req, res) {
             })
             }
          } catch (error) {
-             TerraLogger.debug(error)
+             TerraLogger.debug(error.response)
             Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)     
          }
      } else if (keyword === '2') {
         try {
-         const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId, entryChannel: 'SMS', userConsent: 2 })
+         const data = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: 'SMS', userConsent: 2 })
 
             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
 
