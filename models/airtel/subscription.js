@@ -48,6 +48,9 @@ const subscriptionSchemaAirtel = new Schema({
   temp2: {
     type: String,
   },
+  feedbackStatus: {
+    type: Boolean,
+  },
 }, {
   timestamps: true,
 })

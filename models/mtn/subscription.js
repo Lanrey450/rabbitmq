@@ -29,6 +29,9 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	feedbackStatus: {
+		type: Boolean,
+	},
 	renewal_date: {
 		type: Date,
 		required: true,

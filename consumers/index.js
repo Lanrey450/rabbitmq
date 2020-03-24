@@ -3,6 +3,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-tabs */
 const TerraLogger = require('terra-logger')
+require('../mongoClient')
+
 // MTN
 const SubscriptionModelMTN = require('../models/mtn/subscription')
 const UnSubscriptionModelMTN = require('../models/mtn/subscription')
@@ -45,7 +47,7 @@ module.exports = {
 	// AIRTEL CONSUMERS
 	saveConsumedSubscriptionDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
-		const queue = config.rabbit_mq.airtel.postback_queue
+		const queue = config.rabbit_mq.airtel.subscription_queue
 		const type = 'AIRTEL'
 		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type)
 	},
@@ -103,15 +105,9 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 				delete msg.type
 				try {
 					TerraLogger.debug(msg)
-					// TODO
 					const data = await model.create(msg)
-					// fix saving to DB
-					if (data) {
-						delete msg.feedbackStatus
-						TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
-					}else{
-						TerraLogger.debug('Failed to save to db')
-					}
+					delete msg.feedbackStatus
+					TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 				} catch (error) {
 					TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 				}

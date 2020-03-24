@@ -21,6 +21,10 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	feedbackStatus: {
+		type: Boolean,
+		required: true,
+	},
 	subscriptionResult: {
 		type: String,
 	},
