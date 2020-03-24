@@ -5,34 +5,30 @@ const { Schema } = mongoose
 
 
 const subscriptionSchema = new Schema({
-	service_name: {
+	message: {
 		type: String,
 		required: true,
 	},
-	msisdn: {
+	inError: {
+		type: Boolean,
+		required: true,
+	},
+	code: {
 		type: String,
 		required: true,
 	},
 	transactionId: {
-		type: Date,
-		required: true,
-	},
-	operator: {
 		type: String,
-		required: true,
-	},
-	feedbackStatus: {
-		type: Boolean,
 		required: true,
 	},
 	subscriptionResult: {
 		type: String,
 	},
-	subscription_date: {
-		type: Date,
+	externalTxId: {
+		type: String,
 		required: true,
 	},
-	status: {
+	subscriptionError: {
 		type: String,
 		required: true,
 	},

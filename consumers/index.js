@@ -29,19 +29,19 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.mtn.subscription_queue
 		const type = 'MTN'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelMTN, type)
+		consumeHandler(feedbackQueue, queue, SubscriptionModelMTN, type, false)
 	},
 	saveConsumedUnSubscriptionDataMTN() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const type = 'MTN'
 		const queue = config.rabbit_mq.mtn.un_subscription_queue
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelMTN, type)
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelMTN, type, false)
 	},
 	saveConsumedPostbackDataMTN() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const type = 'MTN'
 		const queue = config.rabbit_mq.mtn.postback_queue
-		consumeHandler(feedbackQueue, queue, PostbackModelMTN, type)
+		consumeHandler(feedbackQueue, queue, PostbackModelMTN, type, false)
 	},
 
 	// AIRTEL CONSUMERS
@@ -49,19 +49,19 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.subscription_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type, false)
 	},
 	saveConsumedUnsubscriptionDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.un_subscription_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelAIRTEL, type, false)
 	},
 	saveConsumedPostbackDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.postback_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, PostbackModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, PostbackModelAIRTEL, type, false)
 	},
 
 	// NINE MOBILE CONSUMERS
@@ -69,23 +69,23 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.subscription_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, SubscriptionModelNINE_MOBILE, type, true)
 	},
 	saveConsumedUnsubscriptionData9Mobile() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.un_subscription_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, UnSubscriptionModelNINE_MOBILE, type, true)
 	},
 	saveConsumedPostbackData9Mobile() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.postback_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, PostbackModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, PostbackModelNINE_MOBILE, type, false)
 	},
 }
 
-function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
+function consumeHandler(feedbackQueue, consumerQueue, model, _type = '', ninemobileSub) {
 	consume(consumerQueue, async (err, msg) => {
 		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
 		if (err) {
@@ -98,14 +98,27 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 		}
 		if (msg != null && feedbackQueue != null) {
 			try {
-				msg.type = _type
+				msg.telcoType = _type
 				await publish(feedbackQueue, msg)
 				TerraLogger.debug('Successfully pushed to feedback queue')
 				msg.feedbackStatus = true
-				delete msg.type
+				delete msg.telcoType
 				try {
-					TerraLogger.debug(msg)
-					const data = await model.create(msg)
+					let ninemobileObject = {}
+					if (ninemobileSub) {
+						ninemobileObject = {
+							message: msg.message,
+							inError: msg.inError,
+							code: msg.code,
+							transactionId: msg.responseData.transactionId,
+							subscriptionResult: msg.responseData.subscriptionResult,
+							externalTxId: msg.responseData.externalTxId,
+							subscriptionError: msg.responseData.subscriptionError,
+						}
+					}
+					const dataToSave = ninemobileSub === true ? ninemobileObject : msg
+					TerraLogger.debug(dataToSave)
+					const data = await model.create(dataToSave)
 					delete msg.feedbackStatus
 					TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 				} catch (error) {
