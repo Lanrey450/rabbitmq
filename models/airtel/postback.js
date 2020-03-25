@@ -41,6 +41,9 @@ const postbackSchema = new Schema({
 		type: Date,
 		required: true,
 	},
+	feedbackStatus: {
+		type: Boolean,
+	},
 	msisdn: {
 		type: String,
 		required: true,

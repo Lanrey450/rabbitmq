@@ -13,8 +13,7 @@ const consumeFromQueue = async (queue, callback) => {
 		await channel.consume(queue, (msg) => {
 			TerraLogger.debug(`just consumed from queue: ${queue}`)
 			channel.ack(msg)
-			const data = JSON.parse(msg.content)
-			TerraLogger.debug('*************')
+			const data = JSON.parse(msg.content.toString())
 			return callback(null, data)
 		})
 	} catch (error) {
