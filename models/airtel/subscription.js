@@ -34,7 +34,7 @@ const subscriptionSchemaAirtel = new Schema({
   },
   requestId: {
     type: Number,
-
+    required: true,
   },
   type: {
     type: String,

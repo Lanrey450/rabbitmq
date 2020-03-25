@@ -9,6 +9,18 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	msisdn: {
+		type: String,
+		required: true,
+	},
+	serviceId: {
+		type: String,
+		required: true,
+	},
+	entryChannel: {
+		type: String,
+		required: true,
+	},
 	inError: {
 		type: Boolean,
 		required: true,
