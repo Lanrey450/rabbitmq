@@ -42,7 +42,6 @@ async userConsent(req, res) {
      const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
 
 
-
      const result = data.split('::')
      const serviceId = result[0]
      const channel = result[1]
@@ -51,13 +50,17 @@ async userConsent(req, res) {
  
         try {
     
-        const response = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1 })
+        const response = await subscribeUser.subscribe({
+ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
+})
 
         TerraLogger.debug(data, '9Mobile subscription data')
 
              if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
-                await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...response, renewable: true })
+                await publish(config.rabbit_mq.nineMobile.subscription_queue, {
+ ...response, msisdn, serviceId, entryChanel: channel, renewable: true, 
+})
                 .then(() => {
                 TerraLogger.debug('successfully pushed subscription data to queue')
             }).catch((err) => {
@@ -73,11 +76,15 @@ async userConsent(req, res) {
          }
      } else if (keyword === '2') {
         try {
-         const response = await subscribeUser.subscribe({ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 2 })
+         const response = await subscribeUser.subscribe({
+ userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 2, 
+})
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
-              return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...response, renewable: false })
+              return publish(config.rabbit_mq.nineMobile.subscription_queue, {
+ ...response, msisdn, serviceId, entryChanel: channel, renewable: false, 
+})
              .then(() => {
              TerraLogger.debug('successfully pushed postback data to queue')
              }).catch((err) => {
