@@ -29,11 +29,12 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'productId', 'channel']
+		const requiredParams = ['msisdn', 'productId', 'channel', 'requestId']
 
 		const airtelReqBody = {
 			msisdn: req.body.msisdn,
 			channel: req.body.channel,
+			requestId: req.body.requestId,
 			service: {
 				product: {
 					productId: req.body.productId,
@@ -82,9 +83,11 @@ module.exports = {
        * @param serviceObject this is the service config to be subscribed against
        */
 	subscribeUser(reqBody) {
-		const { channel, msisdn, service } = reqBody
+		const {
+ channel, msisdn, service, requestId,
+} = reqBody
 		const response = {}
-					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
+					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, requestId, 'API')
 						.then((subscriptionData) => {
 							TerraLogger.debug(subscriptionData, 'subscription data')
 							response.error = false
@@ -116,12 +119,13 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'channel', 'productId']
+		const requiredParams = ['msisdn', 'channel', 'productId', 'requestId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		const airtelReqBody = {
 			msisdn: req.body.msisdn,
 			channel: req.body.channel,
+			requestId: req.body.requestId,
 			service: {
 				product: {
 					productId: req.body.productId,
@@ -176,10 +180,10 @@ module.exports = {
 	   * @param channel channel for the request
        */
 	unSubscribeUser(reqBody) {
-		const { msisdn, service, channel } = reqBody
+		const { msisdn, service, channel, requestId } = reqBody
 		const response = {}
 		TerraLogger.debug(`Making a unsubscription request for ${msisdn}`)
-		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, 'API')
+		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, requestId, 'API')
 			.then((unsubscriptionData) => {
 				TerraLogger.debug(`message: ${unsubscriptionData}`)
 				response.error = false
