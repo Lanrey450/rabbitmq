@@ -5,7 +5,7 @@ const { Schema } = mongoose
 
 
 const subscriptionSchema = new Schema({
-	service_name: {
+	message: {
 		type: String,
 		required: true,
 	},
@@ -13,22 +13,34 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	transactionId: {
-		type: Date,
+	serviceId: {
+		type: String,
 		required: true,
 	},
-	operator: {
+	entryChannel: {
+		type: String,
+		required: true,
+	},
+	inError: {
+		type: Boolean,
+		required: true,
+	},
+	code: {
+		type: String,
+		required: true,
+	},
+	transactionId: {
 		type: String,
 		required: true,
 	},
 	subscriptionResult: {
 		type: String,
 	},
-	subscription_date: {
-		type: Date,
+	externalTxId: {
+		type: String,
 		required: true,
 	},
-	status: {
+	subscriptionError: {
 		type: String,
 		required: true,
 	},

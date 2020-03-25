@@ -32,6 +32,10 @@ const subscriptionSchemaAirtel = new Schema({
     type: String,
     required: true,
   },
+  requestId: {
+    type: Number,
+    required: true,
+  },
   type: {
     type: String,
     required: true,
@@ -47,6 +51,9 @@ const subscriptionSchemaAirtel = new Schema({
   },
   temp2: {
     type: String,
+  },
+  feedbackStatus: {
+    type: Boolean,
   },
 }, {
   timestamps: true,
