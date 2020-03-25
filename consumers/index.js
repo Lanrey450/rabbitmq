@@ -109,7 +109,7 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 					if (data) {
 						delete msg.feedbackStatus
 						TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
-					}else{
+					} else {
 						TerraLogger.debug('Failed to save to db')
 					}
 				} catch (error) {

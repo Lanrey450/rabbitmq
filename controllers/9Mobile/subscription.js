@@ -33,24 +33,24 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 
-			const { msisdn, shortCode, serviceId } = req.body
+			const { msisdn, shortCode, serviceId, channel } = req.body
 
-			const requiredParams = ['msisdn', 'shortCode', 'serviceId']
+			const requiredParams = ['msisdn', 'shortCode', 'serviceId', 'channel']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
-			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
-			  redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, serviceId, 'ex', 60 * 60 * 24) // save for 24 hours
+			if (missingFields.length !== 0){
+				return ResponseManager.sendErrorResponse({
+					res, message: `Please pass the following parameters for post request ${missingFields}`,
+				})
+			}
 
-			  redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
+			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
+			redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}`, 'ex', 60 * 60 * 24) // save for 24 hours
+
+			redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
-
-				if (missingFields.length !== 0){
-					return ResponseManager.sendErrorResponse({
-						res, message: `Please pass the following parameters for post request ${missingFields}`,
-					})
-				}
 				try {
 				Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
 				.then(TerraLogger.debug).catch(TerraLogger.debug)

@@ -415,7 +415,8 @@ sample subscription call - ```http://staging-vas-aggregator-subscription-billing
 {
     "msisdn": "2348094195020",
     "shortCode": "64602",
-    "serviceId": "NOVAJI_05-9JADEC20"
+    "serviceId": "NOVAJI_05-9JADEC20",
+    "channel": "sms"
 }
 ```
 
