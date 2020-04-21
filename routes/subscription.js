@@ -28,10 +28,10 @@ route.post('/nineMobile/sms/mo', asyncHandler((req, res) => NineMOBILE_MO_Contro
 
 
 // Nine mobile postback (INCOMING FROM TELCO)
-route.post('/nineMobile/subscription/optout', asyncHandler((req, res) => NineMobilePostbackController.optoutRequest(req, res)))
-route.post('/nineMobile/charge/async', asyncHandler((req, res) => NineMobilePostbackController.chargeAsyncRequest(req, res)))
-route.post('/nineMobile/subscription/optin', asyncHandler((req, res) => NineMobilePostbackController.optinRequest(req, res)))
-route.post('/nineMobile/consent', asyncHandler((req, res) => NineMobilePostbackController.consentmoRequest(req, res)))
+route.post('/nineMobile/subscription/optout', asyncHandler((req, res) => NineMobilePostbackController.optout(req, res)))
+route.post('/nineMobile/charge/async', asyncHandler((req, res) => NineMobilePostbackController.chargeAsync(req, res)))
+route.post('/nineMobile/subscription/optin', asyncHandler((req, res) => NineMobilePostbackController.optin(req, res)))
+route.post('/nineMobile/consent', asyncHandler((req, res) => NineMobilePostbackController.consent(req, res)))
 
 
 // postback 9Mobile (called by telco)
