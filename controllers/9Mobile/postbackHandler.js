@@ -17,10 +17,10 @@ module.exports = {
 		try {
 			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
-					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
+					console.log('successfully pushed to the 9mobile postback queue')
 				})
 		} catch (err) {
-			console.log(`unable to push unsubscription data to queue :: ${err}`)
+			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
 		res.send('ok')
 	},
@@ -35,10 +35,10 @@ module.exports = {
 		try {
 			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
-					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
+					console.log('successfully pushed to the 9mobile postback queue')
 				})
 		} catch (err) {
-			console.log(`unable to push unsubscription data to queue :: ${err}`)
+			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
 		res.send('ok')
 	},
@@ -53,10 +53,10 @@ module.exports = {
 		try {
 			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
-					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
+					console.log('successfully pushed to the 9mobile postback queue')
 				})
 		} catch (err) {
-			console.log(`unable to push unsubscription data to queue :: ${err}`)
+			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
 		res.send('ok')
 	},
@@ -71,10 +71,10 @@ module.exports = {
 		try {
 			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
-					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
+					console.log('successfully pushed to the 9mobile postback queue')
 				})
 		} catch (err) {
-			console.log(`unable to push unsubscription data to queue :: ${err}`)
+			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
 		res.send('ok')
 	},
