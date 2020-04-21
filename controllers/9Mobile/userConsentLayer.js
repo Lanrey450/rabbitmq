@@ -59,7 +59,7 @@ async userConsent(req, res) {
              if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
                 await publish(config.rabbit_mq.nineMobile.subscription_queue, {
- ...response, msisdn, serviceId, entryChanel: channel, renewable: true, 
+ ...response, userIdentifier: msisdn, serviceId, entryChanel: channel, renewable: true, 
 })
                 .then(() => {
                 TerraLogger.debug('successfully pushed subscription data to queue')
@@ -83,7 +83,7 @@ async userConsent(req, res) {
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
- ...response, msisdn, serviceId, entryChanel: channel, renewable: false, 
+ ...response, userIdentifier: msisdn, serviceId, entryChanel: channel, renewable: false, 
 })
              .then(() => {
              TerraLogger.debug('successfully pushed postback data to queue')

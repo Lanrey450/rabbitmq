@@ -17,6 +17,9 @@ RUN apk update && apk upgrade && apk add ca-certificates && update-ca-certificat
 
 RUN apk add --update tzdata
 
+# make startup script executable 
+RUN chmod +x /home/node/app/run.sh
+
 ENV TZ=Africa/Lagos
 
 # Clean APK cache
@@ -29,7 +32,7 @@ COPY --chown=node:node . .
 
 EXPOSE 80
 
-CMD npm start
+CMD ./run.sh
 
 
-#DOCKER_NAME=registry.gitlab.com/tm30/vas-aggregator-platform/backend/campaign-service
+
