@@ -10,12 +10,12 @@ module.exports = {
 	async optin(req, res) {
 		console.log('optin request')
 		console.log(req.body)
-		body_to_queue = {
+		let bodyToQueue = {
 			'source' : 'optin',
 			'data' : req.body
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, body_to_queue)
+			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
 					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
 				})
@@ -28,12 +28,12 @@ module.exports = {
 	async optout(req, res) {
 		console.log('optout request')
 		console.log(req.body)
-		body_to_queue = {
+		let bodyToQueue = {
 			'source' : 'optout',
 			'data' : req.body
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, body_to_queue)
+			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
 					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
 				})
@@ -46,12 +46,12 @@ module.exports = {
 	async chargeAsync(req, res) {
 		console.log('charge async request')
 		console.log(req.body)
-		body_to_queue = {
+		let bodyToQueue = {
 			'source' : 'chargeAsync',
 			'data' : req.body
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, body_to_queue)
+			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
 					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
 				})
@@ -64,12 +64,12 @@ module.exports = {
 	async consent(req, res) {
 		console.log('consent request')
 		console.log(req.body)
-		body_to_queue = {
+		let bodyToQueue = {
 			'source' : 'consent',
 			'data' : req.body
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, body_to_queue)
+			publish(config.rabbit_mq.nineMobile.postback_queue, bodyToQueue)
 				.then(() => {
 					console.log('successfully pushed to the 9MOBILE unsubscription data queue')
 				})
