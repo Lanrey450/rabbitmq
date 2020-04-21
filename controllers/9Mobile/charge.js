@@ -37,7 +37,7 @@ module.exports = {
 				}
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
-				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.msisdn, serviceId: nineMobileRequestBody.serviceId })
+				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
@@ -86,7 +86,7 @@ module.exports = {
 				}
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
 
-				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.msisdn, serviceId: nineMobileRequestBody.serviceId })
+				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
