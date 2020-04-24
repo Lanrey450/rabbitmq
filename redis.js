@@ -12,7 +12,7 @@ bluebird.promisifyAll(redis.RedisClient.prototype)
 const Redis = redis.createClient(config.redisClientConnection.port,
     config.redisClientConnection.host, { no_ready_check: true })
 
-    Redis.auth(config.redisClientConnection.password)
+    // Redis.auth(config.redisClientConnection.password)
     Redis.on('error', error => TerraLogger.debug('Error Connecting to the Redis Cluster', error))
     Redis.on('connect', () => {
         TerraLogger.debug('Successfully connected to the Redis cluster!')
