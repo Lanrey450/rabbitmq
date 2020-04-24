@@ -17,6 +17,8 @@ RUN apk update && apk upgrade && apk add ca-certificates && update-ca-certificat
 
 RUN apk add --update tzdata
 
+ADD . /home/node/app
+
 # make startup script executable 
 RUN chmod +x /home/node/app/run.sh
 
