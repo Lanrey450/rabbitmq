@@ -34,8 +34,8 @@ route.post('/nineMobile/subscription/optin', asyncHandler((req, res) => NineMobi
 route.post('/nineMobile/consent', asyncHandler((req, res) => NineMobilePostbackController.consent(req, res)))
 
 
-// postback 9Mobile (called by telco)
-route.post('/nineMobile/billing/feedback', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
+// postback 9Mobile (called by telco)  // duplicate
+// route.post('/nineMobile/billing/feedback', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res))) 
 
 
 // Airtel sub

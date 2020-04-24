@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable indent */
 /* eslint-disable prefer-template */
 /* eslint-disable consistent-return */
@@ -47,6 +48,12 @@ module.exports = {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
 					try {
+						if (subscribedResponse.ResultDesc === '22007203') {
+							return ResponseManager.sendErrorResponse({
+								res,
+								message: 'Product not provisioned on MTN',
+						})
+					}
 						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
 							.then(() => {
 								TerraLogger.debug('successfully pushed to the MTN subscription data queue')
@@ -68,8 +75,9 @@ module.exports = {
 						responseBody: error,
 					})
 				}
-			}
-			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	   } else {
+		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	   }
 	},
 
 
@@ -129,8 +137,9 @@ module.exports = {
 						responseBody: error,
 					})
 				}
+			} else {
+				return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 			}
-			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
 	async status(req, res) {
