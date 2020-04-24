@@ -31,13 +31,13 @@ module.exports = {
 		if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 			try {
 				const nineMobileRequestBody = {
-					msisdn: req.body.msisdn,
+					userIdentifier: req.body.msisdn,
 					serviceId: req.body.serviceId,
 					context: 'STATELESS',
 				}
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
-				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, msisdn: nineMobileRequestBody.msisdn, serviceId: nineMobileRequestBody.serviceId })
+				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
@@ -80,13 +80,13 @@ module.exports = {
 		if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
 			try {
 				const nineMobileRequestBody = {
-					msisdn: req.body.msisdn,
+					userIdentifier: req.body.msisdn,
 					serviceId: req.body.serviceId,
 					context: 'RENEW',
 				}
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
 
-				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, msisdn: nineMobileRequestBody.msisdn, serviceId: nineMobileRequestBody.serviceId })
+				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({

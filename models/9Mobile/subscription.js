@@ -7,42 +7,45 @@ const { Schema } = mongoose
 const subscriptionSchema = new Schema({
 	message: {
 		type: String,
-		required: true,
 	},
-	msisdn: {
+	userIdentifier: {
 		type: String,
-		required: true,
 	},
 	serviceId: {
 		type: String,
-		required: true,
 	},
 	entryChannel: {
 		type: String,
-		required: true,
 	},
 	inError: {
 		type: Boolean,
-		required: true,
 	},
 	code: {
 		type: String,
-		required: true,
 	},
 	transactionId: {
 		type: String,
-		required: true,
+	},
+	transactionUUID: {
+		type: String,
 	},
 	subscriptionResult: {
 		type: String,
 	},
 	externalTxId: {
 		type: String,
-		required: true,
+	},
+	validity: {
+		type: String,
+	},
+	operation: {
+		type: String,
+	},
+	mnoDeliveryCode: {
+		type: String,
 	},
 	subscriptionError: {
 		type: String,
-		required: true,
 	},
 }, {
 	timestamps: true,

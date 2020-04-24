@@ -85,7 +85,7 @@ module.exports = {
 	},
 }
 
-function consumeHandler(feedbackQueue, consumerQueue, model, _type = '', ninemobileSub) {
+function consumeHandler(feedbackQueue, consumerQueue, model, _type = '', ninemobileSub = false) {
 	consume(consumerQueue, async (err, msg) => {
 		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
 		if (err) {
