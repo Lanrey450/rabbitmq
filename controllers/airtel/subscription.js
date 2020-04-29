@@ -7,6 +7,7 @@ const TerraLogger = require('terra-logger')
 const SubscriptionService = require('../../lib/airtel/subscription')
 const config = require('../../config')
 const ResponseManager = require('../../commons/response')
+const publish = require('../../rabbitmq/producer')
 
 
 const Utils = require('../../lib/utils')
@@ -249,5 +250,26 @@ module.exports = {
 				}
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	},
+
+
+
+
+	async AirtelPostBack(req, res) {
+		TerraLogger.debug('getting feedback from airtel')
+		const data = req.body
+		TerraLogger.debug(data)
+		// process airtel feedback here
+		await publish(config.rabbit_mq.airtel.postback_queue, { ...data })
+			.then(() => {
+				TerraLogger.debug('successfully pushed postback data to queue')
+				return ResponseManager.sendResponse({
+					res,
+					message: 'successfully pushed Airtel-Postback data to queue',
+				})
+			}).catch((err) => ResponseManager.sendErrorResponse({
+					res,
+					message: `Unable to push postback data to queue, ${err}`,
+				}))
 	},
 }
