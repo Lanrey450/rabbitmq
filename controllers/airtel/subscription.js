@@ -101,7 +101,7 @@ module.exports = {
 							response.statusCode = error.statusCode
 							response.message = error.message
 							return response
-						})
+				})
 	},
 
 

@@ -465,6 +465,14 @@ response goes here
 ```
 ---
 
+
+### Note
+
+MTN-POSTBACK-SERVER-APP - `bitbucket.org/terragonengineering/mtn-sdp-postback-php.git`  (BRANCH -push_to_sub_bill_engine)
+AIRTEL-POSTBACK-SERVER-APP - `bitbucket.org/terragonengineering/airtel-se-soap-postback-app.git` (BRANCH -push_to_sub_bill_engine)
+
+The postback app for both MTN and Airtel gets the POSTBACK directly from the telco, converts the XML to JSON and posts the JSON data back to the subscription and billing engine for processing
+
 9Mobile Flow
 Action 1
     - AG calls "/nineMobile/subscribe" to initiate a subscription
@@ -485,3 +493,7 @@ Action 1
 NB - All feedback for subscription and unsubscription across all telcos goes to a queue (aggregator_subscription_feedback_queue) with a new param in the payload - "Network": "Airtel". Same goes for the billing queue (aggregator_billing_feedback_queue).
 
 For a more indept description of this API, please check the wiki...
+
+
+
+

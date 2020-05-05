@@ -5,7 +5,8 @@
   "main": "server.js",
   "directories": {
     "lib": "lib",
-    "model": "model"
+    "model": "model",
+    "controllers": "controllers"
   },
   "scripts": {
     "start": "node server.js",
