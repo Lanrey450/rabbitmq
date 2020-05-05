@@ -1,3 +1,5 @@
+/* eslint-disable no-duplicate-case */
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-empty */
 /* eslint-disable indent */
 /* eslint-disable prefer-template */
@@ -48,38 +50,85 @@ module.exports = {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
 					try {
-						if (subscribedResponse.ResultDesc === '22007203') {
-							return ResponseManager.sendErrorResponse({
+						const errCode = subscribedResponse.ResultDesc
+						switch (errCode) {
+							case '22007203': {
+								return ResponseManager.sendErrorResponse({
 								res,
-								message: 'Product not provisioned on MTN',
+								message: `${subscribedResponse.ResultDetails}`,
 						})
-					}
-						await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
-							.then(() => {
-								TerraLogger.debug('successfully pushed to the MTN subscription data queue')
-								return ResponseManager.sendResponse({
-									res,
-									responseBody: subscribedResponse,
-								})
-							})
-					} catch (err) {
-						return ResponseManager.sendErrorResponse({
+						}
+						case '22007201': {
+							return ResponseManager.sendErrorResponse({
 							res,
-							message: `Unable to push subscription data to queue, :: ${err}`,
-						})
-					}
-				} catch (error) {
-					return ResponseManager.sendErrorResponse({
+							message: `${subscribedResponse.ResultDetails}`,
+					})
+					} case (errCode >= '10000000' && errCode <= '10009999'): {
+						return ResponseManager.sendErrorResponse({
 						res,
-						message: 'Subscription request failed',
-						responseBody: error,
+						message: `${subscribedResponse.ResultDetails}`,
+				})
+				}
+				case '22007203': {
+					return ResponseManager.sendErrorResponse({
+					res,
+					message: `${subscribedResponse.ResultDetails}`,
+			})
+			}
+			case '22007014': {
+				return ResponseManager.sendErrorResponse({
+				res,
+				message: `${subscribedResponse.ResultDetails}`,
+		})
+		} case '22007238': {
+			return ResponseManager.sendErrorResponse({
+			res,
+			message: `${subscribedResponse.ResultDetails}`,
+	})
+	} case '22007306': {
+		return ResponseManager.sendErrorResponse({
+		res,
+		message: `${subscribedResponse.ResultDetails}`,
+})
+} case '22007206': {
+	return ResponseManager.sendErrorResponse({
+	res,
+	message: `${subscribedResponse.ResultDetails}`,
+})
+} case '22007011': {
+		return ResponseManager.sendErrorResponse({
+		res,
+		message: `${subscribedResponse.ResultDetails}`,
+		})
+		 }
+		   default: {
+			  await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
+				.then(() => {
+					TerraLogger.debug('successfully pushed to the MTN subscription data queue')
+					 return ResponseManager.sendResponse({
+						res,
+						responseBody: subscribedResponse,
+						})
 					})
 				}
-	   } else {
-		return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-	   }
-	},
-
+			}
+			 } catch (err) {
+				return ResponseManager.sendErrorResponse({
+					res,
+					message: `Unable to push subscription data to queue, :: ${err}`,
+					})
+				}
+			} catch (error) {
+				return ResponseManager.sendErrorResponse({
+				  res,
+				  message: 'Subscription request failed',
+				responseBody: error,
+				})
+			}
+	} else {
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	}
+},
 
 	async unsubscribe(req, res) {
 		const auth = req.headers.authorization
