@@ -1,3 +1,4 @@
+/* eslint-disable no-fallthrough */
 /* eslint-disable no-duplicate-case */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable no-empty */
@@ -49,7 +50,6 @@ module.exports = {
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
-					try {
 						const errCode = subscribedResponse.ResultDesc
 						switch (errCode) {
 							case '22007203': {
@@ -100,9 +100,9 @@ module.exports = {
 		res,
 		message: `${subscribedResponse.ResultDetails}`,
 		})
-		 }
-		   default: {
-			  await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
+		 } case '00000000': {
+			 try {
+				await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
 				.then(() => {
 					TerraLogger.debug('successfully pushed to the MTN subscription data queue')
 					 return ResponseManager.sendResponse({
@@ -110,19 +110,25 @@ module.exports = {
 						responseBody: subscribedResponse,
 						})
 					})
-				}
-			}
-			 } catch (err) {
+			 } catch (error) {
 				return ResponseManager.sendErrorResponse({
 					res,
-					message: `Unable to push subscription data to queue, :: ${err}`,
+					message: `Unable to push subscription data to queue, :: ${error}`,
 					})
 				}
+			 }
+		   default: {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: `${subscribedResponse.ResultDetails}`,
+				})
+				}
+			}
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
 				  message: 'Subscription request failed',
-				responseBody: error,
+				  responseBody: error,
 				})
 			}
 	} else {
