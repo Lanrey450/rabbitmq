@@ -50,87 +50,39 @@ module.exports = {
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
-						const errCode = subscribedResponse.ResultDesc
-						switch (errCode) {
-							case '22007203': {
+						const MTNStatusCode = subscribedResponse.ResultDesc
+						switch (MTNStatusCode) {
+				case '00000000': {
+							try {
+								await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
+								.then(() => {
+									TerraLogger.debug('successfully pushed to the MTN subscription data queue')
+									return ResponseManager.sendResponse({
+										res,
+										responseBody: subscribedResponse,
+										})
+									})
+							} catch (error) {
 								return ResponseManager.sendErrorResponse({
-								res,
-								message: `${subscribedResponse.ResultDetails}`,
-						})
-						}
-						case '22007201': {
-							return ResponseManager.sendErrorResponse({
-							res,
-							message: `${subscribedResponse.ResultDetails}`,
-					})
-					} case (errCode >= '10000000' && errCode <= '10009999'): {
-						return ResponseManager.sendErrorResponse({
-						res,
-						message: `${subscribedResponse.ResultDetails}`,
-				})
-				}
-				case '22007203': {
+									res,
+									message: `Unable to push subscription data to queue, :: ${error}`,
+									})
+								}
+							}
+				default: {
 					return ResponseManager.sendErrorResponse({
 					res,
 					message: `${subscribedResponse.ResultDetails}`,
-			})
-			}
-			case '22007014': {
-				return ResponseManager.sendErrorResponse({
-				res,
-				message: `${subscribedResponse.ResultDetails}`,
-		})
-		} case '22007238': {
-			return ResponseManager.sendErrorResponse({
-			res,
-			message: `${subscribedResponse.ResultDetails}`,
-	})
-	} case '22007306': {
-		return ResponseManager.sendErrorResponse({
-		res,
-		message: `${subscribedResponse.ResultDetails}`,
-})
-} case '22007206': {
-	return ResponseManager.sendErrorResponse({
-	res,
-	message: `${subscribedResponse.ResultDetails}`,
-})
-} case '22007011': {
-		return ResponseManager.sendErrorResponse({
-		res,
-		message: `${subscribedResponse.ResultDetails}`,
-		})
-		 } case '00000000': {
-			 try {
-				await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
-				.then(() => {
-					TerraLogger.debug('successfully pushed to the MTN subscription data queue')
-					 return ResponseManager.sendResponse({
-						res,
-						responseBody: subscribedResponse,
 						})
-					})
-			 } catch (error) {
-				return ResponseManager.sendErrorResponse({
-					res,
-					message: `Unable to push subscription data to queue, :: ${error}`,
-					})
+					}
 				}
-			 }
-		   default: {
-			return ResponseManager.sendErrorResponse({
-				res,
-				message: `${subscribedResponse.ResultDetails}`,
-				})
-				}
-			}
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
 				  message: 'Subscription request failed',
 				  responseBody: error,
-				})
-			}
+			  })
+		 }
 	} else {
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
