@@ -6,17 +6,16 @@ const TerraLogger = require('terra-logger')
 require('../mongoClient')
 
 // MTN
-const SubscriptionModelMTN = require('../models/mtn/subscription')
-const UnSubscriptionModelMTN = require('../models/mtn/subscription')
-const PostbackModelMTN = require('../models/mtn/subscription')
+const MtnSubscriptionModel = require('../models/mtn/subscription')
+
+
 // AIRTEL
-const SubscriptionModelAIRTEL = require('../models/airtel/subscription')
-const UnSubscriptionModelAIRTEL = require('../models/airtel/subscription')
-const PostbackModelAIRTEL = require('../models/airtel/postback')
+const AirtelSubscriptionModel = require('../models/airtel/subscription')
+const AirtelPostbackModel = require('../models/airtel/postback')
+
 // NINE MOBILE
-const SubscriptionModelNINE_MOBILE = require('../models/9Mobile/subscription')
-const UnSubscriptionModelNINE_MOBILE = require('../models/9Mobile/subscription')
-const PostbackModelNINE_MOBILE = require('../models/9Mobile/subscription')
+const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
+
 
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
@@ -29,19 +28,19 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.mtn.subscription_queue
 		const type = 'MTN'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelMTN, type)
+		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel, type)
 	},
 	saveConsumedUnSubscriptionDataMTN() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const type = 'MTN'
 		const queue = config.rabbit_mq.mtn.un_subscription_queue
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelMTN, type)
+		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel, type)
 	},
 	saveConsumedPostbackDataMTN() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const type = 'MTN'
 		const queue = config.rabbit_mq.mtn.postback_queue
-		consumeHandler(feedbackQueue, queue, PostbackModelMTN, type)
+		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel, type)
 	},
 
 	// AIRTEL CONSUMERS
@@ -49,19 +48,19 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.subscription_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, AirtelSubscriptionModel, type)
 	},
 	saveConsumedUnsubscriptionDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.un_subscription_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, AirtelSubscriptionModel, type)
 	},
 	saveConsumedPostbackDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.postback_queue
 		const type = 'AIRTEL'
-		consumeHandler(feedbackQueue, queue, PostbackModelAIRTEL, type)
+		consumeHandler(feedbackQueue, queue, AirtelPostbackModel, type)
 	},
 
 	// NINE MOBILE CONSUMERS
@@ -69,19 +68,19 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.subscription_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, SubscriptionModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, NineMobileSubscriptionModel, type)
 	},
 	saveConsumedUnsubscriptionData9Mobile() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.un_subscription_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, UnSubscriptionModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, NineMobileSubscriptionModel, type)
 	},
 	saveConsumedPostbackData9Mobile() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.nineMobile.postback_queue
 		const type = '9MOBILE'
-		consumeHandler(feedbackQueue, queue, PostbackModelNINE_MOBILE, type)
+		consumeHandler(feedbackQueue, queue, NineMobileSubscriptionModel, type)
 	},
 }
 
