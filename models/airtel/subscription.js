@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 /* eslint-disable indent */
 const mongoose = require('mongoose')
 
