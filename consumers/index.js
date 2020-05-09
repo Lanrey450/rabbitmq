@@ -23,7 +23,7 @@ const config = require('../config')
 const publish = require('../rabbitmq/producer')
 
 module.exports = {
-	// Some of the mongodb schemas are not ready, as we are not sure yet, what will be on their queue.
+
 	// MTN CONSUMERS
 	saveConsumedSubscriptionDataMTN() {
 		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
@@ -93,7 +93,7 @@ function consumeHandler(feedbackQueue, consumerQueue, model, _type = '') {
 			return
 		}
 		if (msg == null) {
-			TerraLogger.debug('the queue is empty at the moment ')
+			TerraLogger.debug('the queue is empty at the moment')
 			return
 		}
 		if (msg != null && feedbackQueue != null) {
