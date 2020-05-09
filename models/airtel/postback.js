@@ -32,7 +32,7 @@ const postbackSchema = new Schema({
 		required: true,
 	},
 	serviceId: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 })
