@@ -37,7 +37,20 @@ module.exports = {
 				}
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
-				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
+				// format data to push to queue
+				const dataToPush = {
+					status: 'success',
+					network: '9mobile',
+					transactionId: data.responseData.transactionUUID,
+					serviceId: nineMobileRequestBody.serviceId,
+					msisdn: nineMobileRequestBody.userIdentifier,
+					message: data.message,
+					meta: {
+						result: data.responseData.result,
+					},
+				}
+
+				await publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
@@ -86,7 +99,20 @@ module.exports = {
 				}
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
 
-				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...data, userIdentifier: nineMobileRequestBody.userIdentifier, serviceId: nineMobileRequestBody.serviceId })
+				// format data to push to queue
+				const dataToPush = {
+					status: 'success',
+					network: '9mobile',
+					transactionId: data.responseData.transactionUUID,
+					serviceId: nineMobileRequestBody.serviceId,
+					msisdn: nineMobileRequestBody.userIdentifier,
+					message: data.message,
+					meta: {
+						result: data.responseData.result,
+					},
+				}
+
+				return publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush })
 					.then(() => {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({

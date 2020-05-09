@@ -259,8 +259,26 @@ module.exports = {
 		TerraLogger.debug('getting feedback from airtel')
 		const data = req.body
 		TerraLogger.debug(data)
+
+		const resp = data.args.notificationRespDTO
+
+		//  reformat data to send to Queue
+		const dataToSend = {
+	        msisdn: resp.msisdn,
+			transactionId: resp.xactionId,
+			status: 'success',
+			meta: {
+				amount: parseFloat(resp.amount),
+				chargingTime: resp.chargigTime,
+				lowBalance: resp.lowBalance,
+			},
+			network: 'airtel',
+			serviceId: resp.productId,
+			message: resp.errorMsg,
+		}
+
 		// process airtel feedback here
-		await publish(config.rabbit_mq.airtel.postback_queue, { ...data })
+		await publish(config.rabbit_mq.airtel.postback_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

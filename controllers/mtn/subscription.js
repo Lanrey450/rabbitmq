@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 /* eslint-disable no-fallthrough */
 /* eslint-disable no-duplicate-case */
 /* eslint-disable no-mixed-spaces-and-tabs */
@@ -50,11 +51,26 @@ module.exports = {
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
-						const MTNStatusCode = subscribedResponse.ResultDesc
-						switch (MTNStatusCode) {
-				case '00000000': {
-							try {
-								await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
+					// reformat data to push to MTN queue
+					const dataToPush = {
+						msisdn: sanitized_msisdn,
+						status: 'success',
+						meta: {
+							ResultCode: subscribedResponse.ResultCode,
+							ResultDesc: subscribedResponse.ResultDesc,
+						},
+						action: config.request_type.sub,
+						network: 'mtn',
+						serviceId: data.productid,
+						message: subscribedResponse.ResultDetails,
+					}
+
+					const MTNStatusCode = subscribedResponse.ResultDesc
+
+					switch (MTNStatusCode) {
+					case '22007233': {
+					 try {
+								await publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
 								.then(() => {
 									TerraLogger.debug('successfully pushed to the MTN subscription data queue')
 									return ResponseManager.sendResponse({
@@ -69,7 +85,56 @@ module.exports = {
 									})
 								}
 							}
-				default: {
+							case '22007203': {
+								return ResponseManager.sendErrorResponse({
+								res,
+								message: `${subscribedResponse.ResultDetails}`,
+						})
+						}
+						case '22007201': {
+							return ResponseManager.sendErrorResponse({
+							res,
+							message: `${subscribedResponse.ResultDetails}`,
+					})
+					} case (MTNStatusCode >= '10000000' && MTNStatusCode <= '10009999'): {
+						return ResponseManager.sendErrorResponse({
+						res,
+						message: `${subscribedResponse.ResultDetails}`,
+				})
+				}
+				case '22007203': {
+					return ResponseManager.sendErrorResponse({
+					res,
+					message: `${subscribedResponse.ResultDetails}`,
+			})
+			}
+			case '22007014': {
+				return ResponseManager.sendErrorResponse({
+				res,
+				message: `${subscribedResponse.ResultDetails}`,
+		})
+			} case '22007238': {
+			return ResponseManager.sendErrorResponse({
+			res,
+			message: `${subscribedResponse.ResultDetails}`,
+	})
+		} case '22007306': {
+		return ResponseManager.sendErrorResponse({
+		res,
+		message: `${subscribedResponse.ResultDetails}`,
+})
+	} case '22007206': {
+	return ResponseManager.sendErrorResponse({
+	res,
+	message: `${subscribedResponse.ResultDetails}`,
+})
+	} case '22007011': {
+		return ResponseManager.sendErrorResponse({
+		res,
+		message: `${subscribedResponse.ResultDetails}`,
+		})
+		 }
+			default: {
 					return ResponseManager.sendErrorResponse({
 					res,
 					message: `${subscribedResponse.ResultDetails}`,
@@ -122,8 +187,22 @@ module.exports = {
 				try {
 					const UnSubscribedResponse = await MTNSDPAPIHandler.unsubscribe(sanitized_msisdn, data)
 
+					const dataToPush = {
+						msisdn: sanitized_msisdn,
+						status: 'success',
+						meta: {
+							ResultCode: UnSubscribedResponse.ResultCode,
+							ResultDesc: UnSubscribedResponse.ResultDesc,
+						},
+						action: config.request_type.unsub,
+						network: 'mtn',
+						serviceId: data.productid,
+						message: UnSubscribedResponse.ResultDetails,
+					}
+
+
 					try {
-						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...UnSubscribedResponse })
+						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToPush })
 							.then(() => {
 								TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
 								return ResponseManager.sendResponse({
@@ -194,9 +273,62 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from mtn')
 		const data = req.body
 		TerraLogger.debug(data)
-		// process mtn feedback here
 
-		await publish(config.rabbit_mq.mtn.postback_queue, { ...data })
+		// process mtn feedback here
+		const resp = data.soapenvBody.ns1syncOrderRelation
+
+		const extraInfo = resp.ns1extensionInfo
+
+		//  loop through the extra info object to populate meta field
+		const result = extraInfo.item.map((v) => {
+			switch (v.key) {
+			  case 'cycleEndTime': {
+				return { cycleEndTime: `${v.value}` }
+			  }
+			 case 'serviceAvailability': {
+			   return { serviceAvailability: `${v.value}` }
+			  }
+			  case 'Starttime': {
+			   return { Starttime: `${v.value}` }
+			  }
+			  case 'keyword': {
+				return { keyword: `${v.value}` }
+			  }
+			  case 'fee': {
+			  return { fee: `${v.value}` }
+			  }
+			  case 'transactionID': {
+			   return { transactionID: `${v.value}` }
+			  }
+			}
+			})
+
+		// return an array with the undefined elements removed
+		const filtered = result.filter((el) => el != null)
+
+		TerraLogger.debug(filtered)
+
+		// reformat mtn data to be sent to queue
+		const dataToSend = {
+			msisdn: resp.ns1userID.ID,
+			status: 'success',
+			meta: {
+				updateTime: resp.ns1updateTime,
+				effectiveTime: resp.ns1effectiveTime,
+				expiryTime: resp.ns1expiryTime,
+				serviceAvailability: filtered[1].serviceAvailability,
+				fee: filtered[2].fee,
+				keyword: filtered[3].keyword,
+				cycleEndTime: filtered[4].cycleEndTime,
+				Starttime: filtered[5].Starttime,
+			},
+			network: 'mtn',
+			serviceId: resp.ns1productID,
+			message: resp.ns1updateDesc,
+			transactionId: filtered[0].transactionID,
+		}
+
+		await publish(config.rabbit_mq.mtn.postback_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

@@ -5,13 +5,28 @@ const config = require('../../config')
 
 
 module.exports = {
-	
 
 	async optin(req, res) {
 		console.log('optin request')
 		console.log(req.body)
+
+		const data = req.body
+
+		const dataToPush = {
+
+			msisdn: data.userIdentifier,
+			status: 'success',
+			meta: {
+				mnoDeliveryCode: data.mnoDeliveryCode,
+			},
+			network: '9mobile',
+			serviceId: data.serviceId,
+			message: data.operation,
+			transactionId: data.transactionUUID,
+		}
+
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, req.body)
+			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -24,8 +39,22 @@ module.exports = {
 	async optout(req, res) {
 		console.log('optout request')
 		console.log(req.body)
+
+		const data = req.body
+
+		const dataToPush = {
+
+			msisdn: data.userIdentifier,
+			status: 'success',
+			meta: {
+			},
+			network: '9mobile',
+			serviceId: data.serviceId,
+			message: data.operation,
+			transactionId: data.transactionUUID,
+		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, req.body)
+			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -38,8 +67,22 @@ module.exports = {
 	async chargeAsync(req, res) {
 		console.log('charge async request')
 		console.log(req.body)
+
+		const data = req.body
+
+		const dataToPush = {
+
+			msisdn: data.userIdentifier,
+			status: 'success',
+			meta: {
+			},
+			network: '9mobile',
+			serviceId: data.serviceId,
+			message: data.operation,
+			transactionId: data.transactionUUID,
+		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, req.body)
+			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -52,8 +95,25 @@ module.exports = {
 	async consent(req, res) {
 		console.log('consent request')
 		console.log(req.body)
+
+		const { data, source } = req.body
+
+		const dataToPush = {
+
+			msisdn: data.userIdentifier,
+			status: 'success',
+			meta: {
+				validity: data.validity,
+				mnoDeliveryCode: data.mnoDeliveryCode,
+				source,
+			},
+			network: '9mobile',
+			serviceId: data.serviceId,
+			message: data.operation,
+			transactionId: data.transactionUUID,
+		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, req.body)
+			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})

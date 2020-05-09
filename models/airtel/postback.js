@@ -5,50 +5,33 @@ const { Schema } = mongoose
 
 
 const postbackSchema = new Schema({
-	xactionId: {
+	transactionId: {
 		type: Number,
 		required: true,
 	},
-	errorCode: {
-		type: Number,
-		required: true,
-	},
-	errorMsg: {
+	status: {
 		type: String,
 		required: true,
 	},
-	temp1: {
+	meta: {
+		type: [Object],
+		required: true,
+	},
+	network: {
 		type: String,
-		required: true,
-	},
-	temp2: {
-		type: String,
-		required: true,
-	},
-	temp3: {
-		type: String,
-		required: true,
-	},
-	lowBalance: {
-		type: Number,
-		required: true,
-	},
-	amount: {
-		type: String,
-		required: true,
-	},
-	chargigTime: {
-		type: Date,
 		required: true,
 	},
 	feedbackStatus: {
 		type: Boolean,
 	},
+	message: {
+		type: String,
+	},
 	msisdn: {
 		type: String,
 		required: true,
 	},
-	productId: {
+	serviceId: {
 		type: Number,
 		required: true,
 	},

@@ -8,52 +8,30 @@ const subscriptionSchemaAirtel = new Schema({
     type: String,
     required: true,
   },
-  productId: {
+  serviceId: {
     type: String,
     required: true,
   },
   status: {
     type: String,
-    enum: ['new', 'active', 'inactive', 'renew', 'suspended'],
     required: true,
   },
-  chargingTime: {
-    type: Date,
+  meta: {
+    type: [Object],
+    required: true,
   },
-  transactionId: {
+  network: {
     type: String,
-    sparse: true,
-    unique: true,
   },
   message: {
     type: String,
   },
-  channel: {
-    type: String,
-    required: true,
-  },
-  requestId: {
-    type: Number,
-    required: true,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: Number,
-  },
-  lowBalance: {
-    type: String,
-  },
-  temp1: {
-    type: String,
-  },
-  temp2: {
-    type: String,
-  },
   feedbackStatus: {
-    type: Boolean,
+		type: Boolean,
+	},
+  action: {
+    type: String,
+    required: true,
   },
 }, {
   timestamps: true,

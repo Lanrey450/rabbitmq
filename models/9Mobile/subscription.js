@@ -8,44 +8,29 @@ const subscriptionSchema = new Schema({
 	message: {
 		type: String,
 	},
-	userIdentifier: {
+	msisdn: {
 		type: String,
 	},
 	serviceId: {
 		type: String,
 	},
-	entryChannel: {
+	action: {
 		type: String,
 	},
-	inError: {
-		type: Boolean,
+	status: {
+		type: String,
 	},
-	code: {
+	network: {
 		type: String,
 	},
 	transactionId: {
 		type: String,
 	},
-	transactionUUID: {
-		type: String,
+	meta: {
+		type: [Object],
 	},
-	subscriptionResult: {
-		type: String,
-	},
-	externalTxId: {
-		type: String,
-	},
-	validity: {
-		type: String,
-	},
-	operation: {
-		type: String,
-	},
-	mnoDeliveryCode: {
-		type: String,
-	},
-	subscriptionError: {
-		type: String,
+	feedbackStatus: {
+		type: Boolean,
 	},
 }, {
 	timestamps: true,

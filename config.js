@@ -15,9 +15,9 @@ module.exports = {
 	},
 
 	feedbackQueues: {
-		SubscriptionFeedbackQUEUE: 'subscription_feedback_queue',
-		BillingFeedbackQUEUE: 'billing_feedback_queue',
-		UnsubscriptionFeedbackQUEUE: 'unsubscription_feedback_queue',
+		SubscriptionFeedbackQUEUE: 'subscription_feedback',
+		BillingFeedbackQUEUE: 'charge_feedback',
+		UnsubscriptionFeedbackQUEUE: 'unsubscription_feedback',
 	},
 
 	mtn: {
@@ -103,9 +103,9 @@ module.exports = {
 	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
 	baseURL: env.APP_BASE_URL,
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
-	airtel_request_type: {
-		sub: 'sub',
-		unsub: 'unsub',
+	request_type: {
+		sub: 'subscription',
+		unsub: 'unsubscription',
 		renew: 'renew',
 	},
 }
