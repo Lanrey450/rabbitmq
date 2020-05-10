@@ -82,7 +82,7 @@ module.exports = {
 			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
+			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -110,10 +110,9 @@ module.exports = {
 			network: '9mobile',
 			serviceId: data.serviceId,
 			message: data.operation,
-			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
+			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
