@@ -26,7 +26,7 @@ module.exports = {
 		}
 
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
+			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -54,7 +54,7 @@ module.exports = {
 			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, ...dataToPush)
+			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -71,7 +71,6 @@ module.exports = {
 		const data = req.body
 
 		const dataToPush = {
-
 			msisdn: data.userIdentifier,
 			status: 'success',
 			meta: {

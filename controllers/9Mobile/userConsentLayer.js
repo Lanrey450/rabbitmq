@@ -62,19 +62,12 @@ async userConsent(req, res) {
                 action: config.request_type.sub,
                 serviceId,
                 msisdn,
-                message: response.message,
+                message: response.responseData.subscriptionResult,
                 meta: {
                     entryChannel: channel,
                     transactionId: response.responseData.transactionId,
-                    subscriptionStatus: response.responseData.subscriptionStatus,
-                    lastRenewalOkDate: response.responseData.lastRenewalOkDate,
-                    lastRenewalNotOkDate: response.responseData.lastRenewalNotOkDate,
-                    nextRenewalDate: response.responseData.nextRenewalDate,
-                    optinPricepointId: response.responseData.optinPricepointId,
-                    subscriptionResult: response.responseData.subscriptionResult,
-                    subStatusDate: response.responseData.subStatusDate,
-                    subSubStatusDate: response.responseData.subSubStatusDate,
-                    subscriptionId: response.responseData.subscriptionId,
+                    externalTxId: response.responseData.externalTxId,
+                    subscriptionError: response.responseData.subscriptionError,              
                 },
             }
 
@@ -108,23 +101,16 @@ async userConsent(req, res) {
         // format data to push to queue
         const dataToPush = {
             status: 'success',
-            network: '9mobile',
-            action: config.request_type.sub,
-            serviceId,
-            msisdn,
-            message: response.message,
-            meta: {
-                entryChannel: channel,
-                transactionId: response.responseData.transactionId,
-                subscriptionStatus: response.responseData.subscriptionStatus,
-                lastRenewalOkDate: response.responseData.lastRenewalOkDate,
-                lastRenewalNotOkDate: response.responseData.lastRenewalNotOkDate,
-                nextRenewalDate: response.responseData.nextRenewalDate,
-                optinPricepointId: response.responseData.optinPricepointId,
-                subscriptionResult: response.responseData.subscriptionResult,
-                subStatusDate: response.responseData.subStatusDate,
-                subSubStatusDate: response.responseData.subSubStatusDate,
-                subscriptionId: response.responseData.subscriptionId,
+                network: '9mobile',
+                action: config.request_type.sub,
+                serviceId,
+                msisdn,
+                message: response.responseData.subscriptionResult,
+                meta: {
+                    entryChannel: channel,
+                    transactionId: response.responseData.transactionId,
+                    externalTxId: response.responseData.externalTxId,
+                    subscriptionError: response.responseData.subscriptionError,   
             },
         }
 

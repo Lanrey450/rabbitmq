@@ -47,6 +47,9 @@ module.exports = {
 					message: data.message,
 					meta: {
 						result: data.responseData.result,
+						requestId: data.requestId,
+						code: data.code,
+						inError: data.inError,
 					},
 				}
 
@@ -55,7 +58,7 @@ module.exports = {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
-							responseBody: data,
+							responseBody: dataToPush,
 						})
 					}).catch((err) => ResponseManager.sendErrorResponse({
 						res,
@@ -109,6 +112,9 @@ module.exports = {
 					message: data.message,
 					meta: {
 						result: data.responseData.result,
+						requestId: data.requestId,
+						code: data.code,
+						inError: data.inError,
 					},
 				}
 
@@ -117,7 +123,7 @@ module.exports = {
 						TerraLogger.debug('successfully pushed charging data to queue')
 						return ResponseManager.sendResponse({
 							res,
-							responseBody: data,
+							responseBody: dataToPush,
 						})
 					}).catch((err) => ResponseManager.sendErrorResponse({
 						res,

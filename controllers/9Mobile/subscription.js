@@ -108,19 +108,12 @@ module.exports = {
 								action: config.request_type.unsub,
 								serviceId: nineMobileReqBody.serviceId,
 								msisdn: nineMobileReqBody.userIdentifier,
-								message: unsubscriptionResponse.message,
+								message: unsubscriptionResponse.responseData.subscriptionResult,
 								meta: {
 									transactionId: unsubscriptionResponse.responseData.transactionId,
 									entryChannel: nineMobileReqBody.entryChannel,
-									subscriptionStatus: unsubscriptionResponse.responseData.subscriptionStatus,
-									lastRenewalOkDate: unsubscriptionResponse.responseData.lastRenewalOkDate,
-									lastRenewalNotOkDate: unsubscriptionResponse.responseData.lastRenewalNotOkDate,
-									nextRenewalDate: unsubscriptionResponse.responseData.nextRenewalDate,
-									optinPricepointId: unsubscriptionResponse.responseData.optinPricepointId,
-									subscriptionResult: unsubscriptionResponse.responseData.subscriptionResult,
-									subStatusDate: unsubscriptionResponse.responseData.subStatusDate,
-									subSubStatusDate: unsubscriptionResponse.responseData.subSubStatusDate,
-									subscriptionId: unsubscriptionResponse.responseData.subscriptionId,
+									externalTxId: unsubscriptionResponse.responseData.externalTxId,
+									subscriptionError: unsubscriptionResponse.responseData.subscriptionError,
 								},
 						}
 						try {
@@ -129,7 +122,7 @@ module.exports = {
 									TerraLogger.debug('successfully pushed to the 9MOBILE unsubscription data queue')
 								return ResponseManager.sendResponse({
 										res,
-										responseBody: unsubscriptionResponse,
+										responseBody: dataToPush,
 									})
 								})
 						} catch (err) {

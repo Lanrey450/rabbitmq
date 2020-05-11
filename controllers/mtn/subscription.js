@@ -75,7 +75,7 @@ module.exports = {
 									TerraLogger.debug('successfully pushed to the MTN subscription data queue')
 									return ResponseManager.sendResponse({
 										res,
-										responseBody: subscribedResponse,
+										responseBody: dataToPush,
 										})
 									})
 							} catch (error) {
@@ -207,7 +207,7 @@ module.exports = {
 								TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
 								return ResponseManager.sendResponse({
 									res,
-									responseBody: UnSubscribedResponse,
+									responseBody: dataToPush,
 								})
 							})
 					} catch (err) {
