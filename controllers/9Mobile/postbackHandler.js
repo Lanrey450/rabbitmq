@@ -16,6 +16,7 @@ module.exports = {
 
 			msisdn: data.userIdentifier,
 			status: 'success',
+			action: config.request_type.sub,
 			meta: {
 				mnoDeliveryCode: data.mnoDeliveryCode,
 			},
@@ -26,7 +27,7 @@ module.exports = {
 		}
 
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
+			publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush }) // subscription feedback
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -46,6 +47,7 @@ module.exports = {
 
 			msisdn: data.userIdentifier,
 			status: 'success',
+			action: config.request_type.unsub,
 			meta: {
 			},
 			network: '9mobile',
@@ -54,7 +56,7 @@ module.exports = {
 			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
+			publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -81,7 +83,7 @@ module.exports = {
 			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
+			publish(config.rabbit_mq.nineMobile.charge_postback_queue, { ...dataToPush }) // charge feedback
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -111,7 +113,7 @@ module.exports = {
 			message: data.operation,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.postback_queue, { ...dataToPush })
+			publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush }) // subscription feedback queue
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})

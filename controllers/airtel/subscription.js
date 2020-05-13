@@ -30,12 +30,11 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'productId', 'channel', 'requestId']
+		const requiredParams = ['msisdn', 'productId', 'channel']
 
 		const airtelReqBody = {
 			msisdn: req.body.msisdn,
 			channel: req.body.channel,
-			requestId: req.body.requestId,
 			service: {
 				product: {
 					productId: req.body.productId,
@@ -85,10 +84,10 @@ module.exports = {
        */
 	subscribeUser(reqBody) {
 		const {
- channel, msisdn, service, requestId,
+ channel, msisdn, service,
 } = reqBody
 		const response = {}
-					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, requestId, 'API')
+					return SubscriptionService.sendSubscriptionRequest(msisdn, channel, service, 'API')
 						.then((subscriptionData) => {
 							TerraLogger.debug(subscriptionData, 'subscription data')
 							response.error = false
@@ -120,13 +119,12 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'channel', 'productId', 'requestId']
+		const requiredParams = ['msisdn', 'channel', 'productId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		const airtelReqBody = {
 			msisdn: req.body.msisdn,
 			channel: req.body.channel,
-			requestId: req.body.requestId,
 			service: {
 				product: {
 					productId: req.body.productId,
@@ -181,10 +179,10 @@ module.exports = {
 	   * @param channel channel for the request
        */
 	unSubscribeUser(reqBody) {
-		const { msisdn, service, channel, requestId } = reqBody
+		const { msisdn, service, channel } = reqBody
 		const response = {}
 		TerraLogger.debug(`Making a unsubscription request for ${msisdn}`)
-		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, requestId, 'API')
+		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, 'API')
 			.then((unsubscriptionData) => {
 				TerraLogger.debug(`message: ${unsubscriptionData}`)
 				response.error = false
@@ -215,7 +213,9 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'productId']
+		const { msisdn, serviceId } = req.query
+
+		const requiredParams = ['msisdn', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.query, requiredParams)
 
 		if (missingFields.length !== 0) {
@@ -232,13 +232,13 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
-					const subscriptionDetails = await SubscriptionService.getSubscriptionStatus(req.query)
+					const subscriptionDetails = await SubscriptionService.getSubscriptionDetails(msisdn, serviceId)
 					if (subscriptionDetails) {
 						return ResponseManager.sendResponse({
 							res,
-							responseBody: subscriptionDetails.data.response.status,
+							responseBody: subscriptionDetails.action,
 						})
 					}
 				} catch (error) {
@@ -248,11 +248,10 @@ module.exports = {
 						responseBody: '',
 					})
 				}
+
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
-
-
 
 
 	async AirtelPostBack(req, res) {
@@ -277,8 +276,24 @@ module.exports = {
 			message: resp.errorMsg,
 		}
 
-		// process airtel feedback here
-		await publish(config.rabbit_mq.airtel.postback_queue, { ...dataToSend })
+		//  check for post-back message to route data to queue\
+
+		if (dataToSend.message === 'Successful Deprovisioning') {
+				// process airtel feedback here for un susbcription only - for the aggregator platform
+		await publish(config.rabbit_mq.airtel.un_subscription_queue, { ...dataToSend })
+		.then(() => {
+			TerraLogger.debug('successfully pushed postback data to queue')
+			return ResponseManager.sendResponse({
+				res,
+				message: 'successfully pushed Airtel-Postback data to queue',
+			})
+		}).catch((err) => ResponseManager.sendErrorResponse({
+				res,
+				message: `Unable to push postback data to queue, ${err}`,
+			}))
+		}
+		// process airtel feedback here for susbcription only - for the aggregator platform
+		await publish(config.rabbit_mq.airtel.subscription_postback_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

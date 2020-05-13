@@ -11,7 +11,6 @@ const MtnSubscriptionModel = require('../models/mtn/subscription')
 
 // AIRTEL
 const AirtelSubscriptionModel = require('../models/airtel/subscription')
-const AirtelPostbackModel = require('../models/airtel/postback')
 
 // NINE MOBILE
 const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
@@ -25,36 +24,40 @@ module.exports = {
 
 	// MTN CONSUMERS
 	saveConsumedSubscriptionDataMTN() {
-		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.mtn.subscription_queue
-		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel)
+		saveUserSubData(queue, MtnSubscriptionModel)
 	},
+	// unsubscription postback consumer queue for aggregator platform
 	saveConsumedUnSubscriptionDataMTN() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.mtn.un_subscription_queue
 		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel)
 	},
+	// subscription postback consumer for aggregator platform
 	saveConsumedPostbackDataMTN() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
-		const queue = config.rabbit_mq.mtn.postback_queue
+		const queue = config.rabbit_mq.mtn.subscription_postback_queue
 		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel)
 	},
 
 	// AIRTEL CONSUMERS
+	//  consume from queue and save to database only for data tracking
 	saveConsumedSubscriptionDataAIRTEL() {
-		const feedbackQueue = config.feedbackQueues.SubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.subscription_queue
-		consumeHandler(feedbackQueue, queue, AirtelSubscriptionModel)
+		saveUserSubData(queue, AirtelSubscriptionModel)
 	},
+	// AIRTEL CONSUMERS
+	// unsubscription postback consumer queue for aggregator platform
 	saveConsumedUnsubscriptionDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.UnsubscriptionFeedbackQUEUE
 		const queue = config.rabbit_mq.airtel.un_subscription_queue
 		consumeHandler(feedbackQueue, queue, AirtelSubscriptionModel)
 	},
+	// subscription postback consumer for aggregator platform
 	saveConsumedPostbackDataAIRTEL() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
-		const queue = config.rabbit_mq.airtel.postback_queue
-		consumeHandler(feedbackQueue, queue, AirtelPostbackModel)
+		const queue = config.rabbit_mq.airtel.subscription_postback_queue
+		consumeHandler(feedbackQueue, queue, AirtelSubscriptionModel)
 	},
 
 	// NINE MOBILE CONSUMERS
@@ -70,7 +73,7 @@ module.exports = {
 	},
 	saveConsumedPostbackData9Mobile() {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
-		const queue = config.rabbit_mq.nineMobile.postback_queue
+		const queue = config.rabbit_mq.nineMobile.charge_postback_queue
 		consumeHandler(feedbackQueue, queue, NineMobileSubscriptionModel)
 	},
 }
@@ -115,7 +118,7 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 			}
 			return
 		}
-
+		//  if feedback queue is emtpy
 		if (msg != null && feedbackQueue == null) {
 			try {
 				msg.feedbackStatus = false
@@ -124,6 +127,27 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 			} catch (error) {
 				TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 			}
+		}
+	})
+}
+
+function saveUserSubData(consumerQueue, model) {
+	consume(consumerQueue, async (err, msg) => {
+		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
+		if (err) {
+			TerraLogger.debug(`rabbitmq connection failed! - ${err}`)
+			return
+		}
+		if (msg == null) {
+			TerraLogger.debug('the queue is empty at the moment')
+			return
+		}
+		try {
+			TerraLogger.debug(msg)
+			const data = await model.create(msg)
+			TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
+		} catch (error) {
+			TerraLogger.debug(`unable to save data to mongodb - ${error}`)
 		}
 	})
 }

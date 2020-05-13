@@ -69,22 +69,33 @@ module.exports = {
 
 					switch (MTNStatusCode) {
 					case '22007233': {
+						const { msisdn } = req.body
+						const serviceId = data.productid
+						// we do not push duplicate records to the queue
+						return MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
+						.then((subRecord) => {
+							console.log(subRecord, '-------sub record')
+							if (subRecord.msisdn === sanitized_msisdn) {
+								return ResponseManager.sendResponse({
+									res,
+									responseBody: dataToPush,
+								})
+							}
 					 try {
-								await publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
-								.then(() => {
+								 publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
 									TerraLogger.debug('successfully pushed to the MTN subscription data queue')
 									return ResponseManager.sendResponse({
 										res,
 										responseBody: dataToPush,
 										})
-									})
 							} catch (error) {
 								return ResponseManager.sendErrorResponse({
 									res,
 									message: `Unable to push subscription data to queue, :: ${error}`,
 									})
 								}
-							}
+							}).catch(() => { TerraLogger.debug() })
+						}
 							case '22007203': {
 								return ResponseManager.sendErrorResponse({
 								res,
@@ -144,8 +155,7 @@ module.exports = {
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
-				  message: 'Subscription request failed',
-				  responseBody: error,
+				  message: `Subscription request failed ${error}`,
 			  })
 		 }
 	} else {
@@ -234,7 +244,11 @@ module.exports = {
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
-		const requiredParams = ['msisdn', 'productId']
+
+		const { msisdn, serviceId } = req.query
+
+
+		const requiredParams = ['msisdn', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.query, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -250,13 +264,13 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
-					const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
+					const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
 						res,
-						responseBody: subscriptionDetail.data.response.status,
+						responseBody: subscriptionDetail.action,
 					})
 				}
 				} catch (error) {
@@ -328,7 +342,21 @@ module.exports = {
 			transactionId: filtered[0].transactionID,
 		}
 
-		await publish(config.rabbit_mq.mtn.postback_queue, { ...dataToSend })
+		if (dataToSend.message === 'Addition') {
+			await publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
+			.then(() => {
+				TerraLogger.debug('successfully pushed postback data to queue')
+				return ResponseManager.sendResponse({
+					res,
+					message: 'successfully pushed MTN-Postback data to queue',
+				})
+			}).catch((err) => ResponseManager.sendErrorResponse({
+					res,
+					message: `Unable to push postback data to queue, ${err}`,
+				}))
+		}
+
+		await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

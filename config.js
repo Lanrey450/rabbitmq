@@ -15,9 +15,9 @@ module.exports = {
 	},
 
 	feedbackQueues: {
-		SubscriptionFeedbackQUEUE: 'subscription_feedback',
-		BillingFeedbackQUEUE: 'charge_feedback',
-		UnsubscriptionFeedbackQUEUE: 'unsubscription_feedback',
+		SubscriptionFeedbackQUEUE: 'subscription_feedback', // MTN and Airtel data tracking and gathering
+		BillingFeedbackQUEUE: 'charge_feedback', // charge_feedback from airtel and mtn subscription-postback-queue
+		UnsubscriptionFeedbackQUEUE: 'unsubscription_feedback', // unsubscription queue from TG
 	},
 
 	mtn: {
@@ -58,19 +58,19 @@ module.exports = {
 		pass: env.RABBITMQ_PASSWORD,
 		vhost: env.RABBITMQ_VHOST,
 		mtn: {
-			subscription_queue: 'mtn_subscription_queue',
-			un_subscription_queue: 'mtn_unsubscription_queue',
-			postback_queue: 'mtn_postback_queue',
+			subscription_queue: 'mtn_subscription_queue', // our inhouse TG data tracking and gathering 
+			un_subscription_queue: 'mtn_unsubscription_queue',  // aggregator platform queue
+			subscription_postback_queue: 'mtn_postback_queue',  // aggregator platform queue
 		},
 		airtel: {
-			subscription_queue: 'airtel_subscription_queue',
-			un_subscription_queue: 'airtel_unsubscription_queue',
-			postback_queue: 'airtel_postback_queue',
+			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering 
+			un_subscription_queue: 'airtel_unsubscription_queue',  // aggregator platform queue
+			subscription_postback_queue: 'airtel_postback_queue', // aggregator platform queue
 		},
 		nineMobile: {
 			subscription_queue: '9Mobile_subscription_queue',
+			charge_postback_queue: '9Mobile_charge_queue',
 			un_subscription_queue: '9Mobile_unsubscription_queue',
-			postback_queue: '9Mobile_postback_queue',
 		},
 	},
 	airtel_options: {

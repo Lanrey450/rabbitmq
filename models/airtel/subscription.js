@@ -19,11 +19,11 @@ const subscriptionSchemaAirtel = new Schema({
   },
   meta: {
     type: [Object],
-    required: true,
   },
   network: {
-    type: String,
-  },
+		type: String,
+		required: true,
+	},
   message: {
     type: String,
   },
@@ -32,10 +32,7 @@ const subscriptionSchemaAirtel = new Schema({
 	},
   action: {
     type: String,
-    required: true,
   },
-}, {
-  timestamps: true,
 })
 
 
