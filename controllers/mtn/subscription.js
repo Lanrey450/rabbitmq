@@ -75,26 +75,21 @@ module.exports = {
 						return MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 						.then((subRecord) => {
 							console.log(subRecord, '-------sub record')
-							if (subRecord.msisdn === sanitized_msisdn) {
-								return ResponseManager.sendResponse({
-									res,
-									responseBody: dataToPush,
-								})
-							}
-					 try {
-								 publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
-									TerraLogger.debug('successfully pushed to the MTN subscription data queue')
+							if (subRecord === null) {
+							return publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
+								.then(() => {
+									TerraLogger.debug('successfully pushed to the Airtel subscription data queue')
 									return ResponseManager.sendResponse({
 										res,
 										responseBody: dataToPush,
-										})
-							} catch (error) {
-								return ResponseManager.sendErrorResponse({
-									res,
-									message: `Unable to push subscription data to queue, :: ${error}`,
 									})
-								}
-							}).catch(() => { TerraLogger.debug() })
+								})
+							}
+							return ResponseManager.sendResponse({
+								res,
+								responseBody: dataToPush,
+							})
+						}).catch(() => { TerraLogger.debug() })
 						}
 							case '22007203': {
 								return ResponseManager.sendErrorResponse({
