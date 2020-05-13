@@ -206,21 +206,21 @@ module.exports = {
 					}
 
 
-					try {
-						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToPush })
-							.then(() => {
-								TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
+					// try {
+						// await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToPush })
+						// 	.then(() => {
+						// 		TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
 								return ResponseManager.sendResponse({
 									res,
 									responseBody: dataToPush,
 								})
-							})
-					} catch (err) {
-						return ResponseManager.sendErrorResponse({
-							res,
-							message: `Unable to push unsubscription request data to queue, ${err}`,
-						})
-					}
+							// })
+					// } catch (err) {
+					// 	return ResponseManager.sendErrorResponse({
+					// 		res,
+					// 		message: `Unable to push unsubscription request data to queue, ${err}`,
+					// 	})
+					// }
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
@@ -338,7 +338,7 @@ module.exports = {
 		}
 
 		if (dataToSend.message === 'Addition') {
-			await publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
+			return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({
@@ -350,8 +350,7 @@ module.exports = {
 					message: `Unable to push postback data to queue, ${err}`,
 				}))
 		}
-
-		await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
+		return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

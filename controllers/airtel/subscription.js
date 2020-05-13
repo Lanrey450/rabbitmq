@@ -280,7 +280,7 @@ module.exports = {
 
 		if (dataToSend.message === 'Successful Deprovisioning') {
 				// process airtel feedback here for un susbcription only - for the aggregator platform
-		await publish(config.rabbit_mq.airtel.un_subscription_queue, { ...dataToSend })
+		return publish(config.rabbit_mq.airtel.un_subscription_queue, { ...dataToSend })
 		.then(() => {
 			TerraLogger.debug('successfully pushed postback data to queue')
 			return ResponseManager.sendResponse({
