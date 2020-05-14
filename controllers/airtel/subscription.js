@@ -151,7 +151,7 @@ module.exports = {
 				// subscription collection and return success...
 				return this.unSubscribeUser(airtelReqBody)
 					.then((response) => {
-						TerraLogger.debug(`response ${response}`)
+						TerraLogger.debug(`response ${JSON.stringify(response)}`)
 						if (response.error) {
 							return ResponseManager.sendErrorResponse({
 								res,
@@ -184,7 +184,7 @@ module.exports = {
 		TerraLogger.debug(`Making a unsubscription request for ${msisdn}`)
 		return SubscriptionService.sendUnSubscriptionRequest(msisdn, service, channel, 'API')
 			.then((unsubscriptionData) => {
-				TerraLogger.debug(`message: ${unsubscriptionData}`)
+				TerraLogger.debug(`message: ${JSON.stringify(unsubscriptionData)}`)
 				response.error = false
 				response.data = unsubscriptionData
 				return response
@@ -293,7 +293,7 @@ module.exports = {
 			}))
 		}
 		// process airtel feedback here for susbcription only - for the aggregator platform
-		await publish(config.rabbit_mq.airtel.subscription_postback_queue, { ...dataToSend })
+		return publish(config.rabbit_mq.airtel.subscription_postback_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({
