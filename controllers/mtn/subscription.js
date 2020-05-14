@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 /* eslint-disable no-fallthrough */
 /* eslint-disable no-duplicate-case */
 /* eslint-disable no-mixed-spaces-and-tabs */
@@ -50,8 +51,46 @@ module.exports = {
 				try {
 					const subscribedResponse = await MTNSDPAPIHandler.subscribe(sanitized_msisdn, data)
 
-						const errCode = subscribedResponse.ResultDesc
-						switch (errCode) {
+					// reformat data to push to MTN queue
+					const dataToPush = {
+						msisdn: sanitized_msisdn,
+						status: 'success',
+						meta: {
+							ResultCode: subscribedResponse.ResultCode,
+							ResultDesc: subscribedResponse.ResultDesc,
+						},
+						action: config.request_type.sub,
+						network: 'mtn',
+						serviceId: data.productid,
+						message: subscribedResponse.ResultDetails,
+					}
+
+					const MTNStatusCode = subscribedResponse.ResultDesc
+
+					switch (MTNStatusCode) {
+					case '22007233': {
+						const { msisdn } = req.body
+						const serviceId = data.productid
+						// we do not push duplicate records to the queue
+						return MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
+						.then((subRecord) => {
+							console.log(subRecord, '-------sub record')
+							if (subRecord === null) {
+							return publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
+								.then(() => {
+									TerraLogger.debug('successfully pushed to the Airtel subscription data queue')
+									return ResponseManager.sendResponse({
+										res,
+										responseBody: dataToPush,
+									})
+								})
+							}
+							return ResponseManager.sendResponse({
+								res,
+								responseBody: dataToPush,
+							})
+						}).catch(() => { TerraLogger.debug() })
+						}
 							case '22007203': {
 								return ResponseManager.sendErrorResponse({
 								res,
@@ -63,7 +102,7 @@ module.exports = {
 							res,
 							message: `${subscribedResponse.ResultDetails}`,
 					})
-					} case (errCode >= '10000000' && errCode <= '10009999'): {
+					} case (MTNStatusCode >= '10000000' && MTNStatusCode <= '10009999'): {
 						return ResponseManager.sendErrorResponse({
 						res,
 						message: `${subscribedResponse.ResultDetails}`,
@@ -80,57 +119,40 @@ module.exports = {
 				res,
 				message: `${subscribedResponse.ResultDetails}`,
 		})
-		} case '22007238': {
+			} case '22007238': {
 			return ResponseManager.sendErrorResponse({
 			res,
 			message: `${subscribedResponse.ResultDetails}`,
 	})
-	} case '22007306': {
+		} case '22007306': {
 		return ResponseManager.sendErrorResponse({
 		res,
 		message: `${subscribedResponse.ResultDetails}`,
 })
-} case '22007206': {
+	} case '22007206': {
 	return ResponseManager.sendErrorResponse({
 	res,
 	message: `${subscribedResponse.ResultDetails}`,
 })
-} case '22007011': {
+	} case '22007011': {
 		return ResponseManager.sendErrorResponse({
 		res,
 		message: `${subscribedResponse.ResultDetails}`,
 		})
-		 } case '00000000': {
-			 try {
-				await publish(config.rabbit_mq.mtn.subscription_queue, { ...subscribedResponse })
-				.then(() => {
-					TerraLogger.debug('successfully pushed to the MTN subscription data queue')
-					 return ResponseManager.sendResponse({
-						res,
-						responseBody: subscribedResponse,
-						})
-					})
-			 } catch (error) {
-				return ResponseManager.sendErrorResponse({
+		 }
+			default: {
+					return ResponseManager.sendErrorResponse({
 					res,
-					message: `Unable to push subscription data to queue, :: ${error}`,
-					})
+					message: `${subscribedResponse.ResultDetails}`,
+						})
+					}
 				}
-			 }
-		   default: {
-			return ResponseManager.sendErrorResponse({
-				res,
-				message: `${subscribedResponse.ResultDetails}`,
-				})
-				}
-			}
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
-				  message: 'Subscription request failed',
-				  responseBody: error,
-				})
-			}
+				  message: `Subscription request failed ${error}`,
+			  })
+		 }
 	} else {
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
@@ -170,21 +192,35 @@ module.exports = {
 				try {
 					const UnSubscribedResponse = await MTNSDPAPIHandler.unsubscribe(sanitized_msisdn, data)
 
-					try {
-						await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...UnSubscribedResponse })
-							.then(() => {
-								TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
+					const dataToPush = {
+						msisdn: sanitized_msisdn,
+						status: 'success',
+						meta: {
+							ResultCode: UnSubscribedResponse.ResultCode,
+							ResultDesc: UnSubscribedResponse.ResultDesc,
+						},
+						action: config.request_type.unsub,
+						network: 'mtn',
+						serviceId: data.productid,
+						message: UnSubscribedResponse.ResultDetails,
+					}
+
+
+					// try {
+						// await publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToPush })
+						// 	.then(() => {
+						// 		TerraLogger.debug('successfully pushed to the MTN unsubscription data queue')
 								return ResponseManager.sendResponse({
 									res,
-									responseBody: UnSubscribedResponse,
+									responseBody: dataToPush,
 								})
-							})
-					} catch (err) {
-						return ResponseManager.sendErrorResponse({
-							res,
-							message: `Unable to push unsubscription request data to queue, ${err}`,
-						})
-					}
+							// })
+					// } catch (err) {
+					// 	return ResponseManager.sendErrorResponse({
+					// 		res,
+					// 		message: `Unable to push unsubscription request data to queue, ${err}`,
+					// 	})
+					// }
 				} catch (error) {
 					return ResponseManager.sendErrorResponse({
 						res,
@@ -203,7 +239,11 @@ module.exports = {
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
-		const requiredParams = ['msisdn', 'productId']
+
+		const { msisdn, serviceId } = req.query
+
+
+		const requiredParams = ['msisdn', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.query, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -219,13 +259,13 @@ module.exports = {
 			const username = credentials[0]
 			const rawPassword = credentials[1]
 
-			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+			if (username == config.userAuth.username && rawPassword == config.userAuth.password) {
 				try {
-					const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(req.query)
+					const subscriptionDetail = await MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
 				if (subscriptionDetail) {
 					return ResponseManager.sendResponse({
 						res,
-						responseBody: subscriptionDetail.data.response.status,
+						responseBody: subscriptionDetail.action,
 					})
 				}
 				} catch (error) {
@@ -242,9 +282,75 @@ module.exports = {
 		TerraLogger.debug('getting data sync feedback from mtn')
 		const data = req.body
 		TerraLogger.debug(data)
-		// process mtn feedback here
 
-		await publish(config.rabbit_mq.mtn.postback_queue, { ...data })
+		// process mtn feedback here
+		const resp = data.soapenvBody.ns1syncOrderRelation
+
+		const extraInfo = resp.ns1extensionInfo
+
+		//  loop through the extra info object to populate meta field
+		const result = extraInfo.item.map((v) => {
+			switch (v.key) {
+			  case 'cycleEndTime': {
+				return { cycleEndTime: `${v.value}` }
+			  }
+			 case 'serviceAvailability': {
+			   return { serviceAvailability: `${v.value}` }
+			  }
+			  case 'Starttime': {
+			   return { Starttime: `${v.value}` }
+			  }
+			  case 'keyword': {
+				return { keyword: `${v.value}` }
+			  }
+			  case 'fee': {
+			  return { fee: `${v.value}` }
+			  }
+			  case 'transactionID': {
+			   return { transactionID: `${v.value}` }
+			  }
+			}
+			})
+
+		// return an array with the undefined elements removed
+		const filtered = result.filter((el) => el != null)
+
+		TerraLogger.debug(filtered)
+
+		// reformat mtn data to be sent to queue
+		const dataToSend = {
+			msisdn: resp.ns1userID.ID,
+			status: 'success',
+			meta: {
+				updateTime: resp.ns1updateTime,
+				effectiveTime: resp.ns1effectiveTime,
+				expiryTime: resp.ns1expiryTime,
+				serviceAvailability: filtered[1].serviceAvailability,
+				fee: filtered[2].fee,
+				keyword: filtered[3].keyword,
+				cycleEndTime: filtered[4].cycleEndTime,
+				Starttime: filtered[5].Starttime,
+			},
+			network: 'mtn',
+			serviceId: resp.ns1productID,
+			message: resp.ns1updateDesc,
+			transactionId: filtered[0].transactionID,
+		}
+
+		if (dataToSend.message === 'Addition') {
+			return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
+			.then(() => {
+				TerraLogger.debug('successfully pushed postback data to queue')
+				return ResponseManager.sendResponse({
+					res,
+					message: 'successfully pushed MTN-Postback data to queue',
+				})
+			}).catch((err) => ResponseManager.sendErrorResponse({
+					res,
+					message: `Unable to push postback data to queue, ${err}`,
+				}))
+		}
+		return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
 			.then(() => {
 				TerraLogger.debug('successfully pushed postback data to queue')
 				return ResponseManager.sendResponse({

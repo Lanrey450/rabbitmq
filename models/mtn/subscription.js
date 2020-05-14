@@ -5,11 +5,10 @@ const { Schema } = mongoose
 
 
 const subscriptionSchema = new Schema({
-	service_name: {
+	message: {
 		type: String,
-		required: true,
 	},
-	product_id: {
+	serviceId: {
 		type: String,
 		required: true,
 	},
@@ -17,32 +16,25 @@ const subscriptionSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	expiry_date: {
-		type: Date,
-		required: true,
+	transactionId: {
+		type: Number,
 	},
-	duration: {
-		type: Date,
-		required: true,
-	},
-	operator: {
-		type: String,
+	meta: {
+		type: [Object],
 		required: true,
 	},
 	feedbackStatus: {
 		type: Boolean,
 	},
-	renewal_date: {
-		type: Date,
-		required: true,
+	action: {
+		type: String,
 	},
-	subscription_date: {
-		type: Date,
+	network: {
+		type: String,
 		required: true,
 	},
 	status: {
 		type: String,
-		enum: ['pending', 'active', 'inactive'],
 		required: true,
 	},
 })

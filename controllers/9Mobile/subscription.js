@@ -100,14 +100,29 @@ module.exports = {
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nineMobileReqBody)
 					if (unsubscriptionResponse) {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
-						// push subscription data to queue
+
+						// format data to push to queue
+						const dataToPush = {
+								status: 'success',
+								network: '9mobile',
+								action: config.request_type.unsub,
+								serviceId: nineMobileReqBody.serviceId,
+								msisdn: nineMobileReqBody.userIdentifier,
+								message: unsubscriptionResponse.responseData.subscriptionResult,
+								meta: {
+									transactionId: unsubscriptionResponse.responseData.transactionId,
+									entryChannel: nineMobileReqBody.entryChannel,
+									externalTxId: unsubscriptionResponse.responseData.externalTxId,
+									subscriptionError: unsubscriptionResponse.responseData.subscriptionError,
+								},
+						}
 						try {
-							return publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...unsubscriptionResponse, userDetails: nineMobileReqBody })
+							return publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })
 								.then(() => {
 									TerraLogger.debug('successfully pushed to the 9MOBILE unsubscription data queue')
 								return ResponseManager.sendResponse({
 										res,
-										responseBody: unsubscriptionResponse,
+										responseBody: dataToPush,
 									})
 								})
 						} catch (err) {

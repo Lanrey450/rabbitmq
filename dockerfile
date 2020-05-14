@@ -17,16 +17,10 @@ RUN apk update && apk upgrade && apk add ca-certificates && update-ca-certificat
 
 RUN apk add --update tzdata
 
-ADD . /home/node/app
-
-# make startup script executable 
-RUN chmod +x /home/node/app/run.sh
-
 ENV TZ=Africa/Lagos
 
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
-
 
 COPY --chown=node:node . .
 
@@ -34,7 +28,5 @@ COPY --chown=node:node . .
 
 EXPOSE 80
 
-CMD ./run.sh
-
-
+CMD npm run start-prod
 
