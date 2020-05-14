@@ -56,7 +56,7 @@ module.exports = {
 			transactionId: data.transactionUUID,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
+			 publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
