@@ -292,22 +292,22 @@ module.exports = {
 		const result = extraInfo.item.map((v) => {
 			switch (v.key) {
 			  case 'cycleEndTime': {
-				return { cycleEndTime: `${v.value}` }
+				return { cycleEndTime: `${v.value}` || '' }
 			  }
 			 case 'serviceAvailability': {
-			   return { serviceAvailability: `${v.value}` }
+			   return { serviceAvailability: `${v.value}` || '' }
 			  }
 			  case 'Starttime': {
-			   return { Starttime: `${v.value}` }
+			   return { Starttime: `${v.value}` || '' }
 			  }
 			  case 'keyword': {
-				return { keyword: `${v.value}` }
+				return { keyword: `${v.value}` || '' }
 			  }
 			  case 'fee': {
-			  return { fee: `${v.value}` }
+			  return { fee: `${v.value}` || '' }
 			  }
 			  case 'transactionID': {
-			   return { transactionID: `${v.value}` }
+			   return { transactionID: `${v.value}` || '' }
 			  }
 			}
 			})
@@ -325,16 +325,16 @@ module.exports = {
 				updateTime: resp.ns1updateTime || '',
 				effectiveTime: resp.ns1effectiveTime || '',
 				expiryTime: resp.ns1expiryTime || '',
-				serviceAvailability: filtered[1].serviceAvailability || '',
-				fee: filtered[2].fee || '',
-				keyword: filtered[3].keyword || '',
-				cycleEndTime: filtered[4].cycleEndTime || '',
-				Starttime: filtered[5].Starttime || '',
+				serviceAvailability: filtered[1] ? filtered[1].serviceAvailability : '',
+				fee: filtered[2] ? filtered[2].fee : '',
+				keyword: filtered[3] ? filtered[3].keyword : '',
+				cycleEndTime: filtered[4] ? filtered[4].cycleEndTime : '',
+				Starttime: filtered[5] ? filtered[5].Starttime : '',
 			},
 			network: 'mtn',
 			serviceId: resp.ns1productID,
 			message: resp.ns1updateDesc,
-			transactionId: filtered[0].transactionID,
+			transactionId: filtered[0] ? filtered[0].transactionID : '',
 		}
 
 		if (dataToSend.message === 'Addition') {
