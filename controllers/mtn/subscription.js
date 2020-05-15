@@ -288,36 +288,19 @@ module.exports = {
 
 		const extraInfo = resp.ns1extensionInfo
 
-		//  loop through the extra info object to populate meta field
-		const result = extraInfo.item.map((v) => {
-			switch (v.key) {
-			  case 'cycleEndTime': {
-				return { cycleEndTime: `${v.value}` || '' }
-			  }
-			 case 'serviceAvailability': {
-			   return { serviceAvailability: `${v.value}` || '' }
-			  }
-			  case 'Starttime': {
-			   return { Starttime: `${v.value}` || '' }
-			  }
-			  case 'keyword': {
-				return { keyword: `${v.value}` || '' }
-			  }
-			  case 'fee': {
-			  return { fee: `${v.value}` || '' }
-			  }
-			  case 'transactionID': {
-			   return { transactionID: `${v.value}` || '' }
-			  }
+		const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID'];
+		const result = {};
+
+		//loop through array and get the selected fields
+		extraInfo.forEach(elem => {
+			if (selectedFields.includes(elem.key)) {
+				result[elem.key] = elem;
 			}
-			})
-
-		// return an array with the undefined elements removed
-		const filtered = result.filter((el) => el != null)
-
-		TerraLogger.debug(filtered)
+		});
 
 		// reformat mtn data to be sent to queue
+		const { cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID} = result;
+
 		const dataToSend = {
 			msisdn: resp.ns1userID.ID,
 			status: 'success',
@@ -325,17 +308,18 @@ module.exports = {
 				updateTime: resp.ns1updateTime || '',
 				effectiveTime: resp.ns1effectiveTime || '',
 				expiryTime: resp.ns1expiryTime || '',
-				serviceAvailability: filtered[1] ? filtered[1].serviceAvailability : '',
-				fee: filtered[2] ? filtered[2].fee : '',
-				keyword: filtered[3] ? filtered[3].keyword : '',
-				cycleEndTime: filtered[4] ? filtered[4].cycleEndTime : '',
-				Starttime: filtered[5] ? filtered[5].Starttime : '',
+				serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
+				fee: (fee) ? fee.value : '',
+				keyword: (keyword) ? keyword.value : '',
+				cycleEndTime: (cycleEndTime) ? cycleEndTime.value : '',
+				Starttime: (Starttime) ? Starttime.value : '',
 			},
 			network: 'mtn',
 			serviceId: resp.ns1productID,
 			message: resp.ns1updateDesc,
-			transactionId: filtered[0] ? filtered[0].transactionID : '',
+			transactionId: (transactionID) ? transactionID.value : '',
 		}
+
 
 		if (dataToSend.message === 'Addition') {
 			return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
