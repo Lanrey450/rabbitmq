@@ -286,20 +286,20 @@ module.exports = {
 		// process mtn feedback here
 		const resp = data.soapenvBody.ns1syncOrderRelation
 
-		const extraInfo = resp.ns1extensionInfo
+		const extraInfo = resp.ns1extensionInfo.item
 
 		const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID'];
-		const result = {};
+		const result = {}
 
-		//loop through array and get the selected fields
-		extraInfo.forEach(elem => {
+		// loop through array and get the selected fields
+		extraInfo.forEach((elem) => {
 			if (selectedFields.includes(elem.key)) {
-				result[elem.key] = elem;
+				result[elem.key] = elem
 			}
-		});
+		})
 
 		// reformat mtn data to be sent to queue
-		const { cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID} = result;
+		const { cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID } = result
 
 		const dataToSend = {
 			msisdn: resp.ns1userID.ID,
