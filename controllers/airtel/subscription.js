@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable valid-typeof */
 /* eslint-disable indent */
 /* eslint-disable max-len */
@@ -161,8 +162,19 @@ module.exports = {
 						}
 						// push unsubscription data to queue.
 						if (response.data) {
+							 try {
+						  publish(config.rabbit_mq.airtel.un_subscription_queue, { ...response.data.response })
+						 	.then(() => {
+								TerraLogger.debug('successfully pushed to the Airtel unsubscription data queue')
 							return ResponseManager.sendResponse({ res, responseBody: response.data })
-						}
+						})
+					} catch (err) {
+						return ResponseManager.sendErrorResponse({
+							res,
+							message: `Unable to push unsubscription request data to queue, ${err}`,
+						})
+					}
+				}
 					}).catch((error) => {
 						TerraLogger.debug(error)
 						return ResponseManager.sendErrorResponse({ res, message: error.message })
@@ -248,7 +260,6 @@ module.exports = {
 						responseBody: '',
 					})
 				}
-
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
