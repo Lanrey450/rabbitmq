@@ -97,7 +97,7 @@ module.exports = {
 		console.log('consent request')
 		console.log(req.body)
 
-		const { data, source } = req.body
+		const data = req.body
 
 		const dataToPush = {
 
@@ -106,7 +106,6 @@ module.exports = {
 			meta: {
 				validity: data.validity,
 				mnoDeliveryCode: data.mnoDeliveryCode,
-				source,
 			},
 			network: '9mobile',
 			serviceId: data.serviceId,
