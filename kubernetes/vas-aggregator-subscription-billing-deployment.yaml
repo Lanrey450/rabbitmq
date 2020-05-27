@@ -95,43 +95,43 @@ spec:
                             key:  MONGODB_USER
                       - name: REDIS_PORT
                         valueFrom:
-                          configMapKeyRef:
-                            name: vas-aggregator-secrets
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
                             key: REDIS_PORT
                       - name: REDIS_HOST
                         valueFrom:
-                          configMapKeyRef:
-                            name: vas-aggregator-secrets
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
                             key: REDIS_HOST
                       - name: REDIS_PASSWORD
                         valueFrom:
-                          configMapKeyRef:
-                            name: vas-aggregator-secrets
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
                             key: REDIS_PASSWORD
                       - name: RABBITMQ_HOST
                         valueFrom:
-                          configMapKeyRef:
-                              name: vas-aggregator-secrets
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
                               key: RABBITMQ_HOST
                       - name: RABBITMQ_PORT
                         valueFrom:
-                          configMapKeyRef:
-                              name: vas-aggregator-secrets
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
                               key: RABBITMQ_PORT
                       - name: RABBITMQ_PASSWORD
                         valueFrom:
-                          configMapKeyRef:
-                              name: vas-aggregator-secrets
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
                               key: RABBITMQ_PASSWORD
                       - name: RABBITMQ_USER
                         valueFrom:
-                          configMapKeyRef:
-                              name: vas-aggregator-secrets
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
                               key: RABBITMQ_USER
                       - name: RABBITMQ_VHOST
                         valueFrom:
-                          configMapKeyRef:
-                              name: vas-aggregator-secrets
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
                               key: RABBITMQ_VHOST
                       - name: AIRTEL_SE_AIRTEL_HOST
                         valueFrom:
