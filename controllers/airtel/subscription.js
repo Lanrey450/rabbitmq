@@ -289,7 +289,7 @@ module.exports = {
 
 		//  check for post-back message to route data to queue\
 
-		if (dataToSend.message === 'Successful Deprovisioning' || dataToSend.message === 'Start/Stop Initiated De-Subscription Success') {
+		if (resp.errorCode === 1001) {
 				// process airtel feedback here for un susbcription only - for the aggregator platform
 		return publish(config.rabbit_mq.airtel.un_subscription_queue, { ...dataToSend })
 		.then(() => {
