@@ -52,6 +52,7 @@ route.post('/airtelPostBack', asyncHandler((req, res) => AirtelSubscriptionContr
 route.post('/mtn/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)))
 route.post('/mtn/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)))
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
+route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res)))
 
 
 // mtn postback (INCOMING FROM TELCO)
