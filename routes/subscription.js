@@ -52,8 +52,21 @@ route.post('/airtelPostBack', asyncHandler((req, res) => AirtelSubscriptionContr
 route.post('/mtn/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)))
 route.post('/mtn/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)))
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
-route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res)))
 
+// sms mt - manulaly initiated by application developer - done 
+route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res))) 
+
+// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url 
+route.post('/mtn/stopSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.stopSMSNotification(req, res)))
+
+// ussd mt - manually initiated 
+route.post('/mtn/sendUssd', asyncHandler((req, res) => MTNSubscriptionController.sendUssd(req, res)))
+
+// ussd mo start-- endpoint to call to register the notify soap url in the config with the telco to start receiving DRL/webhook (notifyUssdReceptionRequest) - handles user initiated part 
+route.post('/mtn/startUSSDNotificationRequest', asyncHandler((req, res) => MTNSubscriptionController.startUssdMo(req, res)))
+
+// ussd mo stop -- endpoint to call to stop receiving DRL webhook for the registered soap-url - done 
+route.post('/mtn/stopUSSDNotification', asyncHandler((req, res) => MTNSubscriptionController.stopUssdMo(req, res)))
 
 // mtn postback (INCOMING FROM TELCO)
 route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.MTNDataSyncPostBack(req, res)))

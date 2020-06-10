@@ -23,6 +23,11 @@ module.exports = {
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
+		baseSmsOnboardUrl: env.BASE_SMS_ONBOARD_URL,
+		notifyUrl: {
+			sms: `${env.APP_BASE_URL}/smsNotify`,
+			ussd: `${env.APP_BASE_URL}/ussdNotify`,
+		},
 	},
 	airtel: {
 		cpID: env.AIRTEL_CP_ID,
