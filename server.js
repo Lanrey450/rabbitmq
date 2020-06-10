@@ -171,57 +171,22 @@ const options = {
 }
 
 const callback = (error, response, body) => {
-  if (!error && response.statusCode === 200) {
-    console.log('Raw result', body)
-    const result = Utils.xmltoJSON(body)
-	const {
- sender, recipient, message, network = 'mtn'
-} = result
-	// post to onboarding gateway endpoint here or save to db
-
-  console.log('error', response.statusCode, response.statusMessage, error)
-}
-request(options, callback)
-})
-
-// ussd notify endpoint
-app.post('/ussdNotify', (req, res) => {
-	res.send('ok')
-	const xml = `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:qtre="http://Main.Service">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <qtre:GetUsers>
-         <qtre:sSearchText></qtre:sSearchText>
-      </qtre:GetUsers>
-   </soapenv:Body>
-</soapenv:Envelope>`
-
-const options = {
-  url: 'http://192.168.0.28:10005/MainService/WindowsService?wsdl',
-  method: 'POST',
-  body: xml,
-  headers: {
-    'Content-Type': 'text/xml;charset=utf-8',
-    'Accept-Encoding': 'gzip,deflate',
-    'Content-Length': xml.length,
-    SOAPAction: 'http://Main.Service/AUserService/GetUsers'
+	if (!error && response.statusCode === 200) {
+	  console.log('Raw result', body)
+	  const result = Utils.xmltoJSON(body)
+	  const {
+   sender, recipient, message, network = 'mtn'
+  } = result
+	  // post to onboarding gateway endpoint
+	  // return request.get(`${config.mtn.baseSmsOnboardUrl}sender=${sender}&recipient=${recipient}&message=${message}&network=${network}&sub_source=sms}`, (err, resp, payload) => {
+	  // 	if (err) { console.log(err); return }
+	  // 	console.log(`Get response: ${resp.statusCode}`)
+	  //   })
+	}
+	console.log('error', response.statusCode, response.statusMessage, error)
   }
-}
-
-const callback = (error, response, body) => {
-  if (!error && response.statusCode == 200) {
-    console.log('Raw result', body)
-    const xml2js = require('xml2js')
-    const parser = new xml2js.Parser({ explicitArray: false, trim: true })
-    parser.parseString(body, (err, result) => {
-      console.log('JSON result', result)
-    })
-  }
-  console.log('E', response.statusCode, response.statusMessage)
-}
-request(options, callback)
-})
-
+  request(options, callback)
+  })
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
