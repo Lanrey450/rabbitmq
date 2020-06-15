@@ -379,7 +379,7 @@ module.exports = {
 					serviceId: req.body.service_id,
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
-					notifyUrl: config.mtn.sms.notifyUrl,
+					notifyUrl: config.mtn.notifyUrl.sms,
 					message: req.body.message,
 				}
 				try {
