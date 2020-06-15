@@ -239,6 +239,10 @@ Postback feedback incoming from TELCO -Airtel
    </soapenv:Body>
 </soapenv:Envelope>
 ```
+
+### Sample JSON response showing the error code for user-initiated ubsubscription on the sub-bill engine
+
+```{"args":{"notificationRespDTO":{"amount":0,"chargigTime":"2020-05-28T14:42:52.000Z","errorCode":1001,"errorMsg":"Start/Stop Initiated De-Subscription Success","lowBalance":0,"msisdn":"2349020327785","productId":8203,"temp1":"124","temp2":"12834639523","temp3":"<XML><ID>106834620</ID><ChargingType>null</ChargingType><VCode>null</VCode><partyB></partyB></XML>","xactionId":-50262365}}}```
 ---
 
 #### Telco - MTN
