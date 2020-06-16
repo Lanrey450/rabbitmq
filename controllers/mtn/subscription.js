@@ -351,6 +351,7 @@ module.exports = {
 
 
 	async sendSms(req, res) {
+		TerraLogger.debug('calling send sms API')
 		const auth = req.headers.authorization
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
@@ -384,6 +385,8 @@ module.exports = {
 				}
 				try {
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
+
+					console.log(response, data)
 
 					return ResponseManager.sendErrorResponse({
 						res,
@@ -571,7 +574,7 @@ module.exports = {
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					notifyUrl: config.mtn.ussd.notifyUrl,
+					notifyUrl: config.mtn.notifyUrl.ussd,
 					serviceId: req.body.serviceId,
 					serviceNumber: req.body.serviceNumber,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
@@ -602,7 +605,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['correlatorId', 'serviceId', 'serviceNumber']
+		const requiredParams = ['correlatorId', 'serviceId', 'shortcode', 'criteria']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -620,15 +623,15 @@ module.exports = {
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					notifyUrl: config.mtn.sms.notifyUrl,
+					notifyUrl: config.mtn.notifyUrl.sms,
 					serviceId: req.body.serviceId,
 					shortcode: req.body.shortcode,
+					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
 				try {
-					const response = await MTNSDPAPIHandler.startSmsMo(data)
-
-					return ResponseManager.sendErrorResponse({
+				 const response = await MTNSDPAPIHandler.startSmsMo(data)
+					return ResponseManager.sendResponse({
 						res,
 						message: `Still working on it - ${response}`,
 					})
@@ -636,7 +639,7 @@ module.exports = {
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
-				  message: `startUSSD request failed ${error}`,
+				  message: `startSMS request failed ${error}`,
 			  })
 		 }
 	} else {

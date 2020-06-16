@@ -25,8 +25,8 @@ module.exports = {
 		spPwd: env.MTN_SPPWD,
 		baseSmsOnboardUrl: env.BASE_SMS_ONBOARD_URL,
 		notifyUrl: {
-			sms: `${env.APP_BASE_URL}/smsNotify`,
-			ussd: `${env.APP_BASE_URL}/ussdNotify`,
+			sms: `${env.SMS_USSD_BASE_URL}/smsNotify`,
+			ussd: `${env.SMS_USSD_BASE_URL}/ussdNotify`,
 		},
 	},
 	airtel: {
@@ -68,7 +68,7 @@ module.exports = {
 			subscription_postback_queue: 'mtn_postback_queue',  // aggregator platform queue
 		},
 		airtel: {
-			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering 
+			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering
 			un_subscription_queue: 'airtel_unsubscription_queue',  // aggregator platform queue
 			subscription_postback_queue: 'airtel_postback_queue', // aggregator platform queue
 		},
