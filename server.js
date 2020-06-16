@@ -26,6 +26,10 @@ const publish = require('./rabbitmq/producer')
 
 const xml = fs.readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
 
+const mtn_sms_xml = fs.readFileSync(`${wsdl_path}/sms_notification_service_2_2.wsdl`, 'utf8')
+
+// const mtn_ussd_xml = fs.readFileSync(`${wsdl_path}/ussd_notification_service_2_2.wsdl`, 'utf8')
+
 const routes = require('./routes')
 
 const redisClient = require('./redis')
@@ -50,6 +54,31 @@ const myService = {
 	  },
 	},
   }
+
+  const smsService = {
+	SmsNotificationService: {
+		SmsNotification: {
+		async smsNotification(args) {
+			console.log(args, '-------------SMS_XML_MTN')
+			TerraLogger.debug('Feedback from MTN SMS API = ', args)
+		},
+	  },
+	},
+  }
+
+
+  const ussdService = {
+	UssdNotificationService: {
+		UssdNotification: {
+		async ussdNotification(args) {
+			console.log(args, '-------------USSD_XML_MTN')
+			TerraLogger.debug('Feedback from MTN USSD API = ', args)
+		},
+	  },
+	},
+
+  }
+
 
 app.use(
 	session({
@@ -113,5 +142,23 @@ const soapServerSub = soap.listen(server, soapUrl, myService, xml)
 soapServerSub.log = (type, data) => {
 TerraLogger.debug(type, data)
 }
+
+
+const smsNotifyUrlEndpoint = '/smsNotify'
+
+TerraLogger.debug(`Listening for MTN SMS SOAP postback on: ${smsNotifyUrlEndpoint}`)
+const soapServerSMS = soap.listen(server, smsNotifyUrlEndpoint, smsService, mtn_sms_xml)
+soapServerSMS.log = (type, data) => {
+TerraLogger.debug(type, data)
+}
+
+
+// const ussdNotifyUrlEndpoint = '/ussdNotify'
+
+// TerraLogger.debug(`Listening for MTN USSD SOAP postback on: ${ussdNotifyUrlEndpoint}`)
+// const soapServerUSSD = soap.listen(server, ussdNotifyUrlEndpoint, ussdService, mtn_ussd_xml)
+// soapServerUSSD.log = (type, data) => {
+// TerraLogger.debug(type, data)
+// }
 
 module.exports = app
