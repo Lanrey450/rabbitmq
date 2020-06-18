@@ -388,7 +388,6 @@ module.exports = {
 
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
 
-					console.log(response, data)
 
 					return ResponseManager.sendErrorResponse({
 						res,
