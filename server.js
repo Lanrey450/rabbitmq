@@ -28,6 +28,8 @@ const xml = fs.readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
 
 const mtn_sms_xml = fs.readFileSync(`${wsdl_path}/sms_notification_service_2_2.wsdl`, 'utf8')
 
+const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8');
+
 // const mtn_ussd_xml = fs.readFileSync(`${wsdl_path}/ussd_notification_service_2_2.wsdl`, 'utf8')
 
 const routes = require('./routes')
@@ -134,23 +136,49 @@ app.use(bodyParser.raw({
 	},
   }))
 
+function notifySmsReception(args, cb, headers){
+    console.log("notifySmsReception")
+
+    console.log(args)
+    return {result: "0"}
+}
+
+
+function notifyUssdReception(args, cb, headers){
+    console.log("notifyUssdReception")
+
+    console.log(args)
+    return {result: "0"}
+}
+ 
+
+var serviceObject = {
+	MTNSDPService: {
+		NotifySmsReceptionServicePort: {
+			notifySmsReception,
+			notifyUssdReception
+		},
+	}
+};
+
+
 
 // Airtel subscription postback endpoint
-const soapUrl = '/airtelPostback'
+const soapUrl = '/iykejordan'
 TerraLogger.debug(`Listening for Airtel SOAP postback on: ${soapUrl}`)
-const soapServerSub = soap.listen(server, soapUrl, myService, xml)
+const soapServerSub = soap.listen(server, soapUrl, serviceObject, mtn_feedback_xml)
 soapServerSub.log = (type, data) => {
-TerraLogger.debug(type, data)
+	TerraLogger.debug(type, data)
 }
 
 
-const smsNotifyUrlEndpoint = '/smsNotify'
+// const smsNotifyUrlEndpoint = '/smsNotify'
 
-TerraLogger.debug(`Listening for MTN SMS SOAP postback on: ${smsNotifyUrlEndpoint}`)
-const soapServerSMS = soap.listen(server, smsNotifyUrlEndpoint, smsService, mtn_sms_xml)
-soapServerSMS.log = (type, data) => {
-TerraLogger.debug(type, data)
-}
+// TerraLogger.debug(`Listening for MTN SMS SOAP postback on: ${smsNotifyUrlEndpoint}`)
+// const soapServerSMS = soap.listen(server, smsNotifyUrlEndpoint, smsService, mtn_sms_xml)
+// soapServerSMS.log = (type, data) => {
+// TerraLogger.debug(type, data)
+// }
 
 
 // const ussdNotifyUrlEndpoint = '/ussdNotify'
