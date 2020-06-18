@@ -24,10 +24,6 @@ const { wsdl_path } = config
 
 const publish = require('./rabbitmq/producer')
 
-const xml = fs.readFileSync(`${wsdl_path}/NotificationToCP.wsdl`, 'utf8')
-
-const mtn_sms_xml = fs.readFileSync(`${wsdl_path}/sms_notification_service_2_2.wsdl`, 'utf8')
-
 const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8');
 
 // const mtn_ussd_xml = fs.readFileSync(`${wsdl_path}/ussd_notification_service_2_2.wsdl`, 'utf8')
