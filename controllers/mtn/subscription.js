@@ -384,6 +384,9 @@ module.exports = {
 					message: req.body.message,
 				}
 				try {
+
+					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user 
+					
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
 
 					console.log(response, data)
