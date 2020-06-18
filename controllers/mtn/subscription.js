@@ -508,7 +508,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['correlatorId', 'serviceId', 'shortcode', 'criteria']
+		const requiredParams = ['correlatorId', 'external_id', 'shortcode', 'criteria']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -527,18 +527,20 @@ module.exports = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
 					notifyUrl: config.mtn.notifyUrl.sms,
-					serviceId: req.body.serviceId,
+					serviceId: req.body.external_id,
 					shortcode: req.body.shortcode,
 					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
 				try {
 				 const response = await MTNSDPAPIHandler.startSmsMo(data)
+				 console.log(response, 'resopons')
 					return ResponseManager.sendResponse({
 						res,
 						message: `Still working on it - ${response}`,
 					})
 			} catch (error) {
+				console.log(error)
 				return ResponseManager.sendErrorResponse({
 				  res,
 				  message: `startSMS request failed ${error}`,
