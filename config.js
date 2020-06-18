@@ -47,7 +47,7 @@ module.exports = {
 			host: env.MONGODB_HOST,
 			port: env.MONGODB_PORT,
 			db_name: env.MONGODB_DATABASE_NAME,
-			url: env.MONGODB_URL,
+			url: env.MONGODB_LOCAL_URL,
 		},
 	},
 	redisClientConnection: {
@@ -107,7 +107,7 @@ module.exports = {
 	},
 	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
 	baseURL: `${env.APP_BASE_URL}/subscription`,
-	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
+	wsdl_path: env.WSDL_PATH,
 	request_type: {
 		sub: 'subscription',
 		unsub: 'unsubscription',
