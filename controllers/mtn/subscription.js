@@ -392,7 +392,7 @@ module.exports = {
 
 					return ResponseManager.sendErrorResponse({
 						res,
-						message: `Still working on it - ${response}`,
+						message: 'SMS has been accepted for delivery',
 					})
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
