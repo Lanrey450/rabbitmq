@@ -169,26 +169,27 @@ var serviceObject = {
 
 
 
-// Airtel subscription postback endpoint
+// MTN postback endpoints
+
 const soapUrl_dlr = '/mtn/dlr'
 TerraLogger.debug(`Listening for MTN DLR SOAP postback on: ${soapUrl_dlr}`)
 const soapServerSub1 = soap.listen(server, soapUrl_dlr, serviceObject, mtn_feedback_xml)
 soapServerSub1.log = (type, data) => {
-	TerraLogger.debug(type, data)
+	// TerraLogger.debug(type, data)
 }
 
 const soapUrl_sms_mo = '/mtn/sms_mo'
 TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_sms_mo}`)
 const soapServerSub2 = soap.listen(server, soapUrl_sms_mo, serviceObject, mtn_feedback_xml)
 soapServerSub2.log = (type, data) => {
-	TerraLogger.debug(type, data)
+	// TerraLogger.debug(type, data)
 }
 
 const soapUrl_ussd_mo = '/mtn/ussd_mo'
 TerraLogger.debug(`Listening for MTN USSD MO SOAP postback on: ${soapUrl_ussd_mo}`)
 const soapServerSub3 = soap.listen(server, soapUrl_ussd_mo, serviceObject, mtn_feedback_xml)
 soapServerSub3.log = (type, data) => {
-	TerraLogger.debug(type, data)
+	// TerraLogger.debug(type, data)
 }
 
 
