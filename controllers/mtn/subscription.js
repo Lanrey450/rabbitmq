@@ -532,20 +532,33 @@ module.exports = {
 					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
-				try {
-				 const response = await MTNSDPAPIHandler.startSmsMo(data)
-				 console.log(response, 'resopons')
-					return ResponseManager.sendResponse({
-						res,
-						message: `Still working on it - ${response}`,
-					})
-			} catch (error) {
-				console.log(error)
-				return ResponseManager.sendErrorResponse({
-				  res,
-				  message: `startSMS request failed ${error}`,
-			  })
+		// 		try {
+		// 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
+		// 		 console.log(response, 'resopons')
+		// 			return ResponseManager.sendResponse({
+		// 				res,
+		// 				message: `Still working on it - ${response}`,
+		// 			})
+		// 	} catch (error) {
+		// 		console.log('ERROOR', error)
+		// 		return ResponseManager.sendErrorResponse({
+		// 		  res,
+		// 		  message: `startSMS request failed ${error}`,
+		// 	  })
+		//  }
+		 const response = await MTNSDPAPIHandler.startSmsMo(data)
+		 if(!response.error){
+			return ResponseManager.sendResponse({
+				res,
+				message: `Still working on it - ${response}`,
+			})
 		 }
+
+		 return ResponseManager.sendErrorResponse({
+			res,
+			message: `startSMS request failed ${response.message}`,
+		})
+
 	} else {
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
