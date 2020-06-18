@@ -25,8 +25,8 @@ module.exports = {
 		spPwd: env.MTN_SPPWD,
 		baseSmsOnboardUrl: env.BASE_SMS_ONBOARD_URL,
 		notifyUrl: {
-			sms: `${env.SMS_USSD_BASE_URL}/smsNotify`,
-			ussd: `${env.SMS_USSD_BASE_URL}/ussdNotify`,
+			sms: `${env.APP_BASE_URL}/smsNotify`,
+			ussd: `${env.APP_BASE_URL}/ussdNotify`,
 		},
 	},
 	airtel: {
@@ -106,7 +106,7 @@ module.exports = {
 		suspended: 'suspended',
 	},
 	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
-	baseURL: env.APP_BASE_URL,
+	baseURL: `${env.APP_BASE_URL}/subscription`,
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	request_type: {
 		sub: 'subscription',
