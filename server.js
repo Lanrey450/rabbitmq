@@ -150,13 +150,23 @@ function notifyUssdReception(args, cb, headers){
     console.log(args)
     return {result: "0"}
 }
+
+function notifySmsDeliveryReceipt(args, cb, headers){
+    console.log("notifySmsDeliveryReceipt")
+
+    console.log(args)
+    return {result: "0"}
+}
+
+
  
 
 var serviceObject = {
 	MTNSDPService: {
 		NotifySmsReceptionServicePort: {
 			notifySmsReception,
-			notifyUssdReception
+			notifyUssdReception,
+			notifySmsDeliveryReceipt,
 		},
 	}
 };
