@@ -377,15 +377,14 @@ module.exports = {
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					external_id: req.body.external_id,
+					serviceId: req.body.external_id,
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
 					notifyUrl: config.mtn.notifyUrl.sms,
 					message: req.body.message,
 				}
 				try {
-
-					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user 
+					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user
 
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
 
@@ -539,7 +538,6 @@ module.exports = {
 						res,
 						message: `Still working on it - ${response}`,
 					})
-
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
@@ -638,7 +636,6 @@ module.exports = {
 						res,
 						message: `Still working on it - ${response}`,
 					})
-
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
@@ -686,7 +683,6 @@ module.exports = {
 						res,
 						message: `Still working on it - ${response}`,
 					})
-
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
@@ -700,7 +696,6 @@ module.exports = {
 
 
 	async sendUssd(req, res) {
-
 		const auth = req.headers.authorization
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
