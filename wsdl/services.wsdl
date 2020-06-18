@@ -78,6 +78,27 @@
             </s:element>
 
 
+            <s:element name="notifySmsDeliveryReceipt">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="correlator" type="s:string"/>
+                        <s:complexType name="deliveryStatus">
+                            <s:sequence>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="address" type="s:string"/>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="deliveryStatus" type="s:string"/>
+                            </s:sequence>
+                        </s:complexType>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+
+            <s:element name="notifySmsDeliveryReceiptResponse">
+                <s:simpleType>
+                    <s:element name="notifySmsDeliveryReceiptResponse"/>
+                </s:simpleType>
+            </s:element>
+
+
 
         </s:schema>
     </wsdl:types>
@@ -97,6 +118,15 @@
     </wsdl:message>
 
 
+    <wsdl:message name="notifySmsDeliveryReceiptIn">
+        <wsdl:part name="parameters" element="tns:notifySmsDeliveryReceipt"/>
+    </wsdl:message>
+    <wsdl:message name="notifySmsDeliveryReceiptOut">
+        <wsdl:part name="parameters" element="tns:notifySmsDeliveryReceiptResponse"/>
+    </wsdl:message>
+
+
+
 
 
 
@@ -111,6 +141,11 @@
         <wsdl:operation name="notifyUssdReception">
             <wsdl:input message="tns:notifyUssdReceptionIn"/>
             <wsdl:output message="tns:notifyUssdReceptionOut"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="notifySmsDeliveryReceipt">
+            <wsdl:input message="tns:notifySmsDeliveryReceiptIn"/>
+            <wsdl:output message="tns:notifySmsDeliveryReceiptOut"/>
         </wsdl:operation>
 
     </wsdl:portType>
@@ -138,6 +173,17 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
+
+        <wsdl:operation name="notifySmsDeliveryReceipt">
+            <soap:operation soapAction="notifySmsDeliveryReceipt" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
     </wsdl:binding>
 
 
