@@ -358,7 +358,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'message', 'service_id', 'shortcode']
+		const requiredParams = ['msisdn', 'message', 'external_id', 'shortcode']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -377,7 +377,7 @@ module.exports = {
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					serviceId: req.body.service_id,
+					external_id: req.body.external_id,
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
 					notifyUrl: config.mtn.notifyUrl.sms,
@@ -386,7 +386,7 @@ module.exports = {
 				try {
 
 					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user 
-					
+
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
 
 					console.log(response, data)
