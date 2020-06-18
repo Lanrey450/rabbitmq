@@ -23,6 +23,11 @@ module.exports = {
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
+		baseSmsOnboardUrl: env.BASE_SMS_ONBOARD_URL,
+		notifyUrl: {
+			sms: `${env.APP_BASE_URL}/smsNotify`,
+			ussd: `${env.APP_BASE_URL}/ussdNotify`,
+		},
 	},
 	airtel: {
 		cpID: env.AIRTEL_CP_ID,
@@ -63,7 +68,7 @@ module.exports = {
 			subscription_postback_queue: 'mtn_postback_queue',  // aggregator platform queue
 		},
 		airtel: {
-			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering 
+			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering
 			un_subscription_queue: 'airtel_unsubscription_queue',  // aggregator platform queue
 			subscription_postback_queue: 'airtel_postback_queue', // aggregator platform queue
 		},
@@ -101,7 +106,7 @@ module.exports = {
 		suspended: 'suspended',
 	},
 	internalSecurityToken: env.INTERNAL_SECURITY_TOKEN,
-	baseURL: env.APP_BASE_URL,
+	baseURL: `${env.APP_BASE_URL}/subscription`,
 	wsdl_path: env.AIRTEL_SE_CLIENT_WSDL_PATH,
 	request_type: {
 		sub: 'subscription',

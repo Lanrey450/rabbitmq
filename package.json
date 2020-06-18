@@ -47,6 +47,7 @@
     "mtn-sdp-nodejs": "bitbucket:terragonengineering/mtn-sdp-nodejs%2F#staging",
     "ramda": "^0.27.0",
     "redis": "^3.0.2",
+    "request": "^2.88.2",
     "soap": "^0.31.0",
     "terra-logger": "bitbucket:terragonengineering/terra-logger-js#1.0",
     "x2js": "^3.4.0"

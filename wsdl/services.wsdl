@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <definitions> must be the root of the WSDL document -->
+<wsdl:definitions targetNamespace="http://tempuri.org/"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:tns="http://tempuri.org/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <!-- WSDL TYPES: definition of the data types that are used in the web service -->
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+
+            <s:element name="NotifySOAPHeader">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="spRevId" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="spRevpassword" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="spId" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="serviceId" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="timeStamp" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="traceUniqueID" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+
+            <s:element name="notifySmsReception">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="correlator" type="s:string"/>
+                        <s:complexType name="message">
+                            <s:sequence>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="message" type="s:string"/>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="senderAddress" type="s:string"/>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="smsServiceActivationNumber" type="s:string"/>
+                                <s:element minOccurs="1" maxOccurs="unbounded" name="dateTime" type="s:string"/>
+                            </s:sequence>
+                        </s:complexType>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+
+            <s:element name="notifySmsReceptionResponse">
+                <s:simpleType>
+                    <s:element name="notifySmsReceptionResponse"/>
+                </s:simpleType>
+            </s:element>
+
+            <s:element name="notifyUssdReception">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="msgType" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="senderCB" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="receiveCB" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="ussdOpType" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="msIsdn" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="serviceCode" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="codeScheme" type="s:string"/>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="ussdString" type="s:string"/>
+                        <s:complexType name="extenionInfo">
+                            <s:sequence>
+                                <s:complexType name="item">
+                                    <s:element minOccurs="1" maxOccurs="unbounded" name="key" type="s:string"/>
+                                    <s:element minOccurs="1" maxOccurs="unbounded" name="value" type="s:string"/>
+                                </s:complexType>
+                            </s:sequence>
+                        </s:complexType>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+
+
+            <s:element name="notifyUssdReceptionResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="unbounded" name="codeScheme" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+
+
+
+        </s:schema>
+    </wsdl:types>
+    <!-- MESSAGES: defines the data being exchanged between the service and client -->
+    <wsdl:message name="notifySmsReceptionIn">
+        <wsdl:part name="parameters" element="tns:notifySmsReception"/>
+    </wsdl:message>
+    <wsdl:message name="notifySmsReceptionOut">
+        <wsdl:part name="parameters" element="tns:notifySmsReceptionResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="notifyUssdReceptionIn">
+        <wsdl:part name="parameters" element="tns:notifyUssdReception"/>
+    </wsdl:message>
+    <wsdl:message name="notifyUssdReceptionOut">
+        <wsdl:part name="parameters" element="tns:notifyUssdReceptionResponse"/>
+    </wsdl:message>
+
+
+
+
+
+    <!-- PORT TYPES: defines the complete communication operation (one way/round trip) -->
+    <wsdl:portType name="NotifySmsReceptionSoapPort">
+        <!-- The operation name must be the same as the one specified in the service object -->
+        <wsdl:operation name="notifySmsReception">
+            <wsdl:input message="tns:notifySmsReceptionIn"/>
+            <wsdl:output message="tns:notifySmsReceptionOut"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="notifyUssdReception">
+            <wsdl:input message="tns:notifyUssdReceptionIn"/>
+            <wsdl:output message="tns:notifyUssdReceptionOut"/>
+        </wsdl:operation>
+
+    </wsdl:portType>
+
+
+    <!-- BINDING: provides details on how a portType operation will actually be transmitted -->
+    <wsdl:binding name="NotifySmsReceptionSoapBinding" type="tns:NotifySmsReceptionSoapPort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="notifySmsReception">
+            <soap:operation soapAction="notifySmsReception" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="notifyUssdReception">
+            <soap:operation soapAction="notifyUssdReception" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+
+
+    <!-- SERVICE:  -->
+    <wsdl:service name="MTNSDPService">
+        <wsdl:port name="NotifySmsReceptionServicePort" binding="tns:NotifySmsReceptionSoapBinding">
+            <soap:address location="http://localhost:8000/wsdl"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
