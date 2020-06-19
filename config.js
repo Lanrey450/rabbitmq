@@ -23,7 +23,7 @@ module.exports = {
 	mtn: {
 		spID: env.MTN_SPID,
 		spPwd: env.MTN_SPPWD,
-		baseSmsOnboardUrl: env.BASE_SMS_ONBOARD_URL,
+		baseSmsOnboardUrl: env.SMS_USSD_IVR_ONBOARDING_SERVICE_URL,
 		notifyUrl: {
 			sms: `${env.APP_BASE_URL}/smsNotify`,
 			ussd: `${env.APP_BASE_URL}/ussdNotify`,
