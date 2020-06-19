@@ -203,31 +203,11 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: AIRTEL_CP_PASSWORD
-                      - name: VLOCATION
+                      - name: MTN_SDP_MODULE_URL
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: VLOCATION
-                      - name: SMSLOC
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: SMSLOC
-                      - name: SMS_NOT_VLOCATION
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: SMS_NOT_VLOCATION
-                      - name: USSDLOC
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: USSDLOC
-                      - name: USSD_NOT_VLOCATION
-                        valueFrom:
-                          secretKeyRef:
-                              name: vas-aggregator-subscription-billing-secrets
-                              key: USSD_NOT_VLOCATION                                    
+                              key: MTN_SDP_MODULE_URL                                   
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337

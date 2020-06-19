@@ -385,7 +385,7 @@ module.exports = {
 				}
 				try {
 					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user
-					const response = await MTNSDPAPIHandler.sendSmsMT(data)
+					await MTNSDPAPIHandler.sendSmsMT(data)
 					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'SMS has been accepted for delivery',
@@ -393,7 +393,7 @@ module.exports = {
 			} catch (error) {
 				return ResponseManager.sendErrorResponse({
 				  res,
-				  message: `SendSMS request failed ${error}`,
+				  message: `Send SMS request has failed with ${error}`,
 			  })
 		 }
 	} else {
@@ -435,13 +435,13 @@ module.exports = {
 					if (!response.error) {
 						return ResponseManager.sendResponse({
 							res,
-							message: `Still working on it - ${response}`,
+							message: `USSD notifcation stopped successfully for ${data.correlatorId}`,
 						})
 					 }
 
 					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `stopUSSD request failed ${response.message}`,
+						message: `Stop USSD notification request failed with ${response.message}`,
 					})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -483,13 +483,13 @@ module.exports = {
 					if (!response.error) {
 						return ResponseManager.sendResponse({
 							res,
-							message: `Still working on it - ${response}`,
+							message: `USSD notifcation started successfully with ${data.correlatorId}`,
 						})
 					 }
 
 					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `startUssd request failed ${response.message}`,
+						message: `Start USSD notification request failed with ${response.message}`,
 					})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -531,13 +531,13 @@ module.exports = {
 		 if (!response.error) {
 			return ResponseManager.sendResponse({
 				res,
-				message: `Still working on it - ${response}`,
+				message: `SMS notifcation started successfully with ${data.correlatorId}`,
 			})
 		 }
 
 		 return ResponseManager.sendErrorResponse({
 			res,
-			message: `startSMS request failed ${response.message}`,
+			message: `Start SMS notification request failed with ${response.message}`,
 		})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -576,13 +576,13 @@ module.exports = {
 				if (!response.error) {
 					return ResponseManager.sendResponse({
 						res,
-						message: `Still working on it - ${response}`,
+						message: `SMS notifcation stopped successfully for ${data.correlatorId}`,
 					})
 				 }
 
 				 return ResponseManager.sendErrorResponse({
 					res,
-					message: `stopSMS request failed ${response.message}`,
+					message: `Stop SMS notification request failed with ${response.message}`,
 				})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
@@ -626,13 +626,13 @@ module.exports = {
 					if (!response.error) {
 						return ResponseManager.sendResponse({
 							res,
-							message: `Still working on it - ${response}`,
+							message: 'USSD has been accepted for delivery',
 						})
 					 }
 
 					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `sendUSSD request failed ${response.message}`,
+						message: `send USSD request has failed with ${response.message}`,
 					})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
