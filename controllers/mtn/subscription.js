@@ -387,8 +387,6 @@ module.exports = {
 					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user
 
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
-
-
 					return ResponseManager.sendErrorResponse({
 						res,
 						message: 'SMS has been accepted for delivery',
@@ -547,7 +545,7 @@ module.exports = {
 		// 	  })
 		//  }
 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
-		 if(!response.error){
+		 if (!response.error) {
 			return ResponseManager.sendResponse({
 				res,
 				message: `Still working on it - ${response}`,
@@ -558,10 +556,8 @@ module.exports = {
 			res,
 			message: `startSMS request failed ${response.message}`,
 		})
-
-	} else {
-	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
 
