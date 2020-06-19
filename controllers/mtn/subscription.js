@@ -385,7 +385,6 @@ module.exports = {
 				}
 				try {
 					//  check if the serviceId exists for the user subscription before attempting to send an sms to the user
-
 					const response = await MTNSDPAPIHandler.sendSmsMT(data)
 					return ResponseManager.sendErrorResponse({
 						res,
@@ -431,22 +430,21 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
-				try {
-					const response = await MTNSDPAPIHandler.stopUssdMo(data)
 
-					return ResponseManager.sendErrorResponse({
+					const response = await MTNSDPAPIHandler.stopUssdMo(data)
+					if (!response.error) {
+						return ResponseManager.sendResponse({
+							res,
+							message: `Still working on it - ${response}`,
+						})
+					 }
+
+					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `Still working on it - ${response}`,
+						message: `stopUSSD request failed ${response.message}`,
 					})
-			} catch (error) {
-				return ResponseManager.sendErrorResponse({
-				  res,
-				  message: `stopUSSD request failed ${error}`,
-			  })
-		 }
-	} else {
-	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
 
@@ -480,22 +478,21 @@ module.exports = {
 					serviceNumber: req.body.serviceNumber,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
-				try {
-					const response = await MTNSDPAPIHandler.startUssdMo(data)
 
-					return ResponseManager.sendErrorResponse({
+					const response = await MTNSDPAPIHandler.startUssdMo(data)
+					if (!response.error) {
+						return ResponseManager.sendResponse({
+							res,
+							message: `Still working on it - ${response}`,
+						})
+					 }
+
+					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `Still working on it - ${response}`,
+						message: `startUssd request failed ${response.message}`,
 					})
-			} catch (error) {
-				return ResponseManager.sendErrorResponse({
-				  res,
-				  message: `startUSSD request failed ${error}`,
-			  })
-		 }
-	} else {
-	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
 
@@ -528,22 +525,8 @@ module.exports = {
 					serviceId: req.body.external_id,
 					shortcode: req.body.shortcode,
 					criteria: req.body.criteria,
-					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
+					correlatorId: req.body.correlatorId,
 				}
-		// 		try {
-		// 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
-		// 		 console.log(response, 'resopons')
-		// 			return ResponseManager.sendResponse({
-		// 				res,
-		// 				message: `Still working on it - ${response}`,
-		// 			})
-		// 	} catch (error) {
-		// 		console.log('ERROOR', error)
-		// 		return ResponseManager.sendErrorResponse({
-		// 		  res,
-		// 		  message: `startSMS request failed ${error}`,
-		// 	  })
-		//  }
 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
 		 if (!response.error) {
 			return ResponseManager.sendResponse({
@@ -589,22 +572,20 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					correlatorId: req.body.correlatorId, // make an API call to get this based on the serviceID
 				}
-				try {
-					const response = await MTNSDPAPIHandler.stopSmsMo(data)
-
-					return ResponseManager.sendErrorResponse({
+				const response = await MTNSDPAPIHandler.stopSmsMo(data)
+				if (!response.error) {
+					return ResponseManager.sendResponse({
 						res,
 						message: `Still working on it - ${response}`,
 					})
-			} catch (error) {
-				return ResponseManager.sendErrorResponse({
-				  res,
-				  message: `stopUSSD request failed ${error}`,
-			  })
-		 }
-	} else {
-	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+				 }
+
+				 return ResponseManager.sendErrorResponse({
+					res,
+					message: `stopSMS request failed ${response.message}`,
+				})
 	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 },
 
 
@@ -640,119 +621,21 @@ module.exports = {
 					shortcode: req.body.shortcode,
 					ussd_string: req.body.ussd_string,
 				}
-				try {
+
 					const response = await MTNSDPAPIHandler.sendUssd(data)
+					if (!response.error) {
+						return ResponseManager.sendResponse({
+							res,
+							message: `Still working on it - ${response}`,
+						})
+					 }
 
-					return ResponseManager.sendErrorResponse({
+					 return ResponseManager.sendErrorResponse({
 						res,
-						message: `Still working on it - ${response}`,
+						message: `sendUSSD request failed ${response.message}`,
 					})
-
-					// // reformat data to push to MTN queue
-					// const dataToPush = {
-					// 	msisdn: sanitized_msisdn,
-					// 	status: 'success',
-					// 	meta: {
-					// 		ResultCode: subscribedResponse.ResultCode,
-					// 		ResultDesc: subscribedResponse.ResultDesc,
-					// 	},
-					// 	action: config.request_type.sub,
-					// 	network: 'mtn',
-					// 	serviceId: data.productid,
-					// 	message: subscribedResponse.ResultDetails,
-					// }
-
-	// 				const MTNStatusCode = subscribedResponse.ResultDesc
-
-	// 				switch (MTNStatusCode) {
-	// 				case '22007233': {
-	// 					const { msisdn } = req.body
-	// 					const serviceId = data.productid
-	// 					// we do not push duplicate records to the queue
-	// 					return MTNSDPAPIHandler.getSubscriptionStatus(msisdn, serviceId)
-	// 					.then((subRecord) => {
-	// 						console.log(subRecord, '-------sub record')
-	// 						if (subRecord === null) {
-	// 						return publish(config.rabbit_mq.mtn.subscription_queue, { ...dataToPush })
-	// 							.then(() => {
-	// 								TerraLogger.debug('successfully pushed to the Airtel subscription data queue')
-	// 								return ResponseManager.sendResponse({
-	// 									res,
-	// 									responseBody: dataToPush,
-	// 								})
-	// 							})
-	// 						}
-	// 						return ResponseManager.sendResponse({
-	// 							res,
-	// 							responseBody: dataToPush,
-	// 						})
-	// 					}).catch(() => { TerraLogger.debug() })
-	// 					}
-	// 						case '22007203': {
-	// 							return ResponseManager.sendErrorResponse({
-	// 							res,
-	// 							message: `${subscribedResponse.ResultDetails}`,
-	// 					})
-	// 					}
-	// 					case '22007201': {
-	// 						return ResponseManager.sendErrorResponse({
-	// 						res,
-	// 						message: `${subscribedResponse.ResultDetails}`,
-	// 				})
-	// 				} case (MTNStatusCode >= '10000000' && MTNStatusCode <= '10009999'): {
-	// 					return ResponseManager.sendErrorResponse({
-	// 					res,
-	// 					message: `${subscribedResponse.ResultDetails}`,
-	// 			})
-	// 			}
-	// 			case '22007203': {
-	// 				return ResponseManager.sendErrorResponse({
-	// 				res,
-	// 				message: `${subscribedResponse.ResultDetails}`,
-	// 		})
-	// 		}
-	// 		case '22007014': {
-	// 			return ResponseManager.sendErrorResponse({
-	// 			res,
-	// 			message: `${subscribedResponse.ResultDetails}`,
-	// 	})
-	// 		} case '22007238': {
-	// 		return ResponseManager.sendErrorResponse({
-	// 		res,
-	// 		message: `${subscribedResponse.ResultDetails}`,
-	// })
-	// 	} case '22007306': {
-	// 	return ResponseManager.sendErrorResponse({
-	// 	res,
-	// 	message: `${subscribedResponse.ResultDetails}`,
-	// })
-	// } case '22007206': {
-	// return ResponseManager.sendErrorResponse({
-	// res,
-	// message: `${subscribedResponse.ResultDetails}`,
-	// })
-	// } case '22007011': {
-	// 	return ResponseManager.sendErrorResponse({
-	// 	res,
-	// 	message: `${subscribedResponse.ResultDetails}`,
-	// 	})
-	// 	 }
-	// 		default: {
-	// 				return ResponseManager.sendErrorResponse({
-	// 				res,
-	// 				message: `${subscribedResponse.ResultDetails}`,
-	// 					})
-	// 				}
-	// 			}
-			} catch (error) {
-				return ResponseManager.sendErrorResponse({
-				  res,
-				  message: `SendSMS request failed ${error}`,
-			  })
-		 }
-	} else {
-	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
 
