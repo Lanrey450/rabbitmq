@@ -113,13 +113,7 @@ app.get('/', (req, res) => {
 // add routes here
 routes(app)
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-	const err = new Error('Not Found')
-	TerraLogger.debug(err)
-	err.status = 404
-	next(err)
-})
+
 
 const server = app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
@@ -212,6 +206,14 @@ const soapServerSub3 = soap.listen(server, soapUrl_ussd_mo, serviceObject, mtn_f
 soapServerSub3.log = (type, data) => {
 	TerraLogger.debug(type, data)
 }
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+	const err = new Error('Not Found')
+	TerraLogger.debug(err)
+	err.status = 404
+	next(err)
+})
 
 
 module.exports = app
