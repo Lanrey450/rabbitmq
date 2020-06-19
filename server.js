@@ -17,6 +17,7 @@ const fs = require('fs')
 
 const RedisStore = require('connect-redis')(session)
 
+const axios = require('axios')
 const config = require('./config')
 
 
@@ -24,9 +25,8 @@ const { wsdl_path } = config
 
 const publish = require('./rabbitmq/producer')
 
-const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8');
+const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8')
 
-// const mtn_ussd_xml = fs.readFileSync(`${wsdl_path}/ussd_notification_service_2_2.wsdl`, 'utf8')
 
 const routes = require('./routes')
 
@@ -53,29 +53,29 @@ const myService = {
 	},
   }
 
-  const smsService = {
-	SmsNotificationService: {
-		SmsNotification: {
-		async smsNotification(args) {
-			console.log(args, '-------------SMS_XML_MTN')
-			TerraLogger.debug('Feedback from MTN SMS API = ', args)
-		},
-	  },
-	},
-  }
+//   const smsService = {
+// 	SmsNotificationService: {
+// 		SmsNotification: {
+// 		async smsNotification(args) {
+// 			console.log(args, '-------------SMS_XML_MTN')
+// 			TerraLogger.debug('Feedback from MTN SMS API = ', args)
+// 		},
+// 	  },
+// 	},
+//   }
 
 
-  const ussdService = {
-	UssdNotificationService: {
-		UssdNotification: {
-		async ussdNotification(args) {
-			console.log(args, '-------------USSD_XML_MTN')
-			TerraLogger.debug('Feedback from MTN USSD API = ', args)
-		},
-	  },
-	},
+//   const ussdService = {
+// 	UssdNotificationService: {
+// 		UssdNotification: {
+// 		async ussdNotification(args) {
+// 			console.log(args, '-------------USSD_XML_MTN')
+// 			TerraLogger.debug('Feedback from MTN USSD API = ', args)
+// 		},
+// 	  },
+// 	},
 
-  }
+//   }
 
 
 app.use(
@@ -132,32 +132,54 @@ app.use(bodyParser.raw({
 	},
   }))
 
-function notifySmsReception(args, cb, headers){
-    console.log("notifySmsReception")
+function notifySmsReception(args, cb, headers) {
+    console.log('notifySmsReception')
 
-    console.log(args)
-    return {result: "0"}
+	console.log(args)
+
+	return axios.get(`${config.mtn.baseSmsOnboardUrl}/sms/entry?sender=${args.message.senderAddress}&recipient=${args.message.smsServiceActivationNumber}&message=${args.message.message}&network=mtn&sub_source=sms`)
+	.then((response) => {
+		console.log(response)
+	  })
+	  .catch((error) => {
+		console.log(error)
+	  })
+
+    // return { result: '0' }
 }
 
 
-function notifyUssdReception(args, cb, headers){
-    console.log("notifyUssdReception")
+function notifyUssdReception(args, cb, headers) {
+	console.log('notifyUssdReception')
+	console.log(args)
 
-    console.log(args)
-    return {result: "0"}
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
+		serviceCode: args.serviceCode[0],
+		command: '',
+		network: 'mtn',
+		msisdn: args.msIsdn[0],
+		sessionId: '',
+	  })
+	  .then((response) => {
+		console.log(response)
+	  })
+	  .catch((error) => {
+		console.log(error)
+	  })
+
+
+    // return { result: '0' }
 }
 
-function notifySmsDeliveryReceipt(args, cb, headers){
-    console.log("notifySmsDeliveryReceipt")
+function notifySmsDeliveryReceipt(args, cb, headers) {
+    console.log('notifySmsDeliveryReceipt')
 
     console.log(args)
-    return {result: "0"}
+    return { result: '0' }
 }
 
 
- 
-
-var serviceObject = {
+const serviceObject = {
 	MTNSDPService: {
 		NotifySmsReceptionServicePort: {
 			notifySmsReception,
@@ -165,8 +187,7 @@ var serviceObject = {
 			notifySmsDeliveryReceipt,
 		},
 	}
-};
-
+}
 
 
 // MTN postback endpoints
