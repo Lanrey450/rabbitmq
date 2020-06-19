@@ -23,7 +23,7 @@ const config = require('./config')
 
 const { wsdl_path } = config
 
-const publish = require('./rabbitmq/producer')
+// const publish = require('./rabbitmq/producer')
 
 const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8')
 
@@ -39,19 +39,19 @@ require('./customHandler')
 const app = express()
 
 
-const myService = {
-	NotificationToCPService: {
-	  NotificationToCP: {
-		async notificationToCP(args) {
-			TerraLogger.debug('Feedback from Airtel = ', args.notificationRespDTO)
-			return publish(config.rabbit_mq.airtel.postback_queue, { ...args.notificationRespDTO, network: 'Airtel' })
-				.then(() => {
-					TerraLogger.debug(`pushed feedback data to queue: ${config.rabbit_mq.airtel.postback_queue}  `)
-				})
-		},
-	  },
-	},
-  }
+// const myService = {
+// 	NotificationToCPService: {
+// 	  NotificationToCP: {
+// 		async notificationToCP(args) {
+// 			TerraLogger.debug('Feedback from Airtel = ', args.notificationRespDTO)
+// 			return publish(config.rabbit_mq.airtel.postback_queue, { ...args.notificationRespDTO, network: 'Airtel' })
+// 				.then(() => {
+// 					TerraLogger.debug(`pushed feedback data to queue: ${config.rabbit_mq.airtel.postback_queue}  `)
+// 				})
+// 		},
+// 	  },
+// 	},
+//   }
 
 //   const smsService = {
 // 	SmsNotificationService: {
@@ -196,21 +196,21 @@ const soapUrl_dlr = '/mtn/dlr'
 TerraLogger.debug(`Listening for MTN DLR SOAP postback on: ${soapUrl_dlr}`)
 const soapServerSub1 = soap.listen(server, soapUrl_dlr, serviceObject, mtn_feedback_xml)
 soapServerSub1.log = (type, data) => {
-	// TerraLogger.debug(type, data)
+	TerraLogger.debug(type, data)
 }
 
 const soapUrl_sms_mo = '/mtn/sms_mo'
 TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_sms_mo}`)
 const soapServerSub2 = soap.listen(server, soapUrl_sms_mo, serviceObject, mtn_feedback_xml)
 soapServerSub2.log = (type, data) => {
-	// TerraLogger.debug(type, data)
+	TerraLogger.debug(type, data)
 }
 
 const soapUrl_ussd_mo = '/mtn/ussd_mo'
 TerraLogger.debug(`Listening for MTN USSD MO SOAP postback on: ${soapUrl_ussd_mo}`)
 const soapServerSub3 = soap.listen(server, soapUrl_ussd_mo, serviceObject, mtn_feedback_xml)
 soapServerSub3.log = (type, data) => {
-	// TerraLogger.debug(type, data)
+	TerraLogger.debug(type, data)
 }
 
 

@@ -167,7 +167,12 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: NOTIFICATION_SERVICE_URL 
+                              key: NOTIFICATION_SERVICE_URL
+                      - name: SMS_USSD_IVR_ONBOARDING_SERVICE_URL 
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: SMS_USSD_IVR_ONBOARDING_SERVICE_URL 
                       - name: AIRTEL_SE_SUBSCRIPTION_BASE_URL
                         valueFrom:
                           secretKeyRef:
@@ -202,7 +207,17 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: VLOCATION                                  
+                              key: VLOCATION
+                      - name: SMSLOC
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: SMSLOC
+                      - name: SMS_NOT_VLOCATION
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: SMS_NOT_VLOCATION                                    
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337

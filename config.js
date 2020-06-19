@@ -47,7 +47,7 @@ module.exports = {
 			host: env.MONGODB_HOST,
 			port: env.MONGODB_PORT,
 			db_name: env.MONGODB_DATABASE_NAME,
-			url: env.MONGODB_URL,
+			url: env.MONGODB_LOCAL_URL,
 		},
 	},
 	redisClientConnection: {
