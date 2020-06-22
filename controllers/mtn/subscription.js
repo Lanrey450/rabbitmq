@@ -348,7 +348,7 @@ module.exports = {
 					message: `Unable to push postback data to queue, ${err}`,
 				}))
 	},
-
+// add a consumer that would do the same thing - 
 
 	async sendSms(req, res) {
 		TerraLogger.debug('calling send sms API')
@@ -380,7 +380,7 @@ module.exports = {
 					serviceId: req.body.external_id,
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
-					notifyUrl: config.mtn.notifyUrl.sms_dlr,
+					notifyUrl: config.mtn.notifyUrl.sms_dlr,  // add another endpoint notification url drl 
 					message: req.body.message,
 				}
 				try {
