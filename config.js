@@ -28,6 +28,7 @@ module.exports = {
 			sms: `${env.APP_BASE_URL}/mtn/sms_mo`,
 			ussd: `${env.APP_BASE_URL}/mtn/ussd_mo`,
 			sms_dlr: `${env.APP_BASE_URL}/mtn/dlr`,
+			notification_url_dlr: env.SMS_NOTIFICATION_STATUS_URL,
 		},
 	},
 	airtel: {
