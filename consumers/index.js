@@ -179,7 +179,7 @@ function sendSms(consumerQueue) {
 			const data = {
 				spId: config.mtn.spID,
 				spPwd: config.mtn.spPwd,
-				serviceId: payload.externalIid,
+				serviceId: payload.externalId,
 				msisdn: sanitized_msisdn,
 				shortcode: payload.shortcode,
 				notifyUrl: payload.dlrUrl,
