@@ -42,7 +42,7 @@ module.exports = {
 		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel)
 	},
 
-	//Send sms to msisdn
+	// Send sms for mtn
 	sendSmsForMtn() {
 		const queue = config.rabbit_mq.mtn.send_sms_queue
 		sendSms(queue)
