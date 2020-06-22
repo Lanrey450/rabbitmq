@@ -19,6 +19,8 @@ const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 const publish = require('../rabbitmq/producer')
+const { sendSmsMT } = require('../lib/mtn/subscription');
+const Utils = require('../lib/utils')
 
 module.exports = {
 
@@ -38,6 +40,12 @@ module.exports = {
 		const feedbackQueue = config.feedbackQueues.BillingFeedbackQUEUE
 		const queue = config.rabbit_mq.mtn.subscription_postback_queue
 		consumeHandler(feedbackQueue, queue, MtnSubscriptionModel)
+	},
+
+	// Send sms for mtn
+	sendSmsForMtn() {
+		const queue = config.rabbit_mq.mtn.send_sms_queue
+		sendSms(queue)
 	},
 
 	// AIRTEL CONSUMERS
@@ -148,6 +156,39 @@ function saveUserSubData(consumerQueue, model) {
 			TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 		} catch (error) {
 			TerraLogger.debug(`unable to save data to mongodb - ${error}`)
+		}
+	})
+}
+
+function sendSms(consumerQueue) {
+	consume(consumerQueue, async (err, msg) => {
+		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
+		if (err) {
+			TerraLogger.debug(`rabbitmq connection failed! - ${err}`)
+			return
+		}
+		if (msg == null) {
+			TerraLogger.debug('the queue is empty at the moment')
+			return
+		}
+		try {
+			TerraLogger.debug(msg)
+			const payload = JSON.parse(msg);
+
+			const sanitized_msisdn = Utils.msisdnSanitizer(payload.to, false)
+			const data = {
+				spId: config.mtn.spID,
+				spPwd: config.mtn.spPwd,
+				serviceId: payload.externalId,
+				msisdn: sanitized_msisdn,
+				shortcode: payload.shortcode,
+				notifyUrl: payload.dlrUrl,
+				message: payload.message,
+			}
+			await sendSmsMT(data)
+			TerraLogger.debug(`Successfully sent sms! - ${sanitized_msisdn}`)
+		} catch (error) {
+			TerraLogger.debug(`unable to send sms - ${error}`)
 		}
 	})
 }
