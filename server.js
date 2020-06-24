@@ -130,7 +130,7 @@ app.use(bodyParser.raw({
 function notifySmsReception(args, cb, headers) {
 	console.log('notifySmsReception')
 	console.log(args)
-			const url = `${config.mtn.baseSmsOnboardUrl}sms/entry?${querystring.stringify({ sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source:'sms' })}`
+			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({ sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source:'sms' })}`
 			return axios.get(url).then((response) => {
 				console.log(response.data)
 			}).catch((err) => {
@@ -145,7 +145,7 @@ function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
 	console.log(args, headers, '-----')
 
-	return axios.post(`${config.mtn.baseSmsOnboardUrl}ussd/entry`, {
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
 		serviceCode: args.serviceCode[0],
 		command: args.ussdString[0],
 		network: 'mtn',
