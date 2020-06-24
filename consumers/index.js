@@ -172,18 +172,19 @@ function sendSms(consumerQueue) {
 			return
 		}
 		try {
-			TerraLogger.debug(msg)
-			const payload = JSON.parse(msg);
+			TerraLogger.debug('HERERRE', msg.to)
 
-			const sanitized_msisdn = Utils.msisdnSanitizer(payload.to, false)
+			const { to, shortcode, message, dlrUrl, externalId } = msg;
+
+			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
 			const data = {
 				spId: config.mtn.spID,
 				spPwd: config.mtn.spPwd,
-				serviceId: payload.externalId,
+				serviceId: externalId,
 				msisdn: sanitized_msisdn,
-				shortcode: payload.shortcode,
-				notifyUrl: payload.dlrUrl,
-				message: payload.message,
+				shortcode,
+				notifyUrl: dlrUrl,
+				message: message,
 			}
 			await sendSmsMT(data)
 			TerraLogger.debug(`Successfully sent sms! - ${sanitized_msisdn}`)

@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "start-prod": "concurrently \"npm run start\" \"npm run mtn_subscription\" \"npm run mtn_unsubscription\" \"npm run mtn_postback\" \"npm run airtel_subscription\" \"npm run airtel_unsubscription\" \"npm run airtel_postback\" \"npm run nine_mobile_subscription\" \"npm run nine_mobile_unsubscription\" \"npm run nine_mobile_postback\"  \"npm run mtn_send_sms_consumer\"",
+    "start-prod": "concurrently \"npm run start\" \"npm run mtn_subscription\" \"npm run mtn_unsubscription\" \"npm run mtn_postback\" \"npm run airtel_subscription\" \"npm run airtel_unsubscription\" \"npm run airtel_postback\" \"npm run nine_mobile_subscription\" \"npm run nine_mobile_unsubscription\" \"npm run nine_mobile_postback\" \"npm run mtn_send_sms_consumer\"",
     "mtn_subscription": "node consumers/subscriptionMTN.js",
     "mtn_unsubscription": "node consumers/unsubscriptionMTN.js",
     "mtn_postback": "node consumers/postbackMTN.js",
@@ -21,7 +21,7 @@
     "nine_mobile_subscription": "node consumers/subscription9mobile.js",
     "nine_mobile_unsubscription": "node consumers/unsubscription9mobile.js",
     "nine_mobile_postback": "node consumers/postback9mobile.js",
-    "mtn_send_sms_consumer": "node consumers/mtn_send_sms_consumer.js"
+    "mtn_send_sms_consumer": "node consumers/sendSmsMTN.js"
   },
   "repository": {
     "type": "git",
