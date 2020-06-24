@@ -14,6 +14,7 @@ const TerraLogger = require('terra-logger')
 const cors = require('cors')
 const session = require('express-session')
 const fs = require('fs')
+const querystring = require('query-string')
 
 const RedisStore = require('connect-redis')(session)
 
@@ -114,7 +115,6 @@ app.get('/', (req, res) => {
 routes(app)
 
 
-
 const server = app.listen(config.port, () => {
 	TerraLogger.debug(`${config.name} listening on port ${config.port}!`)
 })
@@ -126,18 +126,16 @@ app.use(bodyParser.raw({
 	},
   }))
 
+
 function notifySmsReception(args, cb, headers) {
-    console.log('notifySmsReception')
-
+	console.log('notifySmsReception')
 	console.log(args)
-
-	return axios.get(`${config.mtn.baseSmsOnboardUrl}/sms/entry?sender=${args.message.senderAddress}&recipient=${args.message.smsServiceActivationNumber}&message=${args.message.message}&network=mtn&sub_source=sms`)
-	.then((response) => {
-		console.log(response)
-	  })
-	  .catch((error) => {
-		console.log(error)
-	  })
+			const url = `${config.mtn.baseSmsOnboardUrl}sms/entry?${querystring.stringify({ sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source:'sms' })}`
+			return axios.get(url).then((response) => {
+				console.log(response.data)
+			}).catch((err) => {
+				console.log(err)
+			})
 
     // return { result: '0' }
 }
@@ -145,14 +143,14 @@ function notifySmsReception(args, cb, headers) {
 
 function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
-	console.log(args)
+	console.log(args, headers, '-----')
 
-	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}ussd/entry`, {
 		serviceCode: args.serviceCode[0],
-		command: '',
+		command: args.ussdString[0],
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
-		sessionId: '',
+		sessionId: headers.NotifySOAPHeader.linkid,
 	  })
 	  .then((response) => {
 		console.log(response)
@@ -165,11 +163,18 @@ function notifyUssdReception(args, cb, headers) {
     // return { result: '0' }
 }
 
+ // handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
     console.log('notifySmsDeliveryReceipt')
 
-    console.log(args)
-    return { result: '0' }
+	console.log(args, headers.NotifySOAPHeader, '------')
+
+		const url = `${config.mtn.notifyUrl.notification_url_dlr}?${querystring.stringify({ recipient: args.deliveryStatus.address.substring(4), dlr: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2', time: headers.NotifySOAPHeader.timeStamp })}`
+		return axios.get(url).then((response) => {
+			console.log(response.data)
+		}).catch((err) => {
+			console.log(err)
+		})
 }
 
 

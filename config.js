@@ -28,6 +28,7 @@ module.exports = {
 			sms: `${env.APP_BASE_URL}/mtn/sms_mo`,
 			ussd: `${env.APP_BASE_URL}/mtn/ussd_mo`,
 			sms_dlr: `${env.APP_BASE_URL}/mtn/dlr`,
+			notification_url_dlr: env.SMS_NOTIFICATION_STATUS_URL,
 		},
 	},
 	airtel: {
@@ -67,6 +68,7 @@ module.exports = {
 			subscription_queue: 'mtn_subscription_queue', // our inhouse TG data tracking and gathering 
 			un_subscription_queue: 'mtn_unsubscription_queue',  // aggregator platform queue
 			subscription_postback_queue: 'mtn_postback_queue',  // aggregator platform queue
+			send_sms_queue: 'mtn_send_sms_queue'
 		},
 		airtel: {
 			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering
