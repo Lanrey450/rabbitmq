@@ -16,6 +16,8 @@ const session = require('express-session')
 const fs = require('fs')
 const querystring = require('query-string')
 
+const Redis = require('../redis')
+
 const RedisStore = require('connect-redis')(session)
 
 const axios = require('axios')
@@ -160,21 +162,44 @@ function notifyUssdReception(args, cb, headers) {
 	  })
 
 
-    // return { result: '0' }
+	// return { result: '0' }
 }
+
+// async getServiceIdFromKeyword(keyword) {
+	const serviceId = await Redis.getAsync(keyword)
+		.then((rkeyword) => {
+			TerraLogger.debug(rkeyword, 'keyword from redis')
+			return rkeyword
+		}).catch((error) => {
+			TerraLogger.debug(error, 'Error getting serviceID from redis')
+		})
+	TerraLogger.debug(serviceId, '++++++ validKeyword from Redis Store')
+	return serviceId
+// }
+
 
  // handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
-    console.log('notifySmsDeliveryReceipt')
-
+	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------')
 
-		const url = `${config.mtn.notifyUrl.notification_url_dlr}?${querystring.stringify({ recipient: args.deliveryStatus.address.substring(4), dlr: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2', time: headers.NotifySOAPHeader.timeStamp })}`
-		console.log(url, 'dlr url')
-		return axios.get(url).then((response) => {
+	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+
+		console.log(redisKeyForDlrUrl)
+
+		await Redis.getAsync(redisKeyForDlrUrl)
+		.then((dlrUrl) => {
+			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
+		// const url = `${config.mtn.notifyUrl.notification_url_dlr}?${querystring.stringify({ recipient: args.deliveryStatus.address.substring(4), dlr: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2', time: headers.NotifySOAPHeader.timeStamp })}`
+		console.log(dlrUrl, 'dlr url')
+		return axios.get(dlrUrl).then((response) => {
 			console.log(response.data)
 		}).catch((err) => {
 			console.log(err)
+		})
+
+		}).catch((error) => {
+			TerraLogger.debug(error, 'Error getting dlrUrl from redis')
 		})
 }
 
