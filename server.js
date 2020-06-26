@@ -165,17 +165,6 @@ function notifyUssdReception(args, cb, headers) {
 	// return { result: '0' }
 }
 
-// async getServiceIdFromKeyword(keyword) {
-	const serviceId = await Redis.getAsync(keyword)
-		.then((rkeyword) => {
-			TerraLogger.debug(rkeyword, 'keyword from redis')
-			return rkeyword
-		}).catch((error) => {
-			TerraLogger.debug(error, 'Error getting serviceID from redis')
-		})
-	TerraLogger.debug(serviceId, '++++++ validKeyword from Redis Store')
-	return serviceId
-// }
 
 
  // handle dlr from MTN - forward to the new url on notification_url_dlr
