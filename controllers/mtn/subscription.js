@@ -377,7 +377,7 @@ module.exports = {
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					serviceId: req.body.external_id,
+					externalId: req.body.external_id,
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
 					notifyUrl: config.mtn.notifyUrl.sms_dlr,  // add another endpoint notification url drl 
