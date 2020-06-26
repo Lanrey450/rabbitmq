@@ -170,6 +170,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log(args, headers.NotifySOAPHeader, '------')
 
 		const url = `${config.mtn.notifyUrl.notification_url_dlr}?${querystring.stringify({ recipient: args.deliveryStatus.address.substring(4), dlr: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2', time: headers.NotifySOAPHeader.timeStamp })}`
+		console.log(url, 'dlr url')
 		return axios.get(url).then((response) => {
 			console.log(response.data)
 		}).catch((err) => {
