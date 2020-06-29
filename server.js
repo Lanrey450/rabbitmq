@@ -143,7 +143,8 @@ function notifySmsReception(args, cb, headers) {
 
 function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
-	console.log(args, headers, '-----')
+	console.log(args, '-----')
+	// console.log(headers, '-----')
 
 	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
 		serviceCode: args.serviceCode[0],
@@ -151,16 +152,22 @@ function notifyUssdReception(args, cb, headers) {
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
 		sessionId: headers.NotifySOAPHeader.linkid,
+		msgType: args.msgType[0],
 	  })
 	  .then((response) => {
-		console.log(response)
+		// console.log(response.data)
+		// return response.data.result
+		return { result: '0' }
 	  })
 	  .catch((error) => {
-		console.log(error)
+		// console.log(error)
+		return { result: '0' }
 	  })
 
+	//   return { result: '0' }
 
-    // return { result: '0' }
+
+    
 }
 
  // handle dlr from MTN - forward to the new url on notification_url_dlr
