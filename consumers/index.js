@@ -19,7 +19,7 @@ const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 const publish = require('../rabbitmq/producer')
-const redis = require('../../redis')
+const redis = require('../redis')
 const { sendSmsMT } = require('../lib/mtn/subscription')
 const Utils = require('../lib/utils')
 
@@ -181,7 +181,7 @@ function sendSms(consumerQueue) {
 
 			// cache the dlrUrl here and save to redis
 
-			redis.set(`DLR_URL::${externalId}::${to}`, `${dlrUrl}`, 'ex', 60 * 5) // save for 5 mins
+			redis.set(`DLR_URL::${externalId}::${to}`, `${dlrUrl}`, 'ex', 60 * 6) // save for 5 mins
 
 			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
 			const data = {
