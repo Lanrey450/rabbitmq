@@ -71,6 +71,7 @@ async userConsent(req, res) {
                 status: 'success',
                 network: '9mobile',
                 action: config.request_type.sub,
+                renew: true,
                 serviceId,
                 msisdn,
                 message: response.responseData.subscriptionResult,
@@ -81,6 +82,8 @@ async userConsent(req, res) {
                     subscriptionError: response.responseData.subscriptionError,              
                 },
             }
+
+            console.log(dataToPush, 'dataToPush')
 
         TerraLogger.debug(data, response, '9Mobile subscription data')
 
@@ -121,6 +124,7 @@ async userConsent(req, res) {
                 status: 'success',
                 network: '9mobile',
                 action: config.request_type.sub,
+                renew: false,
                 serviceId,
                 msisdn,
                 message: response.responseData.subscriptionResult,
@@ -131,6 +135,8 @@ async userConsent(req, res) {
                     subscriptionError: response.responseData.subscriptionError,   
             },
         }
+
+        console.log(dataToPush, 'dataToPush')
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
