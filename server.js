@@ -16,9 +16,11 @@ const session = require('express-session')
 const fs = require('fs')
 const querystring = require('query-string')
 
+
 const RedisStore = require('connect-redis')(session)
 
 const axios = require('axios')
+const Redis = require('./redis')
 const config = require('./config')
 
 
@@ -130,7 +132,9 @@ app.use(bodyParser.raw({
 function notifySmsReception(args, cb, headers) {
 	console.log('notifySmsReception')
 	console.log(args)
-			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({ sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source:'sms' })}`
+			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
+ sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source: 'sms'
+})}`
 			return axios.get(url).then((response) => {
 				console.log(response.data)
 			}).catch((err) => {
@@ -154,34 +158,40 @@ function notifyUssdReception(args, cb, headers) {
 		sessionId: headers.NotifySOAPHeader.linkid,
 		msgType: args.msgType[0],
 	  })
-	  .then((response) => {
+	  .then((response) =>
 		// console.log(response.data)
 		// return response.data.result
-		return { result: '0' }
-	  })
-	  .catch((error) => {
+		 ({ result: '0' }))
+	  .catch((error) =>
 		// console.log(error)
-		return { result: '0' }
-	  })
+		 ({ result: '0' }))
 
 	//   return { result: '0' }
 
-
-    
+	// return { result: '0' }
 }
+
 
  // handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
-    console.log('notifySmsDeliveryReceipt')
-
+	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------')
 
-		const url = `${config.mtn.notifyUrl.notification_url_dlr}?${querystring.stringify({ recipient: args.deliveryStatus.address.substring(4), dlr: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2', time: headers.NotifySOAPHeader.timeStamp })}`
-		console.log(url, 'dlr url')
-		return axios.get(url).then((response) => {
+	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+
+		console.log(redisKeyForDlrUrl)
+
+		return Redis.getAsync(redisKeyForDlrUrl)
+		.then((dlrUrl) => {
+			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
+		console.log(dlrUrl, 'dlr url')
+		return axios.get(dlrUrl).then((response) => {
 			console.log(response.data)
 		}).catch((err) => {
 			console.log(err)
+		})
+		}).catch((error) => {
+			TerraLogger.debug(error, 'Error getting dlrUrl from redis')
 		})
 }
 

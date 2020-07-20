@@ -37,6 +37,8 @@ async userConsent(req, res) {
 
     const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
 
+    console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+
      try {
         // get serviceId from keyword saved to redis (to be used for subscription request)
      const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
@@ -47,6 +49,9 @@ async userConsent(req, res) {
      const channel = result[1]
 
 
+     console.log(data, serviceId, channel, result,  'data------------------')
+
+
      if (keyword === '1') {
  
         try {
@@ -55,6 +60,7 @@ async userConsent(req, res) {
             userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
             })
 
+            console.log(response, 'response')
             // format data to push to queue
             // const dataToPush = {
             //     status: 'success',
@@ -97,6 +103,8 @@ async userConsent(req, res) {
          const response = await subscribeUser.subscribe({
         userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 2, 
         })
+
+        console.log(response, 'response')
 
         // format data to push to queue
         // const dataToPush = {

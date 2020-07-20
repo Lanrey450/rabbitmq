@@ -19,6 +19,7 @@ const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 const publish = require('../rabbitmq/producer')
+const redis = require('../redis')
 const { sendSmsMT } = require('../lib/mtn/subscription')
 const Utils = require('../lib/utils')
 
@@ -172,9 +173,15 @@ function sendSms(consumerQueue) {
 			return
 		}
 		try {
-			TerraLogger.debug('HERERRE', msg.to)
+			TerraLogger.debug('Here', msg.to)
 
-			const { to, sender, message, dlrUrl, externalId } = msg
+			const {
+				to, sender, message, dlrUrl, externalId,
+			} = msg
+
+			// cache the dlrUrl here and save to redis
+
+			redis.set(`DLR_URL::${externalId}::${to}`, `${dlrUrl}`, 'ex', 60 * 6) // save for 5 mins
 
 			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
 			const data = {
