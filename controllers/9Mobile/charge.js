@@ -6,7 +6,7 @@ const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const Utils = require('../../lib/utils')
 const config = require('../../config')
-// const publish = require('../../rabbitmq/producer')
+const publish = require('../../rabbitmq/producer')
 
 module.exports = {
 	async chargeSync(req, res) {
@@ -35,7 +35,11 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					context: 'STATELESS',
 				}
+
+				console.log(nineMobileRequestBody, '9Mobile request body')
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
+
+				console.log(data, '9Mobile response')
 
 				// format data to push to queue
 				const dataToPush = {
@@ -53,17 +57,19 @@ module.exports = {
 					},
 				}
 
-				// await publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
-				// 	.then(() => {
-				// 		TerraLogger.debug('successfully pushed charging data to queue')
-				return ResponseManager.sendResponse({
-					res,
-					responseBody: dataToPush,
-				})
-				// }).catch((err) => ResponseManager.sendErrorResponse({
-				// 	res,
-				// 	message: err.message,
-				// }))
+				console.log(dataToPush, 'dataToPush')
+
+				await publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
+					.then(() => {
+						TerraLogger.debug('successfully pushed charging data to queue')
+						return ResponseManager.sendResponse({
+							res,
+							responseBody: dataToPush,
+						})
+					}).catch((err) => ResponseManager.sendErrorResponse({
+						res,
+						message: err.message,
+					}))
 			} catch (error) {
 				TerraLogger.debug(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach the 9mobile server - ${error}` })
@@ -100,7 +106,11 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					context: 'RENEW',
 				}
+
+				console.log(nineMobileRequestBody, 'req.body from 9Mobile')
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
+
+				console.log(data, 'response from 9Mobile')
 
 				//  format data to push to queue
 				const dataToPush = {
@@ -118,18 +128,21 @@ module.exports = {
 					},
 				}
 
-				// return publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
-				// .then(() => {
-				// TerraLogger.debug('successfully pushed charging data to queue')
-				return ResponseManager.sendResponse({
-					res,
-					responseBody: dataToPush,
-				})
-				// })
-				// .catch((err) => ResponseManager.sendErrorResponse({
-				// 	res,
-				// 	message: err.message,
-				// }))
+
+				console.log(dataToPush, 'dataToPush')
+
+				return publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
+					.then(() => {
+						TerraLogger.debug('successfully pushed charging data to queue')
+						ResponseManager.sendResponse({
+							res,
+							responseBody: dataToPush,
+						})
+					})
+					.catch((err) => ResponseManager.sendErrorResponse({
+						res,
+						message: err.message,
+					}))
 			} catch (error) {
 				TerraLogger.debug(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach 9mobile server - ${error}` })
