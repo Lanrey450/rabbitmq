@@ -39,7 +39,7 @@ module.exports = {
 				console.log(nineMobileRequestBody, '9Mobile request body')
 				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
-				console.log(data, '9Mobile request body')
+				console.log(data, '9Mobile response')
 
 				// format data to push to queue
 				const dataToPush = {
@@ -56,6 +56,8 @@ module.exports = {
 						inError: data.inError,
 					},
 				}
+
+				console.log(dataToPush, 'dataToPush')
 
 				await publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
 					.then(() => {
@@ -125,6 +127,9 @@ module.exports = {
 						inError: data.inError,
 					},
 				}
+
+
+				console.log(dataToPush, 'dataToPush')
 
 				return publish(config.rabbit_mq.nineMobile.charge_queue, { ...dataToPush })
 					.then(() => {
