@@ -49,17 +49,22 @@ async userConsent(req, res) {
      const channel = result[1]
 
 
-     console.log(data, serviceId, channel, result,  'data------------------')
+     console.log(data, serviceId, channel, result, 'data------------------')
 
 
      if (keyword === '1') {
  
         try {
+
+            console.log('msisdn -', msisdn)
+            console.log('serviceId - ', serviceId.trim())
+            console.log('entryChannel - ', channel.toUpperCase())
                 
                     const response = await subscribeUser.subscribe({
             userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
             })
 
+        
             console.log(response, 'response')
             // format data to push to queue
             // const dataToPush = {
@@ -90,9 +95,10 @@ async userConsent(req, res) {
             // }).catch((err) => {
             //     TerraLogger.debug(err)
             // })
-            }
-            if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
+            } else if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
                 Utils.sendUserAleadySubSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+            } else {
+                Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
             }
          } catch (error) {
              TerraLogger.debug(error.response)
@@ -100,9 +106,13 @@ async userConsent(req, res) {
          }
      } else if (keyword === '2') {
         try {
+            console.log('msisdn -', msisdn)
+            console.log('serviceId - ', serviceId.trim())
+            console.log('entryChannel - ', channel.toUpperCase())
          const response = await subscribeUser.subscribe({
         userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 2, 
         })
+
 
         console.log(response, 'response')
 
@@ -135,6 +145,8 @@ async userConsent(req, res) {
         }
         if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
             Utils.sendUserAleadySubSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+        } else {
+            Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
         }
          } catch (error) {
              TerraLogger.debug(error)

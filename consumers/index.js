@@ -19,7 +19,7 @@ const NineMobileSubscriptionModel = require('../models/9Mobile/subscription')
 const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 const publish = require('../rabbitmq/producer')
-const redis = require('../redis')
+// const redis = require('../redis')
 const { sendSmsMT } = require('../lib/mtn/subscription')
 const Utils = require('../lib/utils')
 
