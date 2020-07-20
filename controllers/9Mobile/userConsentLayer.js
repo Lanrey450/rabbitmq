@@ -83,6 +83,8 @@ async userConsent(req, res) {
                 },
             }
 
+            console.log(dataToPush, 'dataToPush')
+
         TerraLogger.debug(data, response, '9Mobile subscription data')
 
              if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
@@ -133,6 +135,8 @@ async userConsent(req, res) {
                     subscriptionError: response.responseData.subscriptionError,   
             },
         }
+
+        console.log(dataToPush, 'dataToPush')
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
