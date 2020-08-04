@@ -181,13 +181,15 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 
 	const resp = {
 		correlator: args.correlator[0],
-		msisdn: args.deliveryStatus.address.substring[4],
+		msisdn: args.deliveryStatus.address.substring[3],
 		deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2',
 		serviceId: headers.NotifySOAPHeader.serviceId,
 		timeStamp: headers.NotifySOAPHeader.timeStamp,
 		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
 		network: 'mtn'
 	}
+
+	console.log(resp,  '----------resp')
 
 
 	// return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
