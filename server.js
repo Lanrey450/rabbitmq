@@ -179,53 +179,39 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------notifySmsDeliveryReceipt')
 
-	const resp = {
-		correlator: args.correlator[0],
-		msisdn: args.deliveryStatus.address.substring[4],
-		deliveryStatus: args.deliveryStatus.deliveryStatus,
-		serviceId: headers.NotifySOAPHeader.serviceId,
-		timeStamp: headers.NotifySOAPHeader.timeStamp,
-		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
-		network: 'mtn'
-	}
+	// const resp = {
+	// 	correlator: args.correlator[0],
+	// 	msisdn: args.deliveryStatus.address.substring[4],
+	// 	deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? 'success' : 'failed',
+	// 	serviceId: headers.NotifySOAPHeader.serviceId,
+	// 	timeStamp: headers.NotifySOAPHeader.timeStamp,
+	// 	traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
+	// 	network: 'mtn'
+	// }
 
 
-	return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
-	.then((data) => {console.log(data, 'data for send sms pushed to queue')}).catch((error) => {console.log(error, 'error pushing send sms data to queue')})
+	// return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
+	// .then((data) => {console.log(data, 'data for send sms pushed to queue')}).catch((error) => {console.log(error, 'error pushing send sms data to queue')})
 
-	// const data = {
-	// 	correlator: [ '00001' ],
-	// 	deliveryStatus: {
-	// 	  address: 'tel:8612312345678',
-	// 	  deliveryStatus: 'DeliveredToTerminal'
-	// 	}
-	//   } {
-	// 	spRevId: 'sdp',
-	// 	spRevpassword: '206D88BB7F3D154B130DD6E1E0B8828B',
-	// 	spId: '000201',
-	// 	serviceId: '35000001000001',
-	// 	timeStamp: '111029084631570',
-	// 	traceUniqueID: '100001200101110623021721000011'
-	//   }
 
-	//   const resp = 
+	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
 
-	// const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+	const deliveryStatus = args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2'
 
-	// 	// console.log(redisKeyForDlrUrl)
+		// console.log(redisKeyForDlrUrl)
 
-	// 	return Redis.getAsync(redisKeyForDlrUrl)
-	// 	.then((dlrUrl) => {
-	// 		TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
-	// 	console.log(dlrUrl, 'dlr url')
-	// 	return axios.get(dlrUrl).then((response) => {
-	// 		console.log(response.data)
-	// 	}).catch((err) => {
-	// 		console.log(err)
-	// 	})
-	// 	}).catch((error) => {
-	// 		TerraLogger.debug(error, 'Error getting dlrUrl from redis')
-	// 	})
+		return Redis.getAsync(redisKeyForDlrUrl)
+		.then((dlrUrl) => {
+			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
+		console.log(dlrUrl, 'dlr url')
+		return axios.get(`${dlrUrl}/?dlr=${deliveryStatus}`).then((response) => {
+			console.log(response.data)
+		}).catch((err) => {
+			console.log(err)
+		})
+		}).catch((error) => {
+			TerraLogger.debug(error, 'Error getting dlrUrl from redis')
+		})
 }
 
 
