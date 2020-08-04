@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 /* eslint-disable indent */
 /* eslint-disable comma-dangle */
@@ -190,7 +191,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 
 
 	return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
-	.then(() => {}).catch(() => {})
+	.then((data) => {console.log(data, 'data for send sms pushed to queue')}).catch((error) => {console.log(error, 'error pushing send sms data to queue')})
 
 	// const data = {
 	// 	correlator: [ '00001' ],
