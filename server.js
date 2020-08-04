@@ -185,10 +185,11 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 		serviceId: headers.NotifySOAPHeader.serviceId,
 		timeStamp: headers.NotifySOAPHeader.timeStamp,
 		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
+		network: 'mtn'
 	}
 
 
-	return publish(config.rabbit_mq.mtn.mtn_send_sms_dlr_queue, { ...resp })
+	return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
 	.then(() => {}).catch(() => {})
 
 	// const data = {
