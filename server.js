@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 /* eslint-disable indent */
 /* eslint-disable comma-dangle */
@@ -176,7 +177,21 @@ function notifyUssdReception(args, cb, headers) {
  // handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
-	console.log(args, headers.NotifySOAPHeader, '------')
+	console.log(args, headers.NotifySOAPHeader, '------notifySmsDeliveryReceipt')
+
+	const resp = {
+		correlator: args.correlator[0],
+		msisdn: args.deliveryStatus.address.substring[4],
+		deliveryStatus: args.deliveryStatus.deliveryStatus,
+		serviceId: headers.NotifySOAPHeader.serviceId,
+		timeStamp: headers.NotifySOAPHeader.timeStamp,
+		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
+		network: 'mtn'
+	}
+
+
+	return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
+	.then((data) => {console.log(data, 'data for send sms pushed to queue')}).catch((error) => {console.log(error, 'error pushing send sms data to queue')})
 
 	// const data = {
 	// 	correlator: [ '00001' ],
