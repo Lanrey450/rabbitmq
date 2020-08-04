@@ -179,15 +179,15 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------notifySmsDeliveryReceipt')
 
-	// const resp = {
-	// 	correlator: args.correlator[0],
-	// 	msisdn: args.deliveryStatus.address.substring[4],
-	// 	deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? 'success' : 'failed',
-	// 	serviceId: headers.NotifySOAPHeader.serviceId,
-	// 	timeStamp: headers.NotifySOAPHeader.timeStamp,
-	// 	traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
-	// 	network: 'mtn'
-	// }
+	const resp = {
+		correlator: args.correlator[0],
+		msisdn: args.deliveryStatus.address.substring[4],
+		deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2',
+		serviceId: headers.NotifySOAPHeader.serviceId,
+		timeStamp: headers.NotifySOAPHeader.timeStamp,
+		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
+		network: 'mtn'
+	}
 
 
 	// return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
@@ -196,7 +196,6 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 
 	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
 
-	const deliveryStatus = args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2'
 
 		// console.log(redisKeyForDlrUrl)
 
@@ -204,7 +203,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 		.then((dlrUrl) => {
 			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
 		console.log(dlrUrl, 'dlr url')
-		return axios.get(`${dlrUrl}/?dlr=${deliveryStatus}`).then((response) => {
+		return axios.get(`${dlrUrl}/?dlr=${resp.deliveryStatus}&recipient=${resp.msisdn}`).then((response) => {
 			console.log(response.data)
 		}).catch((err) => {
 			console.log(err)
