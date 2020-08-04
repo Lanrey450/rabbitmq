@@ -181,7 +181,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 
 	const resp = {
 		correlator: args.correlator[0],
-		msisdn: args.deliveryStatus.address.substring[3],
+		msisdn: args.deliveryStatus.address.substring(3),
 		deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2',
 		serviceId: headers.NotifySOAPHeader.serviceId,
 		timeStamp: headers.NotifySOAPHeader.timeStamp,
@@ -196,10 +196,10 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	// .then((data) => {console.log(data, 'data for send sms pushed to queue')}).catch((error) => {console.log(error, 'error pushing send sms data to queue')})
 
 
-	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+	const redisKeyForDlrUrl = `DLR_URL::${resp.serviceId}::${resp.msisdn}`
 
 
-		// console.log(redisKeyForDlrUrl)
+		console.log(redisKeyForDlrUrl, '-----------redisKeyForDlrUrl')
 
 		return Redis.getAsync(redisKeyForDlrUrl)
 		.then((dlrUrl) => {
