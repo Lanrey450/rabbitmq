@@ -22,6 +22,7 @@ const RedisStore = require('connect-redis')(session)
 const axios = require('axios')
 const Redis = require('./redis')
 const config = require('./config')
+const publish = require('./rabbitmq/producer')
 
 
 const { wsdl_path } = config
@@ -177,22 +178,39 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------')
 
-	const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+	// const data = {
+	// 	correlator: [ '00001' ],
+	// 	deliveryStatus: {
+	// 	  address: 'tel:8612312345678',
+	// 	  deliveryStatus: 'DeliveredToTerminal'
+	// 	}
+	//   } {
+	// 	spRevId: 'sdp',
+	// 	spRevpassword: '206D88BB7F3D154B130DD6E1E0B8828B',
+	// 	spId: '000201',
+	// 	serviceId: '35000001000001',
+	// 	timeStamp: '111029084631570',
+	// 	traceUniqueID: '100001200101110623021721000011'
+	//   }
 
-		console.log(redisKeyForDlrUrl)
+	//   const resp = 
 
-		return Redis.getAsync(redisKeyForDlrUrl)
-		.then((dlrUrl) => {
-			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
-		console.log(dlrUrl, 'dlr url')
-		return axios.get(dlrUrl).then((response) => {
-			console.log(response.data)
-		}).catch((err) => {
-			console.log(err)
-		})
-		}).catch((error) => {
-			TerraLogger.debug(error, 'Error getting dlrUrl from redis')
-		})
+	// const redisKeyForDlrUrl = `DLR_URL::${headers.NotifySOAPHeader.serviceId}::${args.deliveryStatus.address.substring(4)}`
+
+	// 	// console.log(redisKeyForDlrUrl)
+
+	// 	return Redis.getAsync(redisKeyForDlrUrl)
+	// 	.then((dlrUrl) => {
+	// 		TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
+	// 	console.log(dlrUrl, 'dlr url')
+	// 	return axios.get(dlrUrl).then((response) => {
+	// 		console.log(response.data)
+	// 	}).catch((err) => {
+	// 		console.log(err)
+	// 	})
+	// 	}).catch((error) => {
+	// 		TerraLogger.debug(error, 'Error getting dlrUrl from redis')
+	// 	})
 }
 
 
