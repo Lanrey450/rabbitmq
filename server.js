@@ -176,7 +176,20 @@ function notifyUssdReception(args, cb, headers) {
  // handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
-	console.log(args, headers.NotifySOAPHeader, '------')
+	console.log(args, headers.NotifySOAPHeader, '------notifySmsDeliveryReceipt')
+
+	const resp = {
+		correlator: args.correlator[0],
+		msisdn: args.deliveryStatus.address.substring[4],
+		deliveryStatus: args.deliveryStatus.deliveryStatus,
+		serviceId: headers.NotifySOAPHeader.serviceId,
+		timeStamp: headers.NotifySOAPHeader.timeStamp,
+		traceUniqueID: headers.NotifySOAPHeader.traceUniqueID,
+	}
+
+
+	return publish(config.rabbit_mq.mtn.mtn_send_sms_dlr_queue, { ...resp })
+	.then(() => {}).catch(() => {})
 
 	// const data = {
 	// 	correlator: [ '00001' ],
