@@ -181,7 +181,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 
 	const resp = {
 		correlator: args.correlator[0],
-		msisdn: args.deliveryStatus.address.substring(3),
+		msisdn: args.deliveryStatus.address.substring(4),
 		deliveryStatus: args.deliveryStatus.deliveryStatus === 'DeliveredToTerminal' ? '1' : '2',
 		serviceId: headers.NotifySOAPHeader.serviceId,
 		timeStamp: headers.NotifySOAPHeader.timeStamp,
