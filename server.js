@@ -133,14 +133,16 @@ app.use(bodyParser.raw({
 
 function notifySmsReception(args, cb, headers) {
 	console.log('notifySmsReception')
-	console.log(args)
+	console.log(args, headers)
 			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
- sender: args.message.senderAddress, recipient: args.message.smsServiceActivationNumber, message: args.message.message, network: 'mtn', sub_source: 'sms'
+ message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn'
 })}`
+
+console.log(url, 'url')
 			return axios.get(url).then((response) => {
 				console.log(response.data)
 			}).catch((err) => {
-				console.log(err)
+				console.log(err.message)
 			})
 
     // return { result: '0' }
