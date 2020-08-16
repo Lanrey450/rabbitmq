@@ -29,6 +29,7 @@ const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password
 //  local dev
 // const defaultUrl = defaultConfig.url
 
+
 mongoose.set('debug', true)
 
 TerraLogger.debug("MONGO_DB_FULL_URL", defaultUrl)
