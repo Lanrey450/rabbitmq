@@ -135,7 +135,7 @@ function notifySmsReception(args, cb, headers) {
 	console.log('notifySmsReception')
 	console.log(args, headers)
 			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
- message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn'
+ message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
 })}`
 
 console.log(url, 'url')
