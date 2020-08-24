@@ -165,10 +165,10 @@ function notifyUssdReception(args, cb, headers) {
 	  .then((response) =>
 		// console.log(response.data)
 		// return response.data.result
-		 ({ result: '0' }))
+		 ({ 'loc:result': '0' }))
 	  .catch((error) =>
 		// console.log(error)
-		 ({ result: '0' }))
+		 ({ 'loc:result': '0' }))
 
 	//   return { result: '0' }
 
