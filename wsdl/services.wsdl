@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <definitions> must be the root of the WSDL document -->
-<wsdl:definitions targetNamespace="http://tempuri.org/"
+<wsdl:definitions targetNamespace="http://www.csapi.org/schema/parlayx/ussd/notification/v1_0/local"
                   xmlns:s="http://www.w3.org/2001/XMLSchema"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-                  xmlns:tns="http://tempuri.org/"
+                  xmlns:tns="http://www.csapi.org/schema/parlayx/ussd/notification/v1_0/local"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:loc="http://www.csapi.org/schema/parlayx/ussd/notification/v1_0/local"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
     <!-- WSDL TYPES: definition of the data types that are used in the web service -->
     <wsdl:types>
-        <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+        <s:schema elementFormDefault="qualified" targetNamespace="http://www.csapi.org/schema/parlayx/ussd/notification/v1_0/local">
 
             <s:element name="NotifySOAPHeader">
                 <s:complexType>
