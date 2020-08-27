@@ -115,7 +115,7 @@
         <wsdl:part name="parameters" element="tns:notifyUssdReception"/>
     </wsdl:message>
     <wsdl:message name="notifyUssdReceptionOut">
-        <wsdl:part name="parameters" element="tns:notifyUssdReceptionResponse"/>
+        <wsdl:part name="parameters" element="loc:notifyUssdReceptionResponse"/>
     </wsdl:message>
 
 
