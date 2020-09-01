@@ -172,7 +172,7 @@ function notifyUssdReception(args, cb, headers) {
 		const data = {
 			spId: config.mtn.spID,
 			spPwd: config.mtn.spPwd,
-			serviceId: headers.serviceId,
+			serviceId: headers.NotifySOAPHeader.serviceId,
 			option_type: 1, //
 			msisdn: args.msIsdn[0],
 			shortcode: args.serviceCode[0],
