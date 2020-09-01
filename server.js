@@ -156,6 +156,7 @@ function notifyUssdReception(args, cb, headers) {
 
 	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
 		serviceCode: args.serviceCode[0],
+		shortCode: args.serviceCode[0],
 		command: args.ussdString[0],
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
