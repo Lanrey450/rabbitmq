@@ -620,6 +620,7 @@ module.exports = {
 					msisdn: sanitized_msisdn,
 					shortcode: req.body.shortcode,
 					ussd_string: req.body.ussd_string,
+					linkid: req.body.linkid || '12345678901111',
 				}
 
 					const response = await MTNSDPAPIHandler.sendUssd(data)
