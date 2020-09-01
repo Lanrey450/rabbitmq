@@ -24,6 +24,7 @@ const axios = require('axios')
 const Redis = require('./redis')
 const config = require('./config')
 const publish = require('./rabbitmq/producer')
+const MTNSDPAPIHandler = require('./lib/mtn/subscription')
 
 
 const { wsdl_path } = config
@@ -152,7 +153,7 @@ console.log(url, 'url')
 function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
 	console.log(args, '-----')
-	// console.log(headers, '-----')
+	console.log(headers, '-----')
 
 	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
 		serviceCode: args.serviceCode[0],
@@ -164,13 +165,27 @@ function notifyUssdReception(args, cb, headers) {
 		sessionId: headers.NotifySOAPHeader.linkid,
 		msgType: args.msgType[0],
 	  })
-	  .then((response) =>
+	  .then(async (response) => {
 		console.log(response.data, '-------p--------')
 		// return response.data.result
-		 ({ 'loc:result': '0' }))
-	  .catch((error) =>
-		console.log(error, 'error ------------')
-		 ({ 'loc:result': '0' }))
+
+		const data = {
+			spId: config.mtn.spID,
+			spPwd: config.mtn.spPwd,
+			serviceId: headers.serviceId,
+			option_type: 1, //
+			msisdn: args.msIsdn[0],
+			shortcode: args.serviceCode[0],
+			ussd_string: response.data,
+			linkid: headers.NotifySOAPHeader.linkid,
+		}
+		await MTNSDPAPIHandler.sendUssd(data);
+
+		({ 'loc:result': '0' })
+	  })
+	  .catch((error) => 
+	  console.log(error, 'error ------------')
+	  ({ 'loc:result': '0' }))
 
 	//   return { result: '0' }
 
@@ -193,7 +208,7 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 		network: 'mtn'
 	}
 
-	console.log(resp,  '----------resp')
+	console.log(resp, '----------resp')
 
 
 	// return publish(config.rabbit_mq.mtn.send_sms_dlr_queue, { ...resp })
