@@ -179,9 +179,12 @@ function notifyUssdReception(args, cb, headers) {
 			ussd_string: response.data,
 			linkid: headers.NotifySOAPHeader.linkid,
 		}
-		await MTNSDPAPIHandler.sendUssd(data);
+		console.log('DATA', data)
+		const result = await MTNSDPAPIHandler.sendUssd(data)
 
-		({ 'loc:result': '0' })
+		console.log('Result', result)
+
+		return ({ 'loc:result': '0' })
 	  })
 	  .catch((error) => 
 	  console.log(error, 'error ------------')
