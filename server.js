@@ -163,7 +163,7 @@ function notifyUssdReception(args, cb, headers) {
 		msgType: args.msgType[0],
 	  })
 	  .then((response) =>
-		// console.log(response.data)
+		console.log(response.data)
 		// return response.data.result
 		 ({ 'loc:result': '0' }))
 	  .catch((error) =>
