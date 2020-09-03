@@ -641,13 +641,21 @@ module.exports = {
 
 	async welcome(req, res) {
 		const {
- 			serviceCode, accessCode, network, msisdn, sessionId,
+ 			serviceCode, accessCode, network, msisdn, sessionId, string, command,
 		} = req.body
+
+		let defaultString = 'Welcome to Provider Product'
+		let defaultCommand = 'Continue'
+		if (string == 'endussd' || command !== 'Begin') {
+			defaultString = 'You have ended the session'
+			defaultCommand = 'Terminate'
+		}
+
 		const responseData = {
-			string: 'Welcome to Provider Product',
+			string: defaultString,
 			serviceCode,
 			accessCode,
-			command: 'Continue',
+			command: defaultCommand,
 			network,
 			msisdn,
 			sessionId,
