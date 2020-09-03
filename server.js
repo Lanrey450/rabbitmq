@@ -167,6 +167,7 @@ function notifyUssdReception(args, cb, headers) {
 	  })
 	  .then(async (response) => {
 		console.log(response.data, '-------p--------')
+
 		// return response.data.result
 
 		const data = {
@@ -176,10 +177,11 @@ function notifyUssdReception(args, cb, headers) {
 			option_type: 1,
 			msisdn: args.msIsdn[0],
 			shortcode: args.serviceCode[0],
-			ussd_string: response.data,
+			ussd_string: response.data.data.string,
 			linkid: headers.NotifySOAPHeader.linkid,
 			receiveCB: args.senderCB[0],
-			senderCB: args.receiveCB[0]
+			senderCB: args.receiveCB[0],
+			ussdOpType: (command.toLowerCase() === 'continue') ? 1 : 2,
 		}
 		console.log('DATA', data)
 		const result = await MTNSDPAPIHandler.sendUssd(data, true)
