@@ -644,9 +644,11 @@ module.exports = {
  			serviceCode, accessCode, network, msisdn, sessionId, string, command,
 		} = req.body
 
+		console.log('sample ussd app request -', req.body, ' - sample ussd app request')
+
 		let defaultString = 'Welcome to Provider Product'
 		let defaultCommand = 'Continue'
-		if (string == 'endussd') { // || command !== 'Begin')
+		if (string == 'endussd' || command == 'endussd') {
 			defaultString = 'You have ended the session'
 			defaultCommand = 'Terminate'
 		}
