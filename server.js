@@ -180,15 +180,13 @@ function notifyUssdReception(args, cb, headers) {
 			linkid: headers.NotifySOAPHeader.linkid,
 		}
 		console.log('DATA', data)
-		const result = await MTNSDPAPIHandler.sendUssd(data)
+		const result = await MTNSDPAPIHandler.sendUssd(data, true)
 
 		console.log('Result', result)
 
 		return ({ 'loc:result': '0' })
 	  })
-	  .catch((error) => 
-	  console.log(error, 'error ------------')
-	  ({ 'loc:result': '0' }))
+	  .catch((error) => console.log(error, 'error ------------')({ 'loc:result': '0' }))
 
 	//   return { result: '0' }
 
