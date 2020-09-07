@@ -170,25 +170,67 @@ function notifyUssdReception(args, cb, headers) {
 
 		// return response.data.result
 
-		const data = {
-			spId: config.mtn.spID,
-			spPwd: config.mtn.spPwd,
-			serviceId: headers.NotifySOAPHeader.serviceId,
-			msisdn: args.msIsdn[0],
-			shortcode: args.serviceCode[0],
-			ussd_string: response.data.data.string,
-			linkid: headers.NotifySOAPHeader.linkid,
-			receiveCB: args.senderCB[0],
-			senderCB: args.receiveCB[0],
-			option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
-			msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+		try {
+			const data = {
+				spId: config.mtn.spID,
+				spPwd: config.mtn.spPwd,
+				serviceId: headers.NotifySOAPHeader.serviceId,
+				msisdn: args.msIsdn[0],
+				shortcode: args.serviceCode[0],
+				ussd_string: response.data.data.string,
+				linkid: headers.NotifySOAPHeader.linkid,
+				receiveCB: args.senderCB[0],
+				senderCB: args.receiveCB[0],
+				option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
+				msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+			}
+			console.log('DATA', data)
+			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+
+			console.log('Result', result)
+
+			return ({ 'loc:result': '0' })
+		} catch (error) {
+			const data = {
+				spId: config.mtn.spID,
+				spPwd: config.mtn.spPwd,
+				serviceId: headers.NotifySOAPHeader.serviceId,
+				msisdn: args.msIsdn[0],
+				shortcode: args.serviceCode[0],
+				ussd_string: 'error processing response',
+				linkid: headers.NotifySOAPHeader.linkid,
+				receiveCB: args.senderCB[0],
+				senderCB: args.receiveCB[0],
+				option_type: 4,
+				msgType: 2,
+			}
+			console.log('DATA', data)
+			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+
+			console.log('Result', result)
+
+			return ({ 'loc:result': '0' })
 		}
-		console.log('DATA', data)
-		const result = await MTNSDPAPIHandler.sendUssd(data, true)
 
-		console.log('Result', result)
+		// const data = {
+		// 	spId: config.mtn.spID,
+		// 	spPwd: config.mtn.spPwd,
+		// 	serviceId: headers.NotifySOAPHeader.serviceId,
+		// 	msisdn: args.msIsdn[0],
+		// 	shortcode: args.serviceCode[0],
+		// 	ussd_string: response.data.data.string,
+		// 	linkid: headers.NotifySOAPHeader.linkid,
+		// 	receiveCB: args.senderCB[0],
+		// 	senderCB: args.receiveCB[0],
+		// 	option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
+		// 	msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+		// }
+		// console.log('DATA', data)
+		// const result = await MTNSDPAPIHandler.sendUssd(data, true)
 
-		return ({ 'loc:result': '0' })
+		// console.log('Result', result)
+
+		// return ({ 'loc:result': '0' })
 	  })
 	  .catch((error) => console.log(error, 'error ------------')({ 'loc:result': '0' }))
 
