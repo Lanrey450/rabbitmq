@@ -201,8 +201,8 @@ function notifyUssdReception(args, cb, headers) {
 				linkid: headers.NotifySOAPHeader.linkid,
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
-				option_type: '4',
-				msgType: '2',
+				option_type: 4,
+				msgType: 2,
 			}
 			console.log('DATA', data)
 			const result = await MTNSDPAPIHandler.sendUssd(data, true)
