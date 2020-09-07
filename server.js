@@ -162,7 +162,8 @@ function notifyUssdReception(args, cb, headers) {
 		command: args.ussdString[0],
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
-		sessionId: headers.NotifySOAPHeader.linkid,
+		// sessionId: headers.NotifySOAPHeader.linkid,
+		sessionId: headers.NotifySOAPHeader.senderCB,
 		msgType: args.msgType[0],
 	  })
 	  .then(async (response) => {
