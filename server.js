@@ -154,8 +154,7 @@ function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
 	console.log(args, '-----')
 	console.log(headers, '-----')
-
-	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
+	let axios_body = {
 		serviceCode: args.serviceCode[0],
 		shortCode: args.serviceCode[0],
 		shortcode: args.serviceCode[0],
@@ -163,9 +162,16 @@ function notifyUssdReception(args, cb, headers) {
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
 		// sessionId: headers.NotifySOAPHeader.linkid,
-		sessionId: headers.NotifySOAPHeader.senderCB,
+		sessionId:  args.senderCB[0],
 		msgType: args.msgType[0],
-	  })
+	  }
+
+	console.log('-------axios body start--------')
+	console.log(axios_body)
+	console.log('-------axios body end--------')
+	  
+
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`,axios_body )
 	  .then(async (response) => {
 		console.log('-------axios call response start--------')
 		console.log(response.data)
@@ -182,7 +188,7 @@ function notifyUssdReception(args, cb, headers) {
 				shortcode: args.serviceCode[0],
 				ussd_string: response.data.data.string,
 				// linkid: headers.NotifySOAPHeader.linkid,
-				linkid: headers.NotifySOAPHeader.senderCB,
+				linkid:  args.senderCB[0],
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
 				option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
@@ -207,7 +213,7 @@ function notifyUssdReception(args, cb, headers) {
 				shortcode: args.serviceCode[0],
 				ussd_string: 'error processing response',
 				// linkid: headers.NotifySOAPHeader.linkid,
-				linkid: headers.NotifySOAPHeader.senderCB,
+				linkid:  args.senderCB[0],
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
 				option_type: 4,
