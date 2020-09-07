@@ -197,12 +197,12 @@ function notifyUssdReception(args, cb, headers) {
 				serviceId: headers.NotifySOAPHeader.serviceId,
 				msisdn: args.msIsdn[0],
 				shortcode: args.serviceCode[0],
-				ussd_string: response.data.data.string,
+				ussd_string: 'error processing response',
 				linkid: headers.NotifySOAPHeader.linkid,
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
-				option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
-				msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+				option_type: '4',
+				msgType: '2',
 			}
 			console.log('DATA', data)
 			const result = await MTNSDPAPIHandler.sendUssd(data, true)
