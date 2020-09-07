@@ -166,7 +166,9 @@ function notifyUssdReception(args, cb, headers) {
 		msgType: args.msgType[0],
 	  })
 	  .then(async (response) => {
-		console.log(response.data, '-------p--------')
+		console.log('-------axios call response start--------')
+		console.log(response.data)
+		console.log('-------axios call response end--------')
 
 		// return response.data.result
 
@@ -191,6 +193,10 @@ function notifyUssdReception(args, cb, headers) {
 
 			return ({ 'loc:result': '0' })
 		} catch (error) {
+			console.log('-------data catch error start--------')
+			console.log(error)
+			console.log('-------data catch error end--------')
+
 			const data = {
 				spId: config.mtn.spID,
 				spPwd: config.mtn.spPwd,
