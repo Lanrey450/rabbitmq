@@ -164,6 +164,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
+		console.log('UNSUBCRIBE BODY', req.body);
 		const requiredParams = ['msisdn', 'product_id']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
