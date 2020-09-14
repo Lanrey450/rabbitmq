@@ -30,6 +30,7 @@ const MTNSDPAPIHandler = require('./lib/mtn/subscription')
 const { wsdl_path } = config
 
 // const publish = require('./rabbitmq/producer')
+console.log(wsdl_path)
 
 const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8')
 
@@ -148,6 +149,32 @@ console.log(url, 'url')
 
     // return { result: '0' }
 }
+
+
+function notifySubscriberConsentResult(args, cb, headers) {
+	console.log('notifySubscriberConsentResult')
+
+	console.log("HEADERS ------------")
+	console.log(headers)
+	console.log("------------ HEADERS")
+	
+	console.log("ARGS ------------")
+	console.log(args)
+	console.log("------------ ARGS")
+// 			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
+//  message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
+// })}`
+
+// console.log(url, 'url')
+// 			return axios.get(url).then((response) => {
+// 				console.log(response.data)
+// 			}).catch((err) => {
+// 				console.log(err.message)
+// 			})
+
+    // return { result: '0' }
+}
+
 
 
 function notifyUssdReception(args, cb, headers) {
@@ -303,6 +330,7 @@ const serviceObject = {
 			notifySmsReception,
 			notifyUssdReception,
 			notifySmsDeliveryReceipt,
+			notifySubscriberConsentResult,
 		},
 	}
 }
@@ -321,6 +349,13 @@ const soapUrl_sms_mo = '/mtn/sms_mo'
 TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_sms_mo}`)
 const soapServerSub2 = soap.listen(server, soapUrl_sms_mo, serviceObject, mtn_feedback_xml)
 soapServerSub2.log = (type, data) => {
+	TerraLogger.debug(type, data)
+}
+
+const soapUrl_auth_res = '/mtn/authorize_response'
+TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_auth_res}`)
+const soapServerSub4 = soap.listen(server, soapUrl_auth_res, serviceObject, mtn_feedback_xml)
+soapServerSub4.log = (type, data) => {
 	TerraLogger.debug(type, data)
 }
 
