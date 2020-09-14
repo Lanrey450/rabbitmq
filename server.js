@@ -172,7 +172,7 @@ function notifySubscriberConsentResult(args, cb, headers) {
 // 				console.log(err.message)
 // 			})
 
-    // return { result: '0' }
+    return { result: '0' }
 }
 
 

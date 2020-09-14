@@ -143,7 +143,7 @@
 
     <!-- notifySubscriberConsentResult -->
     <wsdl:message name="notifySubscriberConsentResultIn">
-        <wsdl:part name="parameters" element="tns:notifySubscriberConsentResultRequest"/>
+        <wsdl:part name="parameters" element="tns:notifySubscriberConsentResult"/>
     </wsdl:message>
     <wsdl:message name="notifySubscriberConsentResultOut">
         <wsdl:part name="parameters" element="tns:notifySubscriberConsentResultResponse"/>
