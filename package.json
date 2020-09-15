@@ -52,6 +52,7 @@
     "request": "^2.88.2",
     "soap": "^0.31.0",
     "terra-logger": "bitbucket:terragonengineering/terra-logger-js#1.0",
+    "uuid4": "^2.0.2",
     "x2js": "^3.4.0"
   },
   "devDependencies": {

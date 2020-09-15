@@ -51,6 +51,8 @@ route.post('/airtelPostBack', asyncHandler((req, res) => AirtelSubscriptionContr
 // MTN sub
 route.post('/mtn/subscribe', asyncHandler((req, res) => MTNSubscriptionController.subscribe(req, res)))
 route.post('/mtn/unsubscribe', asyncHandler((req, res) => MTNSubscriptionController.unsubscribe(req, res)))
+route.post('/mtn/authorize/payment', asyncHandler((req, res) => MTNSubscriptionController.authorizePayment(req, res)))
+route.post('/mtn/charge/token', asyncHandler((req, res) => MTNSubscriptionController.chargeToken(req, res)))
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
 
 // sms mt - manulaly initiated by application developer - done 

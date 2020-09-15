@@ -20,7 +20,7 @@ const consume = require('../rabbitmq/consumer')
 const config = require('../config')
 const publish = require('../rabbitmq/producer')
 // const redis = require('../redis')
-const { sendSmsMT } = require('../lib/mtn/subscription')
+const { sendSmsMT, authorizePayment, chargeToken } = require('../lib/mtn/subscription')
 const Utils = require('../lib/utils')
 
 module.exports = {
@@ -47,6 +47,18 @@ module.exports = {
 	sendSmsForMtn() {
 		const queue = config.rabbit_mq.mtn.send_sms_queue
 		sendSms(queue)
+	},
+
+	// Authorize Payment
+	authorizePaymentMtn() {
+		const queue = config.rabbit_mq.mtn.authorize_payment_queue
+		authorize(queue)
+	},
+
+	// Charge Token
+	chargeTokenMtn() {
+		const queue = config.rabbit_mq.mtn.charge_token_queue
+		charge(queue)
 	},
 
 	// AIRTEL CONSUMERS
@@ -85,6 +97,7 @@ module.exports = {
 		const queue = config.rabbit_mq.nineMobile.charge_postback_queue
 		consumeHandler(feedbackQueue, queue, NineMobileSubscriptionModel)
 	},
+	
 }
 
 function consumeHandler(feedbackQueue, consumerQueue, model) {
@@ -197,6 +210,77 @@ function sendSms(consumerQueue) {
 			TerraLogger.debug(`Successfully sent sms! - ${sanitized_msisdn}`)
 		} catch (error) {
 			TerraLogger.debug(`unable to send sms - ${error}`)
+		}
+	})
+}
+
+function authorize(consumerQueue) {
+	consume(consumerQueue, async (err, msg) => {
+		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
+		if (err) {
+			TerraLogger.debug(`rabbitmq connection failed! - ${err}`)
+			return
+		}
+		if (msg == null) {
+			TerraLogger.debug('the queue is empty at the moment')
+			return
+		}
+		try {
+			TerraLogger.debug('Here', msg.to)
+
+			const {
+				to, serviceId, amount, transactionId,
+			} = msg
+
+			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
+			const data = {
+				spId: config.mtn.spID,
+				spPwd: config.mtn.spPwd,
+				msisdn: sanitized_msisdn,
+				notificationURL: process.env.NOTIFICATION_SERVICE_URL,
+				transactionId,
+				amount,
+				serviceId,
+			}
+			await authorizePayment(data)
+			TerraLogger.debug(`Successfully authorized payment! - ${sanitized_msisdn}`)
+		} catch (error) {
+			TerraLogger.debug(`unable to authorize payment - ${error}`)
+		}
+	})
+}
+
+function charge(consumerQueue) {
+	consume(consumerQueue, async (err, msg) => {
+		TerraLogger.debug('!!!!!!!reaching consumer engine...!!!!!!!!!')
+		if (err) {
+			TerraLogger.debug(`rabbitmq connection failed! - ${err}`)
+			return
+		}
+		if (msg == null) {
+			TerraLogger.debug('the queue is empty at the moment')
+			return
+		}
+		try {
+			TerraLogger.debug('Here', msg.to)
+
+			const {
+				to, serviceId, oauth_token, referenceCode,
+			} = msg
+
+			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
+			const data = {
+				spId: config.mtn.spID,
+				spPwd: config.mtn.spPwd,
+				msisdn: sanitized_msisdn,
+				oauth_token,
+				serviceId,
+				referenceCode,
+			}
+			await chargeToken(data)
+			TerraLogger.debug(`Successfully charged token! - ${sanitized_msisdn}`)
+		} catch (error) {
+			TerraLogger.debug(`unable to charge token - ${error}`)
 		}
 	})
 }
