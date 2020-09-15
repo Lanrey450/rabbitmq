@@ -17,6 +17,7 @@ const ResponseManager = require('../../commons/response')
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
+const uuid = require('uuid4')
 
 
 module.exports = {
@@ -164,6 +165,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
+		console.log('UNSUBCRIBE BODY', req.body, " UNSUBCRIBE BODY END");
 		const requiredParams = ['msisdn', 'product_id']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
@@ -668,6 +670,101 @@ module.exports = {
 			responseBody: responseData,
 		})
 	},
+
+	async authorizePayment(req, res){
+		const auth = req.headers.authorization
+
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['msisdn', 'amount']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length != 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: `Please pass the following parameters for post request: ${missingFields}`,
+			})
+		}
+			const authDetails = auth.split(' ')
+			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
+			const credentials = rawAuth.split(':')
+			const username = credentials[0]
+			const rawPassword = credentials[1]
+
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
+				const data = {
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
+					serviceId: req.body.serviceId,
+					notificationURL: process.env.NOTIFICATION_SERVICE_URL,
+					amount: req.body.amount,
+					transactionId: uuid(),
+					msisdn: sanitized_msisdn,
+				}
+				const response = await MTNSDPAPIHandler.authorizePayment(data)
+				if (!response.error) {
+					return ResponseManager.sendResponse({
+						res,
+						message: `Payment authorized successfully for ${data.msisdn}`,
+					})
+				 }
+
+				 return ResponseManager.sendErrorResponse({
+					res,
+					message: `Payment authorization request failed with ${response.message}`,
+				})
+	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	},
+
+	async chargeToken(req, res){
+		const auth = req.headers.authorization
+
+		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		}
+
+		const requiredParams = ['oauth_token', 'msisdn']
+		const missingFields = Utils.authenticateParams(req.body, requiredParams)
+
+		if (missingFields.length != 0) {
+			return ResponseManager.sendErrorResponse({
+				res, message: `Please pass the following parameters for post request: ${missingFields}`,
+			})
+		}
+			const authDetails = auth.split(' ')
+			const rawAuth = Buffer.from(authDetails[1], 'base64').toString()
+			const credentials = rawAuth.split(':')
+			const username = credentials[0]
+			const rawPassword = credentials[1]
+
+			if (username == config.userAuth.username && rawPassword === config.userAuth.password) {
+				const sanitized_msisdn = Utils.msisdnSanitizer(req.body.msisdn, false)
+				const data = {
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
+					serviceId: req.body.serviceId,
+					oauth_token: req.body.oauth_token,
+					msisdn: sanitized_msisdn,
+					referenceCode: uuid(),
+				}
+				const response = await MTNSDPAPIHandler.chargeToken(data)
+				if (!response.error) {
+					return ResponseManager.sendResponse({
+						res,
+						message: `Charge successfull for ${data.msisdn}`,
+					})
+				 }
+
+				 return ResponseManager.sendErrorResponse({
+					res,
+					message: `Charge failed failed with ${response.message}`,
+				})
+	}
+	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
+	}
 
 
 }

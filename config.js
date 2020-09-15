@@ -70,6 +70,8 @@ module.exports = {
 			subscription_postback_queue: 'mtn_postback_queue',  // aggregator platform queue
 			send_sms_queue: 'mtn_send_sms_queue',
 			send_sms_dlr_queue: 'send_sms_dlr_queue',
+			authorize_payment_queue: 'authorize_payment_queue',
+			charge_token_queue: 'charge_token_queue',
 		},
 		airtel: {
 			subscription_queue: 'airtel_subscription_queue',   // our inhouse TG data tracking and gathering
