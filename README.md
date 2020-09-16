@@ -499,5 +499,16 @@ NB - All feedback for subscription and unsubscription across all telcos goes to 
 For a more indept description of this API, please check the wiki...
 
 
+# NB
+WHEN REGISTERING ANY ENDPOINT WITH MTN's SDP TAKE NOTE THAT THEY NETTED OUR IP TO A DIFFERENT IP ON THEIR END. SO FOR IT TO WORK USE THEIR NETTED IP NOT OURS
+
+OUR IP = http://51.104.238.75
+MTN's Netted equivalent = http://172.16.143.223
+
+Example
+http://51.104.238.75:9007/mtn/authorize_response === http://172.16.143.223:9007/mtn/authorize_response
+         
+
+
 
 
