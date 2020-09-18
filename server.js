@@ -184,14 +184,31 @@ function notifySubscriberConsentResult(args, cb, headers) {
 	// [0] extensionInfo: { item: [ [Object], [Object] ] }
 	// [0] }
 	// [0] ------------ ARGS
+	const auth = `Basic ${Buffer.from(`${process.env.PARTNER_USERNAME}:${process.env.PARTNER_PASSWORD}`).toString('base64')}`;
 	let on_demand_mini_app_endpoint2 = `${process.env.SUB_SERVICE_URL}api/v1/charge-token`
 	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({recipient: args.subscriberID.ID, oauth_token: args.accessToken[0]})}`
+
+
 	console.log(url, 'url')
-	axios.get(url).then((response) => {
-		console.log(response.data)
-	}).catch((err) => {
+	try{
+		const response = await axios({
+			method: 'get',
+			url,
+			headers: {
+			  Authorization: auth,
+			}
+		  });
+
+		  console.log(response.data)
+	} catch(err){
 		console.log(err.message)
-	})
+	}
+
+	// axios.get(url).then((response) => {
+	// 	console.log(response.data)
+	// }).catch((err) => {
+	// 	console.log(err.message)
+	// })
     return { result: '0' }
 }
 
