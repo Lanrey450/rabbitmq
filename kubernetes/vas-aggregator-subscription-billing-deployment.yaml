@@ -137,7 +137,12 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: AIRTEL_SE_AIRTEL_HOST 
+                              key: AIRTEL_SE_AIRTEL_HOST
+                      - name: SUB_SERVICE_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: SUB_SERVICE_URL
                       - name: AIRTEL_SE_AIRTEL_PORT
                         valueFrom:
                           secretKeyRef:
