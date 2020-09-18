@@ -752,6 +752,7 @@ module.exports = {
 					referenceCode: uuid(),
 				}
 				const response = await MTNSDPAPIHandler.chargeToken(data)
+				console.log('CHARGE response', response)
 				if (!response.error) {
 					return ResponseManager.sendResponse({
 						res,
