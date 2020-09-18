@@ -185,7 +185,7 @@ function notifySubscriberConsentResult(args, cb, headers) {
 	// [0] }
 	// [0] ------------ ARGS
 	let on_demand_mini_app_endpoint2 = `${process.env.SUB_SERVICE_URL}api/v1/charge-token`
-	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({msisdn: args.subscriberID.ID, oauth_token: args.accessToken[0]})}`
+	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({recipient: args.subscriberID.ID, oauth_token: args.accessToken[0]})}`
 	console.log(url, 'url')
 	axios.get(url).then((response) => {
 		console.log(response.data)
