@@ -237,7 +237,7 @@ function authorize(consumerQueue) {
 				spId: config.mtn.spID,
 				spPwd: config.mtn.spPwd,
 				msisdn: sanitized_msisdn,
-				notificationURL: process.env.NOTIFICATION_SERVICE_URL,
+				notificationURL: process.env.AUTHORIZE_PAYMENT_FEEDBACK_URL,
 				transactionId,
 				amount,
 				serviceId,

@@ -698,7 +698,7 @@ module.exports = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
 					serviceId: req.body.serviceId,
-					notificationURL: process.env.NOTIFICATION_SERVICE_URL,
+					notificationURL: process.env.AUTHORIZE_PAYMENT_FEEDBACK_URL,
 					amount: req.body.amount,
 					transactionId: uuid(),
 					msisdn: sanitized_msisdn,
