@@ -265,7 +265,7 @@ function charge(consumerQueue) {
 			TerraLogger.debug('Here', msg.to)
 
 			const {
-				to, serviceId, oauth_token, referenceCode,
+				to, serviceId, oauth_token, referenceCode, amount
 			} = msg
 
 			const sanitized_msisdn = Utils.msisdnSanitizer(to, false)
@@ -276,6 +276,7 @@ function charge(consumerQueue) {
 				oauth_token,
 				serviceId,
 				referenceCode,
+				amount
 			}
 			await chargeToken(data)
 			TerraLogger.debug(`Successfully charged token! - ${sanitized_msisdn}`)

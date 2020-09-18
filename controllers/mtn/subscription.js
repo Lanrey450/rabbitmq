@@ -748,6 +748,7 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					oauth_token: req.body.oauth_token,
 					msisdn: sanitized_msisdn,
+					amount: req.body.amount,
 					referenceCode: uuid(),
 				}
 				const response = await MTNSDPAPIHandler.chargeToken(data)
