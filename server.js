@@ -30,6 +30,7 @@ const MTNSDPAPIHandler = require('./lib/mtn/subscription')
 const { wsdl_path } = config
 
 // const publish = require('./rabbitmq/producer')
+console.log(wsdl_path)
 
 const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8')
 
@@ -150,23 +151,58 @@ console.log(url, 'url')
 }
 
 
+function notifySubscriberConsentResult(args, cb, headers) {
+	console.log('notifySubscriberConsentResult')
+
+	console.log("HEADERS ------------")
+	console.log(headers)
+	console.log("------------ HEADERS")
+	
+	console.log("ARGS ------------")
+	console.log(args)
+	console.log("------------ ARGS")
+// 			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
+//  message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
+// })}`
+
+// console.log(url, 'url')
+// 			return axios.get(url).then((response) => {
+// 				console.log(response.data)
+// 			}).catch((err) => {
+// 				console.log(err.message)
+// 			})
+
+    return { result: '0' }
+}
+
+
+
 function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
 	console.log(args, '-----')
 	console.log(headers, '-----')
-
-	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, {
+	let axios_body = {
 		serviceCode: args.serviceCode[0],
 		shortCode: args.serviceCode[0],
 		shortcode: args.serviceCode[0],
 		command: args.ussdString[0],
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
-		sessionId: headers.NotifySOAPHeader.linkid,
+		// sessionId: headers.NotifySOAPHeader.linkid,
+		sessionId:  args.senderCB[0],
 		msgType: args.msgType[0],
-	  })
+	  }
+
+	console.log('-------axios body start--------')
+	console.log(axios_body)
+	console.log('-------axios body end--------')
+	  
+
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`,axios_body )
 	  .then(async (response) => {
-		console.log(response.data, '-------p--------')
+		console.log('-------axios call response start--------')
+		console.log(response.data)
+		console.log('-------axios call response end--------')
 
 		// return response.data.result
 
@@ -179,6 +215,7 @@ function notifyUssdReception(args, cb, headers) {
 				shortcode: args.serviceCode[0],
 				ussd_string: response.data.data.string,
 				linkid: headers.NotifySOAPHeader.linkid,
+				// linkid:  args.senderCB[0],
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
 				option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
@@ -191,6 +228,10 @@ function notifyUssdReception(args, cb, headers) {
 
 			return ({ 'loc:result': '0' })
 		} catch (error) {
+			console.log('-------data catch error start--------')
+			console.log(error)
+			console.log('-------data catch error end--------')
+
 			const data = {
 				spId: config.mtn.spID,
 				spPwd: config.mtn.spPwd,
@@ -199,6 +240,7 @@ function notifyUssdReception(args, cb, headers) {
 				shortcode: args.serviceCode[0],
 				ussd_string: 'error processing response',
 				linkid: headers.NotifySOAPHeader.linkid,
+				// linkid:  args.senderCB[0],
 				receiveCB: args.senderCB[0],
 				senderCB: args.receiveCB[0],
 				option_type: 4,
@@ -288,6 +330,7 @@ const serviceObject = {
 			notifySmsReception,
 			notifyUssdReception,
 			notifySmsDeliveryReceipt,
+			notifySubscriberConsentResult,
 		},
 	}
 }
@@ -306,6 +349,13 @@ const soapUrl_sms_mo = '/mtn/sms_mo'
 TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_sms_mo}`)
 const soapServerSub2 = soap.listen(server, soapUrl_sms_mo, serviceObject, mtn_feedback_xml)
 soapServerSub2.log = (type, data) => {
+	TerraLogger.debug(type, data)
+}
+
+const soapUrl_auth_res = '/mtn/authorize_response'
+TerraLogger.debug(`Listening for MTN SMS MO SOAP postback on: ${soapUrl_auth_res}`)
+const soapServerSub4 = soap.listen(server, soapUrl_auth_res, serviceObject, mtn_feedback_xml)
+soapServerSub4.log = (type, data) => {
 	TerraLogger.debug(type, data)
 }
 
