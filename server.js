@@ -153,12 +153,12 @@ console.log(url, 'url')
 
 function notifySubscriberConsentResult(args, cb, headers) {
 	console.log('notifySubscriberConsentResult')
-	console.log("HEADERS ------------")
+	console.log('HEADERS ------------')
 	console.log(headers)
-	console.log("------------ HEADERS")
-	console.log("ARGS ------------")
+	console.log('------------ HEADERS')
+	console.log('ARGS ------------')
 	console.log(args)
-	console.log("------------ ARGS")
+	console.log('------------ ARGS')
 	// [0] notifySubscriberConsentResult
 	// [0] HEADERS ------------
 	// [0] {
@@ -184,23 +184,23 @@ function notifySubscriberConsentResult(args, cb, headers) {
 	// [0] extensionInfo: { item: [ [Object], [Object] ] }
 	// [0] }
 	// [0] ------------ ARGS
-	const auth = `Basic ${Buffer.from(`${process.env.PARTNER_USERNAME}:${process.env.PARTNER_PASSWORD}`).toString('base64')}`;
-	let on_demand_mini_app_endpoint2 = `${process.env.SUB_SERVICE_URL}api/v1/charge-token`
-	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({recipient: args.subscriberID.ID, oauth_token: args.accessToken[0]})}`
+	const auth = `Basic ${Buffer.from(`${process.env.PARTNER_USERNAME}:${process.env.PARTNER_PASSWORD}`).toString('base64')}`
+	const on_demand_mini_app_endpoint2 = `${process.env.SUB_SERVICE_URL}api/v1/charge-token`
+	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({ recipient: args.subscriberID.ID, oauth_token: args.accessToken[0] })}`
 
 
 	console.log(url, 'url')
-	try{
-		const response = await axios({
+	try {
+		const response = axios({
 			method: 'get',
 			url,
 			headers: {
 			  Authorization: auth,
 			}
-		  });
+		  })
 
 		  console.log(response.data)
-	} catch(err){
+	} catch (err) {
 		console.log(err.message)
 	}
 
@@ -213,12 +213,11 @@ function notifySubscriberConsentResult(args, cb, headers) {
 }
 
 
-
 function notifyUssdReception(args, cb, headers) {
 	console.log('notifyUssdReception')
 	console.log(args, '-----')
 	console.log(headers, '-----')
-	let axios_body = {
+	const axios_body = {
 		serviceCode: args.serviceCode[0],
 		shortCode: args.serviceCode[0],
 		shortcode: args.serviceCode[0],
@@ -226,16 +225,16 @@ function notifyUssdReception(args, cb, headers) {
 		network: 'mtn',
 		msisdn: args.msIsdn[0],
 		// sessionId: headers.NotifySOAPHeader.linkid,
-		sessionId:  args.senderCB[0],
+		sessionId: args.senderCB[0],
 		msgType: args.msgType[0],
 	  }
 
 	console.log('-------axios body start--------')
 	console.log(axios_body)
 	console.log('-------axios body end--------')
-	  
 
-	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`,axios_body )
+
+	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, axios_body)
 	  .then(async (response) => {
 		console.log('-------axios call response start--------')
 		console.log(response.data)
@@ -259,7 +258,7 @@ function notifyUssdReception(args, cb, headers) {
 				msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
 			}
 			console.log('DATA', data)
-			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+			const result = MTNSDPAPIHandler.sendUssd(data, true)
 
 			console.log('Result', result)
 
@@ -284,7 +283,7 @@ function notifyUssdReception(args, cb, headers) {
 				msgType: 2,
 			}
 			console.log('DATA', data)
-			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+			const result = MTNSDPAPIHandler.sendUssd(data, true)
 
 			console.log('Result', result)
 
