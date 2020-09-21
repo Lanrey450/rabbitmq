@@ -222,7 +222,7 @@ function notifyUssdReception(args, cb, headers) {
 				msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
 			}
 			console.log('DATA', data)
-			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+			const result = MTNSDPAPIHandler.sendUssd(data, true)
 
 			console.log('Result', result)
 
@@ -247,7 +247,7 @@ function notifyUssdReception(args, cb, headers) {
 				msgType: 2,
 			}
 			console.log('DATA', data)
-			const result = await MTNSDPAPIHandler.sendUssd(data, true)
+			const result = MTNSDPAPIHandler.sendUssd(data, true)
 
 			console.log('Result', result)
 
