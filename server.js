@@ -153,25 +153,62 @@ console.log(url, 'url')
 
 function notifySubscriberConsentResult(args, cb, headers) {
 	console.log('notifySubscriberConsentResult')
-
 	console.log("HEADERS ------------")
 	console.log(headers)
 	console.log("------------ HEADERS")
-	
 	console.log("ARGS ------------")
 	console.log(args)
 	console.log("------------ ARGS")
-// 			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
-//  message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
-// })}`
+	// [0] notifySubscriberConsentResult
+	// [0] HEADERS ------------
+	// [0] {
+	// [0] NotifySOAPHeader: {
+	// [0] spId: '2340110011825',
+	// [0] serviceId: '234012000024538',
+	// [0] timeStamp: '20200916123526',
+	// [0] traceUniqueID: '203035007752020091613355287004',
+	// [0] OperatorID: '23401'
+	// [0] }
+	// [0] }
+	// [0] ------------ HEADERS
+	// [0] ARGS ------------
+	// [0] {
+	// [0] subscriberID: { ID: '2349039572530', type: '0' },
+	// [0] partnerID: [ '2340110011825' ],
+	// [0] serviceID: [ '234012000024538' ],
+	// [0] capabilityType: [ '17' ],
+	// [0] consentResult: [ '0' ],
+	// [0] accessToken: [ '16133526077504912321' ],
+	// [0] tokenType: [ '1' ],
+	// [0] tokenExpiryTime: '20200917123526',
+	// [0] extensionInfo: { item: [ [Object], [Object] ] }
+	// [0] }
+	// [0] ------------ ARGS
+	const auth = `Basic ${Buffer.from(`${process.env.PARTNER_USERNAME}:${process.env.PARTNER_PASSWORD}`).toString('base64')}`;
+	let on_demand_mini_app_endpoint2 = `${process.env.SUB_SERVICE_URL}api/v1/charge-token`
+	const url = `${on_demand_mini_app_endpoint2}?${querystring.stringify({recipient: args.subscriberID.ID, oauth_token: args.accessToken[0]})}`
 
-// console.log(url, 'url')
-// 			return axios.get(url).then((response) => {
-// 				console.log(response.data)
-// 			}).catch((err) => {
-// 				console.log(err.message)
-// 			})
 
+	console.log(url, 'url')
+	try{
+		const response = await axios({
+			method: 'get',
+			url,
+			headers: {
+			  Authorization: auth,
+			}
+		  });
+
+		  console.log(response.data)
+	} catch(err){
+		console.log(err.message)
+	}
+
+	// axios.get(url).then((response) => {
+	// 	console.log(response.data)
+	// }).catch((err) => {
+	// 	console.log(err.message)
+	// })
     return { result: '0' }
 }
 
