@@ -143,6 +143,11 @@ spec:
                           secretKeyRef:
                             name: vas-aggregator-subscription-billing-secrets
                             key: SUB_SERVICE_URL
+                      - name: MOCK_APP_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: vas-aggregator-subscription-billing-secrets
+                            key: MOCK_APP_URL
                       - name: AUTHORIZE_PAYMENT_FEEDBACK_URL
                         valueFrom:
                           secretKeyRef:
