@@ -12,12 +12,12 @@
 /* eslint-disable no-tabs */
 
 const TerraLogger = require('terra-logger')
+const uuid = require('uuid4')
 const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
-const uuid = require('uuid4')
 
 
 module.exports = {
@@ -165,7 +165,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		console.log('UNSUBCRIBE BODY', req.body, " UNSUBCRIBE BODY END");
+		console.log('UNSUBCRIBE BODY', req.body, ' UNSUBCRIBE BODY END')
 		const requiredParams = ['msisdn', 'product_id']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
@@ -671,7 +671,7 @@ module.exports = {
 		})
 	},
 
-	async authorizePayment(req, res){
+	async authorizePayment(req, res) {
 		const auth = req.headers.authorization
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
@@ -719,7 +719,7 @@ module.exports = {
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
-	async chargeToken(req, res){
+	async chargeToken(req, res) {
 		const auth = req.headers.authorization
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
@@ -766,7 +766,7 @@ module.exports = {
 				})
 	}
 	 return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
-	}
+	},
 
 
 }
