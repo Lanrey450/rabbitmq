@@ -678,7 +678,7 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
 
-		const requiredParams = ['msisdn', 'amount']
+		const requiredParams = ['msisdn', 'amount', 'productName', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
 		if (missingFields.length != 0) {
@@ -700,6 +700,7 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					notificationURL: process.env.AUTHORIZE_PAYMENT_FEEDBACK_URL,
 					amount: req.body.amount,
+					productName: req.body.productName,
 					transactionId: uuid(),
 					msisdn: sanitized_msisdn,
 				}
