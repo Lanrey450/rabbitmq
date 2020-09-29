@@ -14,6 +14,13 @@ const Redis = redis.createClient(config.redisClientConnection.port,
 
     // Redis.auth(config.redisClientConnection.password)
     Redis.on('error', error => TerraLogger.debug('Error Connecting to the Redis Cluster', error))
+
+    // add redis ping at intervals 
+    setInterval(() => {
+        console.log('Keeping alive subscription')
+        Redis.set('ping', 'pong')
+    }, 1000 * 60 * 4)
+
     Redis.on('connect', () => {
         TerraLogger.debug('Successfully connected to the Redis cluster!')
 })
