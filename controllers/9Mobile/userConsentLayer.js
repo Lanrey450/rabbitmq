@@ -156,7 +156,7 @@ async userConsent(req, res) {
         
          } catch (error) {
             TerraLogger.debug(error)
-            Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+            Utils.sendUserErrorGlobalSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
          }
      }    
      } catch (error) {
