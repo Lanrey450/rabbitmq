@@ -150,17 +150,17 @@ async userConsent(req, res) {
          }) 
         }
         if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
-            Utils.sendUserAleadySubSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
-        } else {
-            Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
-        }
+            return Utils.sendUserAleadySubSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+        } 
+            // Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
+        
          } catch (error) {
-             TerraLogger.debug(error)
+            TerraLogger.debug(error)
             Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
          }
      }    
      } catch (error) {
         TerraLogger.debug(error)
-     }  
+    }  
 },
 }
