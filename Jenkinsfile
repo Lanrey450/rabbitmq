@@ -7,6 +7,7 @@ def deploymentName = 'vas-aggregator-subscription-billing'
 def isMaster = env.BRANCH_NAME == 'master'
 def isStaging = env.BRANCH_NAME == 'develop'
 def start = new Date()
+def acr_host = 'aggregator.azurecr.io'
 def err = null
 def jobInfo = "${env.JOB_NAME} ${env.BUILD_DISPLAY_NAME} \n${env.BUILD_URL}"
 def imageTag = "${env.BUILD_NUMBER}"
@@ -23,11 +24,9 @@ try {
         stage ('Checkout') {
             checkout scm
         }
-
         stage ('Install Dependencies') {
             sh 'npm install --production'
         }
-
        stage("test deployment") {
          try {
              sh 'kubectl apply --validate=true --dry-run=true -f kubernetes/ --context azurek8s'
@@ -38,10 +37,12 @@ try {
           }
        }
       stage ('Push Docker to ACR') {
-            sh "docker login -u ${ACR_USER} -p ${ACR_PASSWD} ${ACR_HOST}"
-            sh "docker build -t ${ACR_HOST}/${projectName}/${repoName}:${imageTag} ."   
-            pushImage(repoName, projectName, imageTag)
-            slackSend (color: 'good', message: "docker image on `${env.BRANCH_NAME}` branch in `${repoName}` pushed to *_ACR_*")
+             withCredentials([usernamePassword(credentialsId: 'azure-acr1', usernameVariable: 'ACR_USER', passwordVariable: 'ACR_PASSWD')]) {
+               sh "docker login -u ${ACR_USER} -p ${ACR_PASSWD} ${acr_host}"
+               sh "docker build -t ${acr_host}/${projectName}/${repoName}:${imageTag} ."   
+               sh "docker push ${acr_host}/${projectName}/${repoName}:${imageTag}"
+    }
+       slackSend (color: 'good', message: "docker image on `${env.BRANCH_NAME}` branch in `${repoName}` pushed to *_ACR_*")
         }
       if(isMaster || isStaging){
             stage ('Deploy to Kubernetes') {
@@ -79,12 +80,6 @@ def deploy(deploymentName, imageTag, projectName,repoName, isMaster){
     }
     catch (err) {
         slackSend (color: 'danger', message: ":disappointed: _Build failed_: ${jobInfo} ${err}")
-    }
-}
-def pushImage(repoName, projectName, imageTag){
-    try{
-        sh "docker push ${ACR_HOST}/${projectName}/${repoName}:${imageTag}"
-    }catch(e){
     }
 }
 def timeDiff(st) {

@@ -49,7 +49,7 @@ async userConsent(req, res) {
      const channel = result[1]
 
 
-     console.log(data, serviceId, channel, result, 'data------------------')
+     console.log(data, serviceId, channel, result, 'data------------------')  
 
 
      if (keyword === '1') {
