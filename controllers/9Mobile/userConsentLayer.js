@@ -14,7 +14,7 @@ const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
 
 const subscribeUser = require('../../lib/9Mobile/subscription')
-// const publish = require('../../rabbitmq/producer')
+const publish = require('../../rabbitmq/producer')
 
 
 module.exports = {
