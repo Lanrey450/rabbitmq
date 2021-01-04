@@ -59,6 +59,8 @@ module.exports = {
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
 				} catch (error) {
+
+					console.log(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
 				}
 			}
