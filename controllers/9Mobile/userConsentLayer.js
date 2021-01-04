@@ -139,11 +139,11 @@ async userConsent(req, res) {
         console.log(dataToPush, 'dataToPush')
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
+             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
                 ...dataToPush,
             })
              .then(() => {
-             Utils.sendUserSuccessSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
              TerraLogger.debug('successfully pushed postback data to queue')
              }).catch((err) => {
              TerraLogger.debug(err)
