@@ -75,7 +75,7 @@ module.exports = {
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach the 9mobile server - ${error}` })
 			}
 		}
-		return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
+		// return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 	},
 
 
