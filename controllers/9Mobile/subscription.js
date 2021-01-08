@@ -45,11 +45,21 @@ module.exports = {
 			}
 
 			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
-			redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			console.log(redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10), 'consent-url')
+			const redisSubscriptionKey = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
+			console.log("subscription call key "+ redisSubscriptionKey)
+			redis.set(redisSubscriptionKey, `${serviceId}::${channel}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
+			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}`
+
+			if(channel == 'ussd'){
+
+				consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}::${channel}`
+			}
+
+			console.log(consentUrlRedisKey, 'consent-url')
+
+			redis.set(consentUrlRedisKey, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
