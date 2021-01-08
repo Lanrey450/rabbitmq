@@ -59,18 +59,10 @@ async userConsent(req, res) {
             console.log('msisdn -', msisdn)
             console.log('serviceId - ', serviceId.trim())
             console.log('entryChannel - ', channel.toUpperCase())
-
-            let response;
                 
-            if( channel.toUpperCase() == "USSD"){
-             response = await subscribeUser.subscribe({
-            userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), 
+                    const response = await subscribeUser.subscribe({
+            userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
             })
-        }else{
-            response = await subscribeUser.subscribe({
-                userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
-                })
-        }
 
         
             console.log(response, 'response')
@@ -120,19 +112,10 @@ async userConsent(req, res) {
             console.log('msisdn -', msisdn)
             console.log('serviceId - ', serviceId.trim())
             console.log('entryChannel - ', channel.toUpperCase())
-       
-       
-            let response;
-                
-            if( channel.toUpperCase() == "USSD"){
-             response = await subscribeUser.subscribe({
-            userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), 
-            })
-        }else{
-            response = await subscribeUser.subscribe({
-                userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 1, 
-                })
-        }
+         const response = await subscribeUser.subscribe({
+        userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase(), userConsent: 2, 
+        })
+
 
         console.log(response, 'response')
 

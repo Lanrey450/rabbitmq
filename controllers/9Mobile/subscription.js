@@ -64,8 +64,16 @@ module.exports = {
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
-				Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
+				if(channel == 'ussd'){
+					Utils.sendUSSDConsentSMS(msisdn, '9Mobile', shortCode)
 				.then(TerraLogger.debug).catch(TerraLogger.debug)
+					
+				}else{
+
+					Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
+				.then(TerraLogger.debug).catch(TerraLogger.debug)
+
+				}
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
 				} catch (error) {
@@ -73,6 +81,11 @@ module.exports = {
 					console.log(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
 				}
+
+			
+
+
+				
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
  },
