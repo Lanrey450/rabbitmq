@@ -46,17 +46,31 @@ module.exports = {
 			}
 
 			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
-			redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
+			// redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			console.log(redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10), 'consent-url')
+			const redisSubscriptionKey = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
+			console.log("subscription call key "+ redisSubscriptionKey)
+			redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
+			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}`
+
+
+				redis.set(consentUrlRedisKey, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
+
+			
+
+			console.log(consentUrlRedisKey, 'consent-url')
+
+			NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
-					NineMobileUtils.sendUserConsentSMS(req.body)
-				.then(TerraLogger.debug).catch(TerraLogger.debug)
+
+					
+				if(channel == 'sms'){
+					NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+				}
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
 				} catch (error) {
@@ -64,6 +78,7 @@ module.exports = {
 					console.log(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
 				}
+					
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
  },
