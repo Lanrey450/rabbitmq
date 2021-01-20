@@ -5,6 +5,7 @@ const TerraLogger = require('terra-logger')
 const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const Utils = require('../../lib/utils')
+const NineMobileUtils = require('../../lib/9Mobile/util')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 
@@ -55,6 +56,14 @@ module.exports = {
 						code: data.code,
 						inError: data.inError,
 					},
+				}
+
+				const responseStatus = data.code.toLowerCase();
+
+				if(responseStatus === 'success'){
+					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+				}else if(responseStatus === 'no_balance'){
+					NineMobileUtils.sendUserlowBalanceSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}
 
 				console.log(dataToPush, 'dataToPush')

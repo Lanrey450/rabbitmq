@@ -11,6 +11,7 @@ const TerraLogger = require('terra-logger')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
 const Utils = require('../../lib/utils')
+const NineMobileUtils = require('../../lib/9Mobile/util')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 const redis = require('../../redis')
@@ -33,7 +34,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 
-			const { msisdn, shortCode, serviceId, channel } = req.body
+			const { msisdn, shortCode, serviceId, channel, amount, validity, name} = req.body
 
 			const requiredParams = ['msisdn', 'shortCode', 'serviceId', 'channel']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
@@ -45,7 +46,7 @@ module.exports = {
 			}
 
 			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
-			redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}`, 'ex', 60 * 60 * 24) // save for 24 hours
+			redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
 			console.log(redis.set(`CONSENT_URL::${shortCode}::${msisdn}`, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10), 'consent-url')
 
@@ -54,7 +55,7 @@ module.exports = {
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				try {
-				Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
+					NineMobileUtils.sendUserConsentSMS(req.body)
 				.then(TerraLogger.debug).catch(TerraLogger.debug)
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
