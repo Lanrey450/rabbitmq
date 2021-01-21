@@ -11,6 +11,7 @@ const TerraLogger = require('terra-logger')
 const ResponseManager = require('../../commons/response')
 const NineMobileApi = require('../../lib/9Mobile/subscription')
 const Utils = require('../../lib/utils')
+const NineMobileUtils = require('../../lib/9Mobile/util')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 const redis = require('../../redis')
@@ -33,7 +34,7 @@ module.exports = {
 			const rawPassword = credentials[1]
 
 
-			const { msisdn, shortCode, serviceId, channel } = req.body
+			const { msisdn, shortCode, serviceId, channel, amount, validity, name} = req.body
 
 			const requiredParams = ['msisdn', 'shortCode', 'serviceId', 'channel']
 			const missingFields = Utils.authenticateParams(req.body, requiredParams)
@@ -45,10 +46,11 @@ module.exports = {
 			}
 
 			// save to redis(rediskey = shortcode + msisdn, and redisValue = serviceId)
+			// redis.set(`SUBSCRIPTION_CALL::${shortCode}::${msisdn}`, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
 			const redisSubscriptionKey = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
 			console.log("subscription call key "+ redisSubscriptionKey)
-			redis.set(redisSubscriptionKey, `${serviceId}::${channel}`, 'ex', 60 * 60 * 24) // save for 24 hours
+			redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
 			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}`
 
@@ -59,7 +61,7 @@ module.exports = {
 
 			console.log(consentUrlRedisKey, 'consent-url')
 
-			
+			NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
@@ -67,10 +69,7 @@ module.exports = {
 
 					
 				if(channel == 'sms'){
-
-					Utils.sendUserConsentSMS(msisdn, '9Mobile', shortCode)
-				.then(TerraLogger.debug).catch(TerraLogger.debug)
-
+					NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}
 
 				return ResponseManager.sendResponse({ res, message: `Consent message successfully sent to the user with msisdn, ${msisdn}` })
@@ -79,11 +78,7 @@ module.exports = {
 					console.log(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to send message to user - ${error}` })
 				}
-
-			
-
-
-				
+					
 			}
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
  },
