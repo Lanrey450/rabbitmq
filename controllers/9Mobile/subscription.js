@@ -118,8 +118,11 @@ module.exports = {
 					}
 
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nineMobileReqBody)
-					if (unsubscriptionResponse) {
+					if (unsubscriptionResponse && !unsubscriptionResponse.inError) {
 						TerraLogger.debug('unsubscription engine for 9Mobile called...')
+
+						NineMobileUtils.sendUserUnsubSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+
 
 						// format data to push to queue
 						const dataToPush = {
