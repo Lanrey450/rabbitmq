@@ -117,6 +117,8 @@ module.exports = {
 						serviceId: req.body.serviceId,
 					}
 
+					console.log("unsub req to 9mobile",nineMobileReqBody)
+
 					const unsubscriptionResponse = await NineMobileApi.unsubscribe(nineMobileReqBody)
 					
 					console.log("response from 9mobile",unsubscriptionResponse)
