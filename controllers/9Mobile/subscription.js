@@ -97,7 +97,7 @@ module.exports = {
 				try {
 					const nineMobileReqBody = {
 						userIdentifier: req.body.msisdn,
-						entryChannel: req.body.channel,
+						entryChannel: req.body.channel.toUpperCase(),
 						serviceId: req.body.serviceId,
 					}
 
