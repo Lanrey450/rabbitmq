@@ -9,6 +9,8 @@ const AirtelSubscriptionController = require('../controllers/airtel/subscription
 const MTNSubscriptionController = require('../controllers/mtn/subscription')
 const NineMobilePostbackController = require('../controllers/9Mobile/postbackHandler')
 const NineMOBILE_MO_Controller = require('../controllers/9Mobile/userConsentLayer')
+
+const NineMOBILE_USSD_MO_Controller = require('../controllers/9Mobile/ussd')
 const NinemobileChargeController = require('../controllers/9Mobile/charge')
 
 
@@ -25,6 +27,11 @@ route.post('/nineMobile/billing/async', asyncHandler((req, res) => NinemobileCha
 
 // Nine mobile SMS-MO(INCOMING FROM TELCO)
 route.post('/nineMobile/sms/mo', asyncHandler((req, res) => NineMOBILE_MO_Controller.userConsent(req, res)))
+
+
+// Nine mobile ussd SUB
+
+route.post('/nineMobile/ussd/mo', asyncHandler((req, res) => NineMOBILE_USSD_MO_Controller.ussd(req, res)))
 
 
 // Nine mobile postback (INCOMING FROM TELCO)
