@@ -55,13 +55,14 @@ module.exports = {
 			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}`
 
 
-				redis.set(consentUrlRedisKey, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
+			redis.set(consentUrlRedisKey, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
 
 			
 
 			console.log(consentUrlRedisKey, 'consent-url')
 
-			NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+			console.log("channel is ", channel)
+
 
 			// eslint-disable-next-line padded-blocks
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
