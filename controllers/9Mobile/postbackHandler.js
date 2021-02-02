@@ -39,7 +39,7 @@ module.exports = {
 
 		const response = {
 
-			requestId: util.now('micro'),
+			requestId: util.now('micro').toString(),
 			
 			code:"SUCCESS",
 			
@@ -83,7 +83,7 @@ module.exports = {
 
 		const response = {
 
-			requestId: util.now('micro'),
+			requestId: util.now('micro').toString(),
 			
 			code:"SUCCESS",
 			
@@ -122,7 +122,7 @@ module.exports = {
 		}
 		const response = {
 
-			requestId: util.now('micro'),
+			requestId: util.now('micro').toString(),
 			
 			code:"SUCCESS",
 			
@@ -164,7 +164,7 @@ module.exports = {
 
 		const response = {
 
-			requestId: util.now('micro'),
+			requestId: util.now('micro').toString(),
 			
 			code:"SUCCESS",
 			
