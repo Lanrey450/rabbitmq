@@ -4,6 +4,8 @@ const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
 
+const util = require('../../lib/utils')
+
 module.exports = {
 
 	async optin(req, res) {
@@ -34,7 +36,22 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+		const response = {
+
+			requestId: util.now('micro'),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
+
+
 	},
 
 	async optout(req, res) {
@@ -63,7 +80,20 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+		const response = {
+
+			requestId: util.now('micro'),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	async chargeAsync(req, res) {
@@ -90,7 +120,19 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+		const response = {
+
+			requestId: util.now('micro'),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	async consent(req, res) {
@@ -119,7 +161,20 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+		const response = {
+
+			requestId: util.now('micro'),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	// async mtRequest(req, res) {
