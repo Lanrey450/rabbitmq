@@ -83,6 +83,12 @@ module.exports = {
 			charge_postback_queue: '9Mobile_charge_queue',
 			un_subscription_queue: '9Mobile_unsubscription_queue',
 		},
+
+		vasQueues: {
+	
+			SUBSCRIPTION_AND_CHARGE_FALLBACK: "subscription_and_charge_fallback",
+
+		},
 	},
 	airtel_options: {
 		host: env.AIRTEL_SE_AIRTEL_HOST,

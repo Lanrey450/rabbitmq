@@ -32,6 +32,37 @@ module.exports = {
 			publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush }) // subscription feedback
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
+
+					const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${dataToPush.serviceId}::${dataToPush.msisdn}`
+
+					console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+
+					let result = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
+
+
+					result = result.split('::')
+					const serviceId = result[0]
+					const channel = result[1]
+					const productId = result[2]
+					const msisdn = dataToPush.msisdn
+
+									const payload = {
+										network: '9mobile',
+										serviceId: serviceId,
+										msisdn: msisdn,
+										channel: channel,
+										productId: productId,
+										feedbackStatus: true
+						
+					}
+					 publish(config.rabbit_mq.vasQueues.SUBSCRIPTION_AND_CHARGE_FALLBACK, {
+						...payload,
+					})
+					 .then(() => {
+					 TerraLogger.debug('successfully pushed to subscription queue for charge and billing process')
+					 }).catch((err) => {
+					 TerraLogger.debug(err)
+				 }) 
 				})
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
