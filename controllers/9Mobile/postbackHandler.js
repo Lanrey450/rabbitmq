@@ -167,7 +167,7 @@ module.exports = {
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-		let result = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
+		let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
 
 		result = result.split('::')
 		const serviceId = result[0]
@@ -184,7 +184,7 @@ module.exports = {
 							feedbackStatus: true
 			
 		}
-		
+
 		 publish(config.rabbit_mq.vasQueues.SUBSCRIPTION_AND_CHARGE_FALLBACK, {
 			...payload,
 		})
