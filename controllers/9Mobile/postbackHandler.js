@@ -166,7 +166,7 @@ module.exports = {
 			message: data.operation,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush }) // subscription feedback queue
+			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
