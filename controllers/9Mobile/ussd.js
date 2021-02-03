@@ -92,6 +92,7 @@ async ussd(req, res) {
              .then(() => {
              TerraLogger.debug('successfully pushed postback data to queue')
              }).catch((err) => {
+                console.log(error)
              TerraLogger.debug(err)
          }) 
         }
@@ -106,11 +107,13 @@ async ussd(req, res) {
             // Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
         
          } catch (error) {
+             console.log(error)
             TerraLogger.debug(error)
-          Utils.sendUserErrorGlobalSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+          //Utils.sendUserErrorGlobalSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
          }
      
      } catch (error) {
+        console.log(error)
         TerraLogger.debug(error)
     }  
 },
