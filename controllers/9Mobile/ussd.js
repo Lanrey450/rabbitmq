@@ -16,7 +16,7 @@ const ResponseManager = require('../../commons/response')
 
 const subscribeUser = require('../../lib/9Mobile/subscription')
 const publish = require('../../rabbitmq/producer')
-
+const redis = require('../../redis')
 
 module.exports = {
 
