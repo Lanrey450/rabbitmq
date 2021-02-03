@@ -156,6 +156,7 @@ module.exports = {
 			msisdn: data.userIdentifier,
 			status: 'success',
 			channel: channel,
+			feedbackStatus: true,
 			meta: {
 				validity: data.validity,
 				mnoDeliveryCode: data.mnoDeliveryCode,
