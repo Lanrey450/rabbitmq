@@ -189,9 +189,9 @@ module.exports = {
 			...payload,
 		})
 		 .then(() => {
-		 TerraLogger.debug('successfully pushed to subscription queue for charge and billing process')
+		 console.log('successfully pushed to subscription queue for charge and billing process')
 		 }).catch((err) => {
-		 TerraLogger.debug(err)
+		 console.log(err)
 	 }) 
 
 		const response = {
