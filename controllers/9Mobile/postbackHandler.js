@@ -141,10 +141,21 @@ module.exports = {
 
 		const data = req.body
 
+		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`
+
+		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+
+		let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
+
+		result = result.split('::')
+
+		const channel = result[1]
+
 		const dataToPush = {
 
 			msisdn: data.userIdentifier,
 			status: 'success',
+			channel: channel,
 			meta: {
 				validity: data.validity,
 				mnoDeliveryCode: data.mnoDeliveryCode,
@@ -162,37 +173,6 @@ module.exports = {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
 
-
-		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${dataToPush.serviceId}::${dataToPush.msisdn}`
-
-		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
-
-		let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
-
-		result = result.split('::')
-		const serviceId = result[0]
-		const channel = result[1]
-		const productId = result[2]
-		const msisdn = dataToPush.msisdn
-
-						const payload = {
-							network: '9mobile',
-							serviceId: serviceId,
-							msisdn: msisdn,
-							channel: channel,
-							productId: productId,
-							feedbackStatus: true
-			
-		}
-
-		 publish(config.rabbit_mq.vasQueues.SUBSCRIPTION_AND_CHARGE_FALLBACK, {
-			...payload,
-		})
-		 .then(() => {
-		 console.log('successfully pushed to subscription queue for charge and billing process')
-		 }).catch((err) => {
-		 console.log(err)
-	 }) 
 
 		const response = {
 
