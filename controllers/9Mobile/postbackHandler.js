@@ -145,11 +145,11 @@ module.exports = {
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-		let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
+		//let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
 
-		result = result.split('::')
+		//result = result.split('::')
 
-		const channel = result[1]
+		const channel = 'USSD'
 
 		const dataToPush = {
 
