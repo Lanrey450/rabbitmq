@@ -16,20 +16,20 @@ const ResponseManager = require('../../commons/response')
 
 const subscribeUser = require('../../lib/9Mobile/subscription')
 const publish = require('../../rabbitmq/producer')
-
+const redis = require('../../redis')
 
 module.exports = {
 
 async ussd(req, res) {
 
-    const { msisdn, serviceId,shortCode } = req.body
+    const { msisdn, serviceId,shortCode,productId } = req.body
 
     ResponseManager.sendResponse({
         res, 
         message: 'Thank you! Now go forth',
     })
 
-    const requiredParams = ['msisdn', 'serviceId','shortCode']
+    const requiredParams = ['msisdn', 'serviceId','shortCode','productId']
     const missingFields = Utils.authenticateParams(req.body, requiredParams)
 
     if (missingFields.length !== 0) {
@@ -49,11 +49,12 @@ async ussd(req, res) {
             console.log('msisdn -', msisdn)
             console.log('serviceId - ', serviceId.trim())
             console.log('entryChannel - ', channel.toUpperCase())
+            console.log('productId - ', productId)
 
          const response = await subscribeUser.subscribe({
         userIdentifier: msisdn, serviceId: serviceId.trim(), entryChannel: channel.toUpperCase() 
         })
-
+      
 
         console.log(response, 'response')
 
@@ -78,12 +79,20 @@ async ussd(req, res) {
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              //   NineMobileUtils.sendUserOneOffSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+
+
+             const redisSubscriptionKey = `USSD_SUBSCRIPTION_CALL::${serviceId}::${msisdn}`
+             console.log("ussd subscription call key "+ redisSubscriptionKey)
+             redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}`, 'ex', 60 * 60 * 24) // save for 24 hours
+
+
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
                 ...dataToPush,
             })
              .then(() => {
              TerraLogger.debug('successfully pushed postback data to queue')
              }).catch((err) => {
+                console.log(error)
              TerraLogger.debug(err)
          }) 
         }
@@ -98,11 +107,13 @@ async ussd(req, res) {
             // Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
         
          } catch (error) {
+             console.log(error)
             TerraLogger.debug(error)
-         //   Utils.sendUserErrorGlobalSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+          //Utils.sendUserErrorGlobalSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
          }
      
      } catch (error) {
+        console.log(error)
         TerraLogger.debug(error)
     }  
 },

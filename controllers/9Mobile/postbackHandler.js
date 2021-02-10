@@ -4,6 +4,8 @@ const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
 
+const util = require('../../lib/utils')
+
 module.exports = {
 
 	async optin(req, res) {
@@ -34,7 +36,22 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+		const response = {
+
+			requestId: util.now('micro').toString(),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
+
+
 	},
 
 	async optout(req, res) {
@@ -63,7 +80,20 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+		const response = {
+
+			requestId: util.now('micro').toString(),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	async chargeAsync(req, res) {
@@ -90,7 +120,19 @@ module.exports = {
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+		const response = {
+
+			requestId: util.now('micro').toString(),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	async consent(req, res) {
@@ -99,10 +141,22 @@ module.exports = {
 
 		const data = req.body
 
+		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`
+
+		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+
+		//let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
+
+		//result = result.split('::')
+
+		const channel = 'USSD'
+
 		const dataToPush = {
 
 			msisdn: data.userIdentifier,
 			status: 'success',
+			channel: channel,
+			feedbackStatus: true,
 			meta: {
 				validity: data.validity,
 				mnoDeliveryCode: data.mnoDeliveryCode,
@@ -112,14 +166,28 @@ module.exports = {
 			message: data.operation,
 		}
 		try {
-			publish(config.rabbit_mq.nineMobile.subscription_queue, { ...dataToPush }) // subscription feedback queue
+			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
 		} catch (err) {
 			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
 		}
-		res.send('ok')
+
+
+		const response = {
+
+			requestId: util.now('micro').toString(),
+			
+			code:"SUCCESS",
+			
+			inError: false,
+			
+			message: "Request processed successfully", "responseData":{}
+			
+			}
+		res.json(response)
+		//res.send('ok')
 	},
 
 	// async mtRequest(req, res) {

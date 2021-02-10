@@ -82,6 +82,13 @@ module.exports = {
 			subscription_queue: '9Mobile_subscription_queue',
 			charge_postback_queue: '9Mobile_charge_queue',
 			un_subscription_queue: '9Mobile_unsubscription_queue',
+		
+		},
+
+		vasQueues: {
+			CONSENT_BILLING:"consent_billing",
+			SUBSCRIPTION_AND_CHARGE_FALLBACK: "subscription_and_charge_fallback",
+
 		},
 	},
 	airtel_options: {
