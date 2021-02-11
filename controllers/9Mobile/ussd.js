@@ -84,7 +84,7 @@ async ussd(req, res) {
 
              const redisSubscriptionKey = `USSD_SUBSCRIPTION_CALL::${serviceId}::${msisdn}`
              console.log("ussd subscription call key "+ redisSubscriptionKey)
-             redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}:${shortCode}`, 'ex', 60 * 60 * 24) // save for 24 hours
+             redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}::${shortCode}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
 
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
