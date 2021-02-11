@@ -179,9 +179,9 @@ module.exports = {
 
 			console.log('PLan', planDetails.data.data);
 
-			const { amount, validity, networkConfig, name } = planDetails.data.data;
+			const { plan, name } = planDetails.data.data;
 
-			const messagePayload  = { msisdn: data.userIdentifier, name, amount, validity, shortCode };
+			const messagePayload  = { msisdn: data.userIdentifier, name, amount: plan.amount, validity: plan.validity, shortCode };
 
 			console.log('message body', messagePayload);
 			NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
