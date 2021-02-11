@@ -1,13 +1,18 @@
 /* eslint-disable no-tabs */
 const TerraLogger = require('terra-logger');
 const axios = require('axios');
-const redis = require('../../redis')
+const redis = require('../../redis');
+const { promisify } = require("util");
+
 const NineMobileUtils = require('../../lib/9Mobile/util');
 const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
 
+
 const util = require('../../lib/utils')
+
+redis.getAsync = promisify(redis.get).bind(redis);
 
 module.exports = {
 
@@ -148,7 +153,7 @@ module.exports = {
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-		const cachedData = await redis.get(redisKeyForServiceId);
+		const cachedData = await redis.getAsync(redisKeyForServiceId); 
 
 		console.log('cached consent data', cachedData)
 
@@ -189,7 +194,7 @@ module.exports = {
 			const messagePayload  = { msisdn: data.userIdentifier, name, amount: plan.amount, validity: plan.validity, shortCode };
 
 			console.log('message body', messagePayload);
-			NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
+			// NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 
 			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
