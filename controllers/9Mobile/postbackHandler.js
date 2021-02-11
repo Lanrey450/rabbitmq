@@ -194,7 +194,7 @@ module.exports = {
 			const messagePayload  = { msisdn: data.userIdentifier, name, amount: plan.amount, validity: plan.validity, shortCode };
 
 			console.log('message body', messagePayload);
-			NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
+			// NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 
 			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
