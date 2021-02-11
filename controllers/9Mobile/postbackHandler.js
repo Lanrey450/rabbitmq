@@ -1,6 +1,7 @@
 /* eslint-disable no-tabs */
 const TerraLogger = require('terra-logger');
-const axios = require('axios')
+const axios = require('axios');
+const redis = require('../../redis')
 const NineMobileUtils = require('../../lib/9Mobile/util');
 const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
@@ -146,6 +147,10 @@ module.exports = {
 		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+
+		const cachedData = await redis.get(redisKeyForServiceId);
+
+		console.log('cached consent data', cachedData)
 
 		const shortCode = redisKeyForServiceId.split('::')[3];
 
