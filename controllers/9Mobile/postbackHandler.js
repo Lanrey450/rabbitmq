@@ -177,7 +177,7 @@ module.exports = {
 
 		
 		try {
-			const planDetails = await _axios.get(`/plans/query?serviceId=${serviceId}&network=9mobile`);
+			const planDetails = await _axios.get(`/plans/query?serviceId=${data.serviceId}&network=9mobile`);
 
 			console.log('PLan', planDetails);
 
