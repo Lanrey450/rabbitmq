@@ -6,13 +6,6 @@ const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
 
-// const _axios = axios.create({
-//     baseURL: `http://staging-api-gateway.terragonbase.com/products/api/v1`,
-// 	headers: {
-// 		'Authorization': "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoIjp7ImVtYWlsVmVyaWZpZWRBdCI6bnVsbCwicGhvbmVWZXJpZmllZEF0IjpudWxsLCJ1c2VySWQiOiI1ZGY3ODQzMThhNDdlNDAwMWJlZTU4MjciLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHRlbGVjb21tZS5jb20iLCJub3RpZmljYXRpb25MYXN0UmVhZEF0IjoiMjAyMC0wMy0xMlQxMjoyMzo0NC4yMTRaIiwiYXV0aElkIjoiNWRmNzg0MzI4YTQ3ZTQwMDFiZWU1ODJhIiwicHJvZmlsZSI6eyJuYW1lIjoiVGVsZWNvbW1lIEFkbWluIiwiZW1haWwiOiJhZG1pbkB0ZWxlY29tbWUuY29tIiwicGhvbmVOdW1iZXIiOiIrMjM0NzAxMjM0NTY3OCIsInVzZXJJZCI6IjVkZjc4NDMxOGE0N2U0MDAxYmVlNTgyNyJ9LCJub3RpZmljYXRpb25zIjpbeyJkZXNjcmlwdGlvbiI6IkFjY291bnQgQXBwcm92YWxzOiAyIHByb3ZpZGVyKHMpIGFyZSBhd2FpdGluZyBhcHByb3ZhbCIsImxldmVsIjoid2FybmluZyJ9XSwidW5yZWFkIjp7InRpY2tldHMiOjAsInByb2R1Y3RzIjoxNTR9fSwiaWF0IjoxNTg1Mzg0Nzg2LCJhdWQiOiJ2YXMtYWdnIiwiaXNzIjoidmFzLWF1dGgiLCJzdWIiOiJ2YXMtYWdnIn0.T5H42csX4L4rVM9Om9fr_fNulZU8vSCeC-jif-tm-XS96Z5Ncq0Npv_fHnw78S5Uq6uJW9gK-AMfvPFfkWBsZg"
-//     }
-// });
-
 const util = require('../../lib/utils')
 
 module.exports = {
@@ -154,9 +147,7 @@ module.exports = {
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-		//let result = await util.getServiceIdFromKeyword(redisKeyForServiceId)
-
-		//result = result.split('::')
+		const shortCode = redisKeyForServiceId.split('::')[3];
 
 		const channel = 'USSD'
 
@@ -175,10 +166,10 @@ module.exports = {
 			message: data.operation,
 		}
 
+	
+
 		
 		try {
-			// const planDetails = await _axios.get(`/plans/query?serviceId=${data.serviceId}&network=9mobile`);
-
 
 			const planDetails = await axios.get(`http://staging-api-gateway.terragonbase.com/products/api/v1/plans/query?serviceId=${data.serviceId}&network=9mobile`, {
 				headers: {
@@ -186,12 +177,19 @@ module.exports = {
 				}
 			});
 
-			console.log('PLan', planDetails.data);
+			console.log('PLan', planDetails.data.data);
+
+			const { amount, validity, networkConfig, name } = planDetails.data.data;
+
+			const messagePayload  = { msisdn: data.userIdentifier, name, amount, validity, shortCode };
+
+			console.log('message body', messagePayload);
+			NineMobileUtils.sendUserWelcomeSMSforUSSD(messagePayload).then(TerraLogger.debug).catch(TerraLogger.debug)
+
 
 			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
-					// NineMobileUtils.sendUserUnsubSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 				})
 		} catch (err) {
