@@ -186,7 +186,7 @@ module.exports = {
 				}
 			});
 
-			console.log('PLan', planDetails);
+			console.log('PLan', planDetails.data);
 
 			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
 				.then(() => {
