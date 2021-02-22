@@ -2,6 +2,7 @@
 /* eslint-disable no-tabs */
 
 const TerraLogger = require('terra-logger')
+const { promisify } = require("util");
 const ResponseManager = require('../../commons/response')
 const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const Utils = require('../../lib/utils')
