@@ -8,6 +8,10 @@ const Utils = require('../../lib/utils')
 const NineMobileUtils = require('../../lib/9Mobile/util')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
+const redis = require('../../redis')
+
+redis.getAsync = promisify(redis.get).bind(redis);
+
 
 module.exports = {
 	async chargeSync(req, res) {
@@ -15,6 +19,8 @@ module.exports = {
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
 		}
+
+		console.log('req body for charge',  req.body)
 		const requiredParams = ['msisdn', 'serviceId']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
 		if (missingFields.length !== 0) {
@@ -60,7 +66,16 @@ module.exports = {
 
 				const responseStatus = data.code.toLowerCase();
 
+				const consentRedisKey = `consentString::${req.body.msisdn}`;
+
+				const cachedData = await redis.getAsync(consentRedisKey); 
+
+				console.log('cached data for charge', cachedData)
+				const services = ['', 'Celebrity Gist', 'Fashion Update'];
 				if(responseStatus === 'success'){
+					req.body.name = services[cachedData];
+					NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+
 					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}else if(responseStatus === 'no_balance'){
 					NineMobileUtils.sendUserlowBalanceSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
