@@ -66,14 +66,20 @@ module.exports = {
 
 				const responseStatus = data.code.toLowerCase();
 
-				const consentRedisKey = `consentString::${req.body.msisdn}`;
+				if(req.body.channel.toLowerCase() === 'ussd'){
+					const consentRedisKey = `consentString::${req.body.msisdn}`;
 
-				const cachedData = await redis.getAsync(consentRedisKey); 
+					const cachedData = await redis.getAsync(consentRedisKey); 
+	
+					console.log('cached data for charge', cachedData);
+					
+					const services = ['', 'Celebrity Gist', 'Fashion Update'];
 
-				console.log('cached data for charge', cachedData)
-				const services = ['', 'Celebrity Gist', 'Fashion Update'];
-				if(responseStatus === 'success'){
 					req.body.name = services[cachedData];
+
+				}
+				
+				if(responseStatus === 'success'){
 					NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)

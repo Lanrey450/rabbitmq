@@ -56,13 +56,9 @@ async userConsent(req, res) {
 
      console.log(data, serviceId, channel, result, msisdn, 'data------------------')  
 
-     const consentRedisKey = `consentString::${msisdn}`;
-
 
      if (keyword === '1') {
  
-        redis.set(consentRedisKey, `${keyword}`, 'ex', 60 * 30) // save for 30 mins
-        
         try {
 
             console.log('msisdn -', msisdn)
@@ -118,8 +114,6 @@ async userConsent(req, res) {
          }
      } else if (keyword === '2') {
         try {
-            redis.set(consentRedisKey, `${keyword}`, 'ex', 60 * 30) // save for 30 mins
-
 
             console.log('msisdn -', msisdn)
             console.log('serviceId - ', serviceId.trim())
