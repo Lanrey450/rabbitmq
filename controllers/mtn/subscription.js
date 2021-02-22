@@ -286,15 +286,21 @@ module.exports = {
 		TerraLogger.debug(data)
 
 		// process mtn feedback here
-		const resp = data.soapenvBody.ns1syncOrderRelation
+		const resp = data.soapenvBody
 
-		const extraInfo = resp.ns1extensionInfo.item
+// console.log(resp)
 
-		const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID']
+const payload = resp.ns2syncOrderRelation
+
+const ns2extensionInfo = resp.ns2syncOrderRelation.ns2extensionInfo
+
+// console.log(ns2extensionInfo)
+
+const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID']
 		const result = {}
 
 		// loop through array and get the selected fields
-		extraInfo.forEach((elem) => {
+		ns2extensionInfo.item.forEach((elem) => {
 			if (selectedFields.includes(elem.key)) {
 				result[elem.key] = elem
 			}
@@ -306,12 +312,12 @@ module.exports = {
 } = result
 
 		const dataToSend = {
-			msisdn: resp.ns1userID.ID,
+			msisdn: payload.ns2userID.ID,
 			status: 'success',
 			meta: {
-				updateTime: resp.ns1updateTime || '',
-				effectiveTime: resp.ns1effectiveTime || '',
-				expiryTime: resp.ns1expiryTime || '',
+				updateTime: payload.ns2updateTime || '',
+				effectiveTime: payload.ns2effectiveTime || '',
+				expiryTime: payload.ns2expiryTime || '',
 				serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
 				fee: (fee) ? fee.value : '',
 				keyword: (keyword) ? keyword.value : '',
@@ -319,10 +325,14 @@ module.exports = {
 				Starttime: (Starttime) ? Starttime.value : '',
 			},
 			network: 'mtn',
-			serviceId: resp.ns1productID,
-			message: resp.ns1updateDesc,
+			serviceId: payload.ns2productID,
+			message: payload.ns2updateDesc,
 			transactionId: (transactionID) ? transactionID.value : '',
 		}
+
+
+
+    console.log(dataToSend)
 
 
 		if (dataToSend.message === 'Addition') {
