@@ -81,7 +81,7 @@ async userConsent(req, res) {
                 msisdn,
                 message: response.responseData.subscriptionResult,
                 meta: {
-                    entryChannel: channel,
+                    entryChannel: channel.toUpperCase(),
                     transactionId: response.responseData.transactionId,
                     externalTxId: response.responseData.externalTxId,
                     subscriptionError: response.responseData.subscriptionError,              
@@ -135,7 +135,7 @@ async userConsent(req, res) {
                 msisdn,
                 message: response.responseData.subscriptionResult,
                 meta: {
-                    entryChannel: channel,
+                    entryChannel: channel.toUpperCase(),
                     transactionId: response.responseData.transactionId,
                     externalTxId: response.responseData.externalTxId,
                     subscriptionError: response.responseData.subscriptionError,   

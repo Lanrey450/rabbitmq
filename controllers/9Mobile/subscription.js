@@ -52,7 +52,7 @@ module.exports = {
 			console.log("subscription call key "+ redisSubscriptionKey)
 			redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
-			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}::sms`
+			let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}::${channel.toLowerCase()}`
 
 
 			redis.set(consentUrlRedisKey, `${config.baseURL}/nineMobile/sms/mo`, 'ex', 60 * 10) // save for 10 mins
