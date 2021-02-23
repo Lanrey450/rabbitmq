@@ -70,7 +70,7 @@ module.exports = {
 				if(req.body.channel.toLowerCase() === 'ussd'){
 					const consentRedisKey = `consentString::${req.body.msisdn}`;
 
-					const cachedData = await redis.getAsysnc(consentRedisKey); 
+					const cachedData = await redis.getAsync(consentRedisKey); 
 	
 					console.log('cached data for charge', cachedData);
 					
