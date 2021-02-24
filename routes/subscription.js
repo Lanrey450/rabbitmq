@@ -84,4 +84,13 @@ route.post('/mtn/stopUSSDNotification', asyncHandler((req, res) => MTNSubscripti
 route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.MTNDataSyncPostBack(req, res)))
 
 
+// on-demand 
+route.post('/nineMobile/billing/on-demand', asyncHandler((req, res) => NinemobileOndemandController.onDemandService(req, res)))
+
+route.post('/mtn/billing/on-demand', asyncHandler((req, res) => MTNOndemandController.onDemandService(req, res)))
+
+route.post('/airtel/billing/on-demand', asyncHandler((req, res) => airtelOndemandController.onDemandService(req, res)))
+
+route.post('/glo/billing/on-demand', asyncHandler((req, res) => gloOndemandController.onDemandService(req, res)))
+
 module.exports = route
