@@ -157,8 +157,6 @@ module.exports = {
 
 		console.log('cached consent data', cachedData)
 
-		const shortCode = cachedData.split('::')[3];
-
 		const channel = 'USSD'
 
 		const dataToPush = {
