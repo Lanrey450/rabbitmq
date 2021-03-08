@@ -159,6 +159,9 @@ module.exports = {
 
 		const channel = 'USSD'
 
+		const consent = cachedData.split('::')[4];
+
+		console.log('consent value', consent);
 		const dataToPush = {
 
 			msisdn: data.userIdentifier,
@@ -172,6 +175,7 @@ module.exports = {
 			network: '9mobile',
 			serviceId: data.serviceId,
 			message: data.operation,
+			consent,
 		}
 
 	
