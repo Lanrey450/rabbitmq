@@ -111,6 +111,13 @@ module.exports = {
 
 
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
+				//------HACK--------
+				const { name, shortCode, keyword } = req.body;
+				const redisSubscriptionKey = `UNSUBSCRIPTION_CALL::${serviceId}::${msisdn}`;
+				console.log("ussd subscription call key " + redisSubscriptionKey)
+				redis.set(redisSubscriptionKey, `${name}::${shortCode}::${keyword}`, 'ex', 60 * 60) // save for 1 hour
+
+				//------HACK--------
 				try {
 					const nineMobileReqBody = {
 						userIdentifier: req.body.msisdn,
@@ -144,6 +151,9 @@ module.exports = {
 									subscriptionError: unsubscriptionResponse.responseData.subscriptionError,
 								},
 						}
+
+			
+
 						try {
 							return publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })
 								.then(() => {
@@ -160,6 +170,8 @@ module.exports = {
 								message: `unable to push unsubscription data to queue :: ${err}`,
 							})
 						}
+					}else{
+						return;
 					}
 				} catch (error) {
 					TerraLogger.debug(error)
