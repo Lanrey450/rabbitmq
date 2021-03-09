@@ -145,7 +145,7 @@ async userConsent(req, res) {
         console.log(dataToPush, 'dataToPush')
 
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
-                NineMobileUtils.sendUserOneOffSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+                // NineMobileUtils.sendUserOneOffSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
                 ...dataToPush,
             })
