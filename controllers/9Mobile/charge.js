@@ -101,15 +101,17 @@ module.exports = {
 						NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 					}
 
+					console.log('BEFPRERERRERER')
 					if(req.body.channel.toLowerCase() === 'sms'){
 						if(req.body.consent == '1'){
 							NineMobileUtils.sendUserAutoRenewalSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
-						}else if(req.body.consent == '2'){
+						} else if(req.body.consent == '2'){
 							NineMobileUtils.sendUserOneOffSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 						}
 					}
 
+					console.log('HTGGSGGSGSG')
 					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}else if(responseStatus === 'no_balance'){
 					NineMobileUtils.sendUserlowBalanceSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
