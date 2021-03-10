@@ -173,7 +173,10 @@ module.exports = {
 							})
 						}
 					}else{
-						return;
+						return ResponseManager.sendResponse({
+							res,
+							responseBody: {},
+						}) 
 					}
 				} catch (error) {
 					TerraLogger.debug(error)
