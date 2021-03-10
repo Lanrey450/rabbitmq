@@ -93,6 +93,7 @@ module.exports = {
 			shortCode: cachedData[1],
 			keyword: cachedData[2],
 			msisdn: data.userIdentifier,
+			channel: cachedData[3]
 
 		}
 		NineMobileUtils.sendUserUnsubSMS(smsData).then(TerraLogger.debug).catch(TerraLogger.debug)
