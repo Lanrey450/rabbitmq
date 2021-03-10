@@ -115,9 +115,9 @@ module.exports = {
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 				//------HACK--------
 				const { name, shortCode, keyword, serviceId } = req.body;
-				const redisSubscriptionKey = `UNSUBSCRIPTION_CALL::${serviceId}::${req.body.msisdn}::${req.body.channel}`;
+				const redisSubscriptionKey = `UNSUBSCRIPTION_CALL::${serviceId}::${req.body.msisdn}`;
 				console.log("ussd subscription call key " + redisSubscriptionKey)
-				redis.set(redisSubscriptionKey, `${name}::${shortCode}::${keyword}`, 'ex', 60 * 60) // save for 1 hour
+				redis.set(redisSubscriptionKey, `${name}::${shortCode}::${keyword}::${req.body.channel}`, 'ex', 60 * 60) // save for 1 hour
 
 				//------HACK--------
 				try {
