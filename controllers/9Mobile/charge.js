@@ -110,7 +110,6 @@ module.exports = {
 						}
 					}
 
-					console.log('HTGGSGGSGSG')
 					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}else if(responseStatus === 'no_balance'){
 					NineMobileUtils.sendUserlowBalanceSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
