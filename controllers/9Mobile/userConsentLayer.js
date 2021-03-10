@@ -51,11 +51,15 @@ async userConsent(req, res) {
      const channel = result[1]
      result[5] = shortCode
      result[6] = msisdn
+     result[7] = keyword
 
 
 
      console.log(data, serviceId, channel, result, msisdn, 'data------------------')  
 
+     const consentRedisKey = `consentStringSMS::${msisdn}`;
+
+     redis.set(consentRedisKey, result.toString());
 
      if (keyword === '1') {
  
