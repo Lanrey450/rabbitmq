@@ -93,7 +93,7 @@ async userConsent(req, res) {
         TerraLogger.debug(data, response, '9Mobile subscription data')
 
              if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
-                NineMobileUtils.sendUserAutoRenewalSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+                // NineMobileUtils.sendUserAutoRenewalSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
 
                 await publish(config.rabbit_mq.nineMobile.subscription_queue, {
                     ...dataToPush,
