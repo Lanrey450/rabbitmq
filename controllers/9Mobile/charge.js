@@ -101,7 +101,6 @@ module.exports = {
 						NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 					}
 
-					console.log('BEFPRERERRERER')
 					if(req.body.channel.toLowerCase() === 'sms'){
 						if(req.body.consent == '1'){
 							NineMobileUtils.sendUserAutoRenewalSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
