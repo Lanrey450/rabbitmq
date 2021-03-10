@@ -86,7 +86,9 @@ module.exports = {
 
 
 	async unsubscribe(req, res) {
-		const auth = req.headers.authorization
+		const auth = req.headers.authorization;
+
+		console.log('REQUESTTSTS bODY', req.body);
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
