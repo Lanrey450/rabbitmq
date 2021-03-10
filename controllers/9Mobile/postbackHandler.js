@@ -83,7 +83,7 @@ module.exports = {
 
 		let cachedDataKey = `UNSUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`;
 
-		const cachedData = await redis.getAsync(cachedDataKey); 
+		let cachedData = await redis.getAsync(cachedDataKey); 
 		console.log('unsub cached data',  cachedData);
 
 		cachedData = cachedData.split('::');
