@@ -227,7 +227,12 @@ spec:
                         valueFrom:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
-                              key: SMS_NOTIFICATION_STATUS_URL                                   
+                              key: SMS_NOTIFICATION_STATUS_URL
+                      - name: ON_DEMAND_SERVICE_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: ON_DEMAND_SERVICE_URL                                   
                     image: 101063123548.dkr.ecr.eu-west-1.amazonaws.com/vas-aggregator-subscription-billing/vas-aggregator-subscription-billing:latest
                     ports:
                       - containerPort: 3337
