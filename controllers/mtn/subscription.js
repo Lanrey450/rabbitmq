@@ -533,6 +533,7 @@ const payload = data.soapenvHeader.ns1NotifySOAPHeader
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
+					// notifyUrl: config.mtn.notifyUrl.sms,
 					notifyUrl: config.mtn.notifyUrl.startSMSNotificationUrl,
 					serviceId: req.body.external_id,
 					shortcode: req.body.shortcode,
