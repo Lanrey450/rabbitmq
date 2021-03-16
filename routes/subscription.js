@@ -65,7 +65,7 @@ route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.st
 // sms mt - manulaly initiated by application developer - done 
 route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res))) 
 
-// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url 
+// sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url 
 route.post('/mtn/startSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.startSMSNotification(req, res)))
 
 // sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url 

@@ -25,7 +25,8 @@ module.exports = {
 		spPwd: env.MTN_SPPWD,
 		baseSmsOnboardUrl: env.SMS_USSD_IVR_ONBOARDING_SERVICE_URL,
 		notifyUrl: {
-			sms: `${env.APP_BASE_URL}/mtn/sms_mo`,
+			// sms: `${env.APP_BASE_URL}/mtn/sms_mo`,
+			startSMSNotificationUrl: env.ON_DEMAND_SERVICE_URL,
 			ussd: `${env.APP_BASE_URL}/mtn/ussd_mo`,
 			sms_dlr: `${env.APP_BASE_URL}/mtn/dlr`,
 			notification_url_dlr: env.SMS_NOTIFICATION_STATUS_URL,
