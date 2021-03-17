@@ -621,6 +621,7 @@ console.log(dataToSend)
 					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId,
 				}
+				console.log(data, "data")
 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
 		 if (!response.error) {
 			return ResponseManager.sendResponse({
