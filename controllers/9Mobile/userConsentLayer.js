@@ -12,6 +12,8 @@ const TerraLogger = require('terra-logger')
 const config = require('../../config')
 const Utils = require('../../lib/utils')
 const NineMobileUtils = require('../../lib/9Mobile/util')
+// const NineMobileUtilslib = require('../../lib/utils')
+
 const ResponseManager = require('../../commons/response')
 const redis = require('../../redis')
 
@@ -108,7 +110,7 @@ async userConsent(req, res) {
                 TerraLogger.debug(err)
             })
             } else if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
-                NineMobileUtils.sendUserAleadySubSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
+                NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
             } else {
                 Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
             }
