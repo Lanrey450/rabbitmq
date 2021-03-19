@@ -165,7 +165,20 @@ function saveUserSubData(consumerQueue, model) {
 			return
 		}
 		try {
-			TerraLogger.debug(msg)
+			TerraLogger.debug(msg, "message to save to database")
+			if(msg.network === "mtn") {
+				// query the db to check for existing record with same msisdn and transactionId
+				const data = {
+					msisdn: msg.msisdn,
+					transactionId: msg.transactionId
+				}
+
+			const result = model.findOne(data)
+			if(!result) {
+				return model.create(msg)
+			}
+			return
+			}
 			const data = await model.create(msg)
 			TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 		} catch (error) {
