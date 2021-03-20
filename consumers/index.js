@@ -118,6 +118,19 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 				msg.feedbackStatus = true
 				try {
 					TerraLogger.debug(msg)
+					if(msg.network === "mtn") {
+						// query the db to check for existing record with same msisdn and transactionId
+						const data = {
+							msisdn: msg.msisdn,
+							transactionId: msg.transactionId
+						}
+		
+					const result = model.findOne(data)
+					if(!result) {
+						return model.create(msg)
+					}
+					return
+					}
 					const data = await model.create(msg)
 					delete msg.feedbackStatus
 					TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
@@ -129,6 +142,19 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 				msg.feedbackStatus = false
 				// save to databse regardless
 				try {
+					if(msg.network === "mtn") {
+						// query the db to check for existing record with same msisdn and transactionId
+						const data = {
+							msisdn: msg.msisdn,
+							transactionId: msg.transactionId
+						}
+		
+					const result = model.findOne(data)
+					if(!result) {
+						return model.create(msg)
+					}
+					return
+					}
 					const data = await model.create(msg)
 					if (data) {
 						delete msg.feedbackStatus
@@ -143,6 +169,19 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 		//  if feedback queue is emtpy
 		if (msg != null && feedbackQueue == null) {
 			try {
+				if(msg.network === "mtn") {
+					// query the db to check for existing record with same msisdn and transactionId
+					const data = {
+						msisdn: msg.msisdn,
+						transactionId: msg.transactionId
+					}
+	
+				const result = model.findOne(data)
+				if(!result) {
+					return model.create(msg)
+				}
+				return
+				}
 				msg.feedbackStatus = false
 				const data = await model.create(msg)
 				TerraLogger.debug(`Successfully saved to db! - ${data}`)
@@ -166,19 +205,6 @@ function saveUserSubData(consumerQueue, model) {
 		}
 		try {
 			TerraLogger.debug(msg, "message to save to database")
-			if(msg.network === "mtn") {
-				// query the db to check for existing record with same msisdn and transactionId
-				const data = {
-					msisdn: msg.msisdn,
-					transactionId: msg.transactionId
-				}
-
-			const result = model.findOne(data)
-			if(!result) {
-				return model.create(msg)
-			}
-			return
-			}
 			const data = await model.create(msg)
 			TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
 		} catch (error) {
