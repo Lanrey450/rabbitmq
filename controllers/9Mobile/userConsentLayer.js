@@ -110,7 +110,15 @@ async userConsent(req, res) {
                 TerraLogger.debug(err)
             })
             } else if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
-                NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+                return publish(config.rabbit_mq.nineMobile.subscription_queue, {
+                    ...dataToPush,
+                    })
+                .then(() => {
+                TerraLogger.debug('successfully pushed subscription data to queue')
+            }).catch((err) => {
+                TerraLogger.debug(err)
+            })
+                // NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
             } else {
                 Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
             }
@@ -162,7 +170,15 @@ async userConsent(req, res) {
          }) 
         }
         if (response.responseData.subscriptionResult === 'OPTIN_ALREADY_ACTIVE') {
-            return NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+            return publish(config.rabbit_mq.nineMobile.subscription_queue, {
+                ...dataToPush,
+                })
+            .then(() => {
+            TerraLogger.debug('successfully pushed subscription data to queue')
+        }).catch((err) => {
+            TerraLogger.debug(err)
+        })
+            // return NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
         } 
             // Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
         
