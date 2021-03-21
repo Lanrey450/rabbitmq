@@ -41,7 +41,9 @@ module.exports = {
 				const nineMobileRequestBody = {
 					userIdentifier: req.body.msisdn,
 					serviceId: req.body.serviceId,
-					context: 'STATELESS',
+					// context: 'STATELESS',
+					context: 'SUBSCRIPTION',
+
 				}
 
 				console.log(nineMobileRequestBody, '9Mobile request body')
@@ -51,7 +53,7 @@ module.exports = {
 
 				// format data to push to queue
 				const dataToPush = {
-					status: 'success',
+					status: data.code.toLowerCase(),
 					network: '9mobile',
 					transactionId: data.responseData.transactionUUID,
 					serviceId: nineMobileRequestBody.serviceId,
@@ -65,6 +67,7 @@ module.exports = {
 					},
 				}
 
+				
 				const responseStatus = data.code.toLowerCase();
 
 				if(req.body.channel.toLowerCase() === 'ussd'){
