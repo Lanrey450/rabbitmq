@@ -113,24 +113,27 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 		}
 		if (msg != null && feedbackQueue != null) {
 			try {
+				if(msg.network === "mtn") {
+					// query the db to check for existing record with same msisdn and transactionId
+					const data = {
+						msisdn: msg.msisdn,
+						transactionId: msg.transactionId
+					}
+	
+				const result = model.findOne(data)
+				if(!result) {
+					await model.create(msg)
+					await publish(feedbackQueue, msg)
+					TerraLogger.debug('Successfully pushed to feedback queue')
+					msg.feedbackStatus = true
+				}
+				return
+				}
 				await publish(feedbackQueue, msg)
 				TerraLogger.debug('Successfully pushed to feedback queue')
 				msg.feedbackStatus = true
 				try {
 					TerraLogger.debug(msg)
-					if(msg.network === "mtn") {
-						// query the db to check for existing record with same msisdn and transactionId
-						const data = {
-							msisdn: msg.msisdn,
-							transactionId: msg.transactionId
-						}
-		
-					const result = model.findOne(data)
-					if(!result) {
-						return model.create(msg)
-					}
-					return
-					}
 					const data = await model.create(msg)
 					delete msg.feedbackStatus
 					TerraLogger.debug(`Successfully saved to db with flag TRUE! - ${data}`)
