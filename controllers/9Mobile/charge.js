@@ -77,8 +77,8 @@ module.exports = {
 	
 					console.log('cached data for charge', cachedData);
 					
-					const services = ['', 'Celebrity Gist', 'Fashion Update'];
-					const unsubKey = ['', 'STOP CG', 'STOP FU'];
+					const services = ['', 'Service Bouquet',];
+					const unsubKey = ['', 'STOP SB',];
 
 					req.body.name = services[cachedData];
 					req.body.unsubKey = unsubKey[cachedData]
