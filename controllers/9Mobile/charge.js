@@ -41,8 +41,8 @@ module.exports = {
 				const nineMobileRequestBody = {
 					userIdentifier: req.body.msisdn,
 					serviceId: req.body.serviceId,
-					// context: 'STATELESS',
-					context: 'SUBSCRIPTION',
+					context: 'STATELESS',
+					// context: 'SUBSCRIPTION',
 
 				}
 
