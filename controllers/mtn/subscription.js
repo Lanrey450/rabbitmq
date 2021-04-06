@@ -369,13 +369,18 @@ async MTNDataSyncPostBack(req, res) {
 	TerraLogger.debug(data)
 
 	// process mtn feedback here
+	c
 	const resp = data.soapenvBody
-
-// console.log(resp)
-
-const payload = resp.ns2syncOrderRelation
-
-const ns2extensionInfo = resp.ns2syncOrderRelation.ns2extensionInfo
+	
+	console.log(resp)
+	
+	const payload = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation : resp.ns1syncOrderRelation
+	
+	console.log(payload)
+	
+	const ns2extensionInfo = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation.ns2extensionInfo : resp.ns1syncOrderRelation.ns1extensionInfo
+	
+	console.log(ns2extensionInfo)
 
 // console.log(ns2extensionInfo)
 
