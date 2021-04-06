@@ -371,11 +371,14 @@ async MTNDataSyncPostBack(req, res) {
 	// process mtn feedback here
 	const resp = data.soapenvBody
 
-// console.log(resp)
-
-const payload = resp.ns2syncOrderRelation
-
-const ns2extensionInfo = resp.ns2syncOrderRelation.ns2extensionInfo
+	console.log(resp)
+	
+	const payload = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation : resp.ns1syncOrderRelation
+	
+	console.log(payload)
+	
+	
+	const ns2extensionInfo = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation.ns2extensionInfo : resp.ns1syncOrderRelation ? resp.ns1syncOrderRelation.ns1extensionInfo : resp.ns1syncOrderRelation.ns1extensionInfo
 
 // console.log(ns2extensionInfo)
 
@@ -621,6 +624,7 @@ console.log(dataToSend)
 					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId,
 				}
+				console.log(data, "data")
 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
 		 if (!response.error) {
 			return ResponseManager.sendResponse({
