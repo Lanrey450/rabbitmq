@@ -86,7 +86,9 @@ module.exports = {
 
 
 	async unsubscribe(req, res) {
-		const auth = req.headers.authorization
+		const auth = req.headers.authorization;
+
+		console.log('REQUESTTSTS bODY', req.body);
 
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
@@ -111,6 +113,13 @@ module.exports = {
 
 
 			if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
+				//------HACK--------
+				const { name, shortCode, keyword, serviceId } = req.body;
+				const redisSubscriptionKey = `UNSUBSCRIPTION_CALL::${serviceId}::${req.body.msisdn}`;
+				console.log("ussd subscription call key " + redisSubscriptionKey)
+				redis.set(redisSubscriptionKey, `${name}::${shortCode}::${keyword}::${req.body.channel}`, 'ex', 60 * 60) // save for 1 hour
+
+				//------HACK--------
 				try {
 					const nineMobileReqBody = {
 						userIdentifier: req.body.msisdn,
@@ -144,6 +153,9 @@ module.exports = {
 									subscriptionError: unsubscriptionResponse.responseData.subscriptionError,
 								},
 						}
+
+			
+
 						try {
 							return publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })
 								.then(() => {
@@ -160,6 +172,11 @@ module.exports = {
 								message: `unable to push unsubscription data to queue :: ${err}`,
 							})
 						}
+					}else{
+						return ResponseManager.sendResponse({
+							res,
+							responseBody: {},
+						}) 
 					}
 				} catch (error) {
 					TerraLogger.debug(error)

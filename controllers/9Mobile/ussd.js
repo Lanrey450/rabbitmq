@@ -78,14 +78,16 @@ async ussd(req, res) {
 
         console.log(dataToPush, 'dataToPush')
 
+        const redisSubscriptionKey = `USSD_SUBSCRIPTION_CALL::${serviceId}::${msisdn}`;
+        console.log("ussd subscription call key "+ redisSubscriptionKey)
+             redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}::${shortCode}::${consent}`, 'ex', 60 * 60 * 24) // save for 24 hours
+
             if (response.responseData.subscriptionResult === 'OPTIN_ACTIVE_WAIT_CHARGING') {
              //   NineMobileUtils.sendUserOneOffSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
 
-
-             const redisSubscriptionKey = `USSD_SUBSCRIPTION_CALL::${serviceId}::${msisdn}`
-             console.log("ussd subscription call key "+ redisSubscriptionKey)
-             redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}::${shortCode}::${consent}`, 'ex', 60 * 60 * 24) // save for 24 hours
-
+            //  const redisSubscriptionKey = `USSD_SUBSCRIPTION_CALL::${serviceId}::${msisdn}`
+            //  console.log("ussd subscription call key "+ redisSubscriptionKey)
+            //  redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${productId}::${shortCode}::${consent}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
                 ...dataToPush,
@@ -103,7 +105,17 @@ async ussd(req, res) {
                    '','','','','',shortCode,msisdn
                ]
 
-            return NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+               return publish(config.rabbit_mq.nineMobile.subscription_queue, {
+                ...dataToPush,
+            })
+             .then(() => {
+             TerraLogger.debug('successfully pushed postback data to queue')
+             }).catch((err) => {
+                console.log(error)
+             TerraLogger.debug(err)
+         }) 
+
+            // return NineMobileUtils.sendUserAleadySubSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
         } 
             // Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug) 
         

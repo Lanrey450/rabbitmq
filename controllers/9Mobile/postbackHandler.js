@@ -80,6 +80,24 @@ module.exports = {
 			message: data.operation,
 			transactionId: data.transactionUUID,
 		}
+
+		let cachedDataKey = `UNSUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`;
+
+		let cachedData = await redis.getAsync(cachedDataKey); 
+		console.log('unsub cached data',  cachedData);
+
+		cachedData = cachedData.split('::');
+		
+		const smsData = {
+			name: cachedData[0],
+			shortCode: cachedData[1],
+			keyword: cachedData[2],
+			msisdn: data.userIdentifier,
+			channel: cachedData[3]
+
+		}
+		NineMobileUtils.sendUserUnsubSMS(smsData).then(TerraLogger.debug).catch(TerraLogger.debug)
+
 		try {
 			 publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
 				.then(() => {

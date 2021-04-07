@@ -42,6 +42,8 @@ module.exports = {
 					userIdentifier: req.body.msisdn,
 					serviceId: req.body.serviceId,
 					context: 'STATELESS',
+					// context: 'SUBSCRIPTION',
+
 				}
 
 				console.log(nineMobileRequestBody, '9Mobile request body')
@@ -51,7 +53,7 @@ module.exports = {
 
 				// format data to push to queue
 				const dataToPush = {
-					status: 'success',
+					status: data.code.toLowerCase(),
 					network: '9mobile',
 					transactionId: data.responseData.transactionUUID,
 					serviceId: nineMobileRequestBody.serviceId,
@@ -65,6 +67,7 @@ module.exports = {
 					},
 				}
 
+				
 				const responseStatus = data.code.toLowerCase();
 
 				if(req.body.channel.toLowerCase() === 'ussd'){
@@ -74,18 +77,51 @@ module.exports = {
 	
 					console.log('cached data for charge', cachedData);
 					
-					const services = ['', 'Celebrity Gist', 'Fashion Update'];
+					const services = ['', 'Service Bouquet',];
+					const unsubKey = ['', 'STOP SB',];
 
 					req.body.name = services[cachedData];
+					req.body.unsubKey = unsubKey[cachedData]
+
+				}
+
+				if(req.body.channel.toLowerCase() === 'sms'){
+
+					const consentRedisKey = `consentStringSMS::${req.body.msisdn}`;
+					const cachedData = await redis.getAsync(consentRedisKey); 
+
+					const result = cachedData.split(',');
+
+					console.log('resulllrllrl', result);
+					
+					req.body.result = result;
+					req.body.consent = result[7];
 
 				}
 				
 				if(responseStatus === 'success'){
-					NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+					if(req.body.channel.toLowerCase() === 'ussd'){
+						NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+					}
+
+					if(req.body.channel.toLowerCase() === 'sms'){
+						if(req.body.consent == '1'){
+							NineMobileUtils.sendUserAutoRenewalSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+
+						} else if(req.body.consent == '2'){
+							NineMobileUtils.sendUserOneOffSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+						}
+					}
 
 					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}else if(responseStatus === 'no_balance'){
 					NineMobileUtils.sendUserlowBalanceSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+
+					return ResponseManager.sendResponse({
+						res,
+						responseBody: {},
+					})
+
 				}
 
 				console.log(dataToPush, 'dataToPush')
