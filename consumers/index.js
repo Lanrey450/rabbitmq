@@ -120,7 +120,12 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 						transactionId: msg.transactionId
 					}
 	
-				const result = model.findOne(data)
+					console.log("data to search", data)
+				const result = await model.findOne(data)
+
+				console.log("result",result)
+
+
 				if(!result) {
 					await model.create(msg)
 					await publish(feedbackQueue, msg)
@@ -179,7 +184,7 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 						transactionId: msg.transactionId
 					}
 	
-				const result = model.findOne(data)
+				const result = await model.findOne(data)
 				if(!result) {
 					return model.create(msg)
 				}
