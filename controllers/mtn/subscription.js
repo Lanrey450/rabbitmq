@@ -411,7 +411,7 @@ cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
 			Starttime: (Starttime) ? Starttime.value : '',
 		},
 		network: 'mtn',
-		serviceId: payload ?  payload.ns1productID : payload.ns2productID,
+		serviceId: payload.ns1productID ?  payload.ns1productID : payload.ns2productID,
 		message: payload.ns1updateDesc ? payload.ns1updateDesc : payload.ns2updateDesc,
 		transactionId: (transactionID) ? transactionID.value : '',
 	}
