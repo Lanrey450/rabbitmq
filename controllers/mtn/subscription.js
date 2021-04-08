@@ -398,12 +398,12 @@ cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
 } = result
 
 	const dataToSend = {
-		msisdn: payload ? payload.ns1userID.ID : payload.ns2userID.ID,
+		msisdn: payload.ns1userID ? payload.ns1userID.ID : payload.ns2userID.ID,
 		status: 'success',
 		meta: {
-			updateTime: payload ? payload.ns1updateTime : payload.ns2updateTime || '',
-			effectiveTime: payload ?  payload.ns1effectiveTime : payload.ns2effectiveTime || '',
-			expiryTime: payload ? payload.ns1expiryTime : payload.ns2expiryTime || '',
+			updateTime: payload.ns1updateTime ? payload.ns1updateTime : payload.ns2updateTime || '',
+			effectiveTime: payload.ns1effectiveTime ?  payload.ns1effectiveTime : payload.ns2effectiveTime || '',
+			expiryTime: payload.ns1expiryTime ? payload.ns1expiryTime : payload.ns2expiryTime || '',
 			serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
 			fee: (fee) ? fee.value : '',
 			keyword: (keyword) ? keyword.value : '',
@@ -412,7 +412,7 @@ cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
 		},
 		network: 'mtn',
 		serviceId: payload ?  payload.ns1productID : payload.ns2productID,
-		message: payload ? payload.ns1updateDesc : payload.ns2updateDesc,
+		message: payload.ns1updateDesc ? payload.ns1updateDesc : payload.ns2updateDesc,
 		transactionId: (transactionID) ? transactionID.value : '',
 	}
 
