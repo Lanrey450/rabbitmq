@@ -198,7 +198,6 @@ module.exports = {
 			}
 
 			try {
-
 				publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
 					.then(() => {
 						console.log('successfully pushed to the 9mobile postback queue')
