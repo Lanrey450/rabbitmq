@@ -18,7 +18,7 @@ const NinemobileChargeController = require('../controllers/9Mobile/charge')
 route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.subscribe(req, res)))
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.get('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
-route.get('/nineMobile/temp', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
+route.get('/nineMobile/temp', asyncHandler((req, res) => NineMOBILESubscriptionController.getIt(req, res)))
 
 
 
