@@ -48,14 +48,14 @@ module.exports = {
 		const response = {
 
 			requestId: util.now('micro').toString(),
-			
-			code:"SUCCESS",
-			
+
+			code: "SUCCESS",
+
 			inError: false,
-			
-			message: "Request processed successfully", "responseData":{}
-			
-			}
+
+			message: "Request processed successfully", "responseData": {}
+
+		}
 		res.json(response)
 		//res.send('ok')
 
@@ -80,8 +80,26 @@ module.exports = {
 			message: data.operation,
 			transactionId: data.transactionUUID,
 		}
+
+		let cachedDataKey = `UNSUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`;
+
+		let cachedData = await redis.getAsync(cachedDataKey);
+		console.log('unsub cached data', cachedData);
+
+		cachedData = cachedData.split('::');
+
+		const smsData = {
+			name: cachedData[0],
+			shortCode: cachedData[1],
+			keyword: cachedData[2],
+			msisdn: data.userIdentifier,
+			channel: cachedData[3]
+
+		}
+		NineMobileUtils.sendUserUnsubSMS(smsData).then(TerraLogger.debug).catch(TerraLogger.debug)
+
 		try {
-			 publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
+			publish(config.rabbit_mq.nineMobile.un_subscription_queue, { ...dataToPush })  //un-sub 
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
 				})
@@ -92,14 +110,14 @@ module.exports = {
 		const response = {
 
 			requestId: util.now('micro').toString(),
-			
-			code:"SUCCESS",
-			
+
+			code: "SUCCESS",
+
 			inError: false,
-			
-			message: "Request processed successfully", "responseData":{}
-			
-			}
+
+			message: "Request processed successfully", "responseData": {}
+
+		}
 		res.json(response)
 		//res.send('ok')
 	},
@@ -131,14 +149,14 @@ module.exports = {
 		const response = {
 
 			requestId: util.now('micro').toString(),
-			
-			code:"SUCCESS",
-			
+
+			code: "SUCCESS",
+
 			inError: false,
-			
-			message: "Request processed successfully", "responseData":{}
-			
-			}
+
+			message: "Request processed successfully", "responseData": {}
+
+		}
 		res.json(response)
 		//res.send('ok')
 	},
@@ -153,57 +171,55 @@ module.exports = {
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-		const cachedData = await redis.getAsync(redisKeyForServiceId); 
+		const cachedData = await redis.getAsync(redisKeyForServiceId);
 
 		console.log('cached consent data', cachedData)
 
 		const channel = 'USSD'
 
-		const consent = cachedData.split('::')[4];
+		if (cachedData) {
+			const consent = cachedData.split('::')[4];
 
-		console.log('consent value', consent);
-		const dataToPush = {
+			console.log('consent value', consent);
+			const dataToPush = {
 
-			msisdn: data.userIdentifier,
-			status: 'success',
-			channel: channel,
-			feedbackStatus: true,
-			meta: {
-				validity: data.validity,
-				mnoDeliveryCode: data.mnoDeliveryCode,
-			},
-			network: '9mobile',
-			serviceId: data.serviceId,
-			message: data.operation,
-			consent,
-		}
+				msisdn: data.userIdentifier,
+				status: 'success',
+				channel: channel,
+				feedbackStatus: true,
+				meta: {
+					validity: data.validity,
+					mnoDeliveryCode: data.mnoDeliveryCode,
+				},
+				network: '9mobile',
+				serviceId: data.serviceId,
+				message: data.operation,
+				consent,
+			}
 
-	
+			try {
+				publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
+					.then(() => {
+						console.log('successfully pushed to the 9mobile postback queue')
 
-		
-		try {
-
-			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
-				.then(() => {
-					console.log('successfully pushed to the 9mobile postback queue')
-
-				})
-		} catch (err) {
-			console.log(`unable to push data to 9mobile postback queue :: ${err}`)
+					})
+			} catch (err) {
+				console.log(`unable to push data to 9mobile postback queue :: ${err}`)
+			}
 		}
 
 
 		const response = {
 
 			requestId: util.now('micro').toString(),
-			
-			code:"SUCCESS",
-			
+
+			code: "SUCCESS",
+
 			inError: false,
-			
-			message: "Request processed successfully", "responseData":{}
-			
-			}
+
+			message: "Request processed successfully", "responseData": {}
+
+		}
 		res.json(response)
 		//res.send('ok')
 	},

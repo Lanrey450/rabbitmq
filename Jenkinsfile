@@ -4,6 +4,7 @@ import groovy.json.*
 def repoName = 'vas-aggregator-subscription-billing'
 def projectName = 'vas-aggregator-subscription-billing'
 def deploymentName = 'vas-aggregator-subscription-billing'
+
 def isMaster = env.BRANCH_NAME == 'iykejordan-master'
 def isStaging = env.BRANCH_NAME == 'iykejordan-staging'
 def start = new Date()

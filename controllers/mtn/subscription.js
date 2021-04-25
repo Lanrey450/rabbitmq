@@ -280,88 +280,172 @@ module.exports = {
 			return ResponseManager.sendErrorResponse({ res, message: 'Forbidden, bad authentication provided!' })
 	},
 
-	async MTNDataSyncPostBack(req, res) {
-		TerraLogger.debug('getting data sync feedback from mtn')
-		const data = req.body
-		TerraLogger.debug(data)
+// 	async MTNDataSyncPostBack(req, res) {
+// 		TerraLogger.debug('getting data sync feedback from mtn')
+// 		const data = req.body
+// 		// TerraLogger.debug(data)
 
-		// process mtn feedback here
-		const resp = data.soapenvBody
+// 		// process mtn feedback here
+// 		const resp = data.soapenvBody.ns2notifySmsReception
 
-// console.log(resp)
+// // console.log(resp)
 
-const payload = resp.ns2syncOrderRelation
+// const payload = data.soapenvHeader.ns1NotifySOAPHeader
 
-const ns2extensionInfo = resp.ns2syncOrderRelation.ns2extensionInfo
+// // const ns2extensionInfo = resp.ns2syncOrderRelation.ns2extensionInfo
+
+// // console.log(payload)
+
+// // const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID']
+// // 		const result = {}
+
+// // 		// loop through array and get the selected fields
+// // 		ns2extensionInfo.item.forEach((elem) => {
+// // 			if (selectedFields.includes(elem.key)) {
+// // 				result[elem.key] = elem
+// // 			}
+// // 		})
+
+// 		// reformat mtn data to be sent to queue
+// // 		const {
+// //  cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
+// // } = result
+
+// 		const dataToSend = {
+// 			msisdn: resp.ns2message.senderAddress,
+// 			status: 'success',
+// 			meta: {
+// 				updateTime: payload.ns1timeStamp || '',
+// 				effectiveTime: resp.ns2message.dateTime || '',
+// 				// expiryTime: payload.ns2expiryTime || '',
+// 				// serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
+// 				// fee: (fee) ? fee.value : '',
+// 				// keyword: (keyword) ? keyword.value : '',
+// 				// cycleEndTime: (cycleEndTime) ? cycleEndTime.value : '',
+// 				// Starttime: (Starttime) ? Starttime.value : '',
+// 			},
+// 			network: 'mtn',
+// 			serviceId: payload.ns1serviceId,
+// 			message: resp.ns2message.message,
+// 			// transactionId: (transactionID) ? transactionID.value : '',
+// 		}
+
+
+
+//     console.log(dataToSend)
+
+
+// 		if (dataToSend.message.includes('Bdand')) {
+// 			return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
+// 			.then(() => {
+// 				TerraLogger.debug('successfully pushed postback data to queue')
+// 				return ResponseManager.sendResponse({
+// 					res,
+// 					message: 'successfully pushed MTN-Postback data to queue',
+// 				})
+// 			}).catch((err) => ResponseManager.sendErrorResponse({
+// 					res,
+// 					message: `Unable to push postback data to queue, ${err}`,
+// 				}))
+// 		}
+// 		return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
+// 			.then(() => {
+// 				TerraLogger.debug('successfully pushed postback data to queue')
+// 				return ResponseManager.sendResponse({
+// 					res,
+// 					message: 'successfully pushed MTN-Postback data to queue',
+// 				})
+// 			}).catch((err) => ResponseManager.sendErrorResponse({
+// 					res,
+// 					message: `Unable to push postback data to queue, ${err}`,
+// 				}))
+// 	},
+// add a consumer that would do the same thing -
+
+
+async MTNDataSyncPostBack(req, res) {
+	TerraLogger.debug('getting data sync feedback from mtn')
+	const data = req.body
+	TerraLogger.debug(data)
+
+	// process mtn feedback here
+	const resp = data.soapenvBody
+
+	console.log(resp)
+	
+	const payload = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation : resp.ns1syncOrderRelation
+	
+	console.log(payload)
+	
+	
+	const ns2extensionInfo = resp.ns2syncOrderRelation ? resp.ns2syncOrderRelation.ns2extensionInfo : resp.ns1syncOrderRelation ? resp.ns1syncOrderRelation.ns1extensionInfo : resp.ns1syncOrderRelation.ns1extensionInfo
 
 // console.log(ns2extensionInfo)
 
 const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'keyword', 'fee', 'transactionID']
-		const result = {}
+	const result = {}
 
-		// loop through array and get the selected fields
-		ns2extensionInfo.item.forEach((elem) => {
-			if (selectedFields.includes(elem.key)) {
-				result[elem.key] = elem
-			}
-		})
+	// loop through array and get the selected fields
+	ns2extensionInfo.item.forEach((elem) => {
+		if (selectedFields.includes(elem.key)) {
+			result[elem.key] = elem
+		}
+	})
 
-		// reformat mtn data to be sent to queue
-		const {
- cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
+	// reformat mtn data to be sent to queue
+	const {
+cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
 } = result
 
-		const dataToSend = {
-			msisdn: payload.ns2userID.ID,
-			status: 'success',
-			meta: {
-				updateTime: payload.ns2updateTime || '',
-				effectiveTime: payload.ns2effectiveTime || '',
-				expiryTime: payload.ns2expiryTime || '',
-				serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
-				fee: (fee) ? fee.value : '',
-				keyword: (keyword) ? keyword.value : '',
-				cycleEndTime: (cycleEndTime) ? cycleEndTime.value : '',
-				Starttime: (Starttime) ? Starttime.value : '',
-			},
-			network: 'mtn',
-			serviceId: payload.ns2productID,
-			message: payload.ns2updateDesc,
-			transactionId: (transactionID) ? transactionID.value : '',
-		}
+	const dataToSend = {
+		msisdn: payload.ns1userID ? payload.ns1userID.ID : payload.ns2userID.ID,
+		status: 'success',
+		meta: {
+			updateTime: payload.ns1updateTime ? payload.ns1updateTime : payload.ns2updateTime || '',
+			effectiveTime: payload.ns1effectiveTime ?  payload.ns1effectiveTime : payload.ns2effectiveTime || '',
+			expiryTime: payload.ns1expiryTime ? payload.ns1expiryTime : payload.ns2expiryTime || '',
+			serviceAvailability: (serviceAvailability) ? serviceAvailability.value : '',
+			fee: (fee) ? fee.value : '',
+			keyword: (keyword) ? keyword.value : '',
+			cycleEndTime: (cycleEndTime) ? cycleEndTime.value : '',
+			Starttime: (Starttime) ? Starttime.value : '',
+		},
+		network: 'mtn',
+		serviceId: payload.ns1productID ?  payload.ns1productID : payload.ns2productID,
+		message: payload.ns1updateDesc ? payload.ns1updateDesc : payload.ns2updateDesc,
+		transactionId: (transactionID) ? transactionID.value : '',
+	}
 
 
 
-    console.log(dataToSend)
+console.log(dataToSend)
 
 
-		if (dataToSend.message === 'Addition') {
-			return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
-			.then(() => {
-				TerraLogger.debug('successfully pushed postback data to queue')
-				return ResponseManager.sendResponse({
-					res,
-					message: 'successfully pushed MTN-Postback data to queue',
-				})
-			}).catch((err) => ResponseManager.sendErrorResponse({
-					res,
-					message: `Unable to push postback data to queue, ${err}`,
-				}))
-		}
-		return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
-			.then(() => {
-				TerraLogger.debug('successfully pushed postback data to queue')
-				return ResponseManager.sendResponse({
-					res,
-					message: 'successfully pushed MTN-Postback data to queue',
-				})
-			}).catch((err) => ResponseManager.sendErrorResponse({
-					res,
-					message: `Unable to push postback data to queue, ${err}`,
-				}))
-	},
-// add a consumer that would do the same thing -
-
+	if (dataToSend.message === 'Addition') {
+		return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
+		.then(() => {
+			TerraLogger.debug('successfully pushed postback data to queue')
+			return ResponseManager.sendResponse({
+				res,
+				message: 'successfully pushed MTN-Postback data to queue',
+			})
+		}).catch((err) => ResponseManager.sendErrorResponse({
+				res,
+				message: `Unable to push postback data to queue, ${err}`,
+			}))
+	}
+	return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
+		.then(() => {
+			TerraLogger.debug('successfully pushed postback data to queue')
+			return ResponseManager.sendResponse({
+				res,
+				message: 'successfully pushed MTN-Postback data to queue',
+			})
+		}).catch((err) => ResponseManager.sendErrorResponse({
+				res,
+				message: `Unable to push postback data to queue, ${err}`,
+			}))
+},
 	async sendSms(req, res) {
 		TerraLogger.debug('calling send sms API')
 		const auth = req.headers.authorization
@@ -533,12 +617,14 @@ const selectedFields = ['cycleEndTime', 'serviceAvailability', 'Starttime', 'key
 				const data = {
 					spId: config.mtn.spID,
 					spPwd: config.mtn.spPwd,
-					notifyUrl: config.mtn.notifyUrl.sms,
+					// notifyUrl: config.mtn.notifyUrl.sms,
+					notifyUrl: config.mtn.notifyUrl.startSMSNotificationUrl,
 					serviceId: req.body.external_id,
 					shortcode: req.body.shortcode,
 					criteria: req.body.criteria,
 					correlatorId: req.body.correlatorId,
 				}
+				console.log(data, "data")
 		 const response = await MTNSDPAPIHandler.startSmsMo(data)
 		 if (!response.error) {
 			return ResponseManager.sendResponse({

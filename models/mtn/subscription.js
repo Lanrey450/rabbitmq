@@ -17,7 +17,7 @@ const subscriptionSchema = new Schema({
 		required: true,
 	},
 	transactionId: {
-		type: Number,
+		type: String,
 	},
 	meta: {
 		type: [Object],
