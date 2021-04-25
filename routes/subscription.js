@@ -18,6 +18,8 @@ const NinemobileChargeController = require('../controllers/9Mobile/charge')
 route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.subscribe(req, res)))
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.get('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
+route.get('/nineMobile/temp', asyncHandler((req, res) => NineMOBILESubscriptionController.getIt(req, res)))
+
 
 
 // billing sync and async
@@ -63,7 +65,7 @@ route.post('/mtn/charge/token', asyncHandler((req, res) => MTNSubscriptionContro
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
 
 // sms mt - manulaly initiated by application developer - done 
-route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res))) 
+route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res)))
 
 // sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url 
 route.post('/mtn/startSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.startSMSNotification(req, res)))
