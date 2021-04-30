@@ -110,8 +110,7 @@ module.exports = {
 		HTSubscriptionServices: 'HTSubscriptionServices.wsdl',
 		TopUpService: 'TopUpService.wsdl',
 	},
-	// notification_service_url: env.NOTIFICATION_SERVICE_URL,
-	notification_service_url: env.NOTIFICATION_ENDPOINT,
+	notification_service_url: env.NOTIFICATION_SERVICE_URL,
 	subscription_service_url: env.SUB_SERVICE_URL,
 
 	redisSecret: env.REDIS_SECRET,
