@@ -70,7 +70,7 @@ module.exports = {
 
 				console.log('AUTH INNN')
 
-				if (channel == 'sms') {
+				if (channel.toLowerCase() == 'sms') {
 					NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}
 
