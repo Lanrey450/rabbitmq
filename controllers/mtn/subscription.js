@@ -420,8 +420,11 @@ cycleEndTime, serviceAvailability, Starttime, keyword, fee, transactionID,
 
 console.log(dataToSend)
 
+	
 
-	if (dataToSend.message === 'Addition') {
+	if (dataToSend.message === 'Addition' ||dataToSend.message === 'Modification' ) {
+		dataToSend.subType = dataToSend.message === 'Modification' ? 'RENEWAL' : 'NEW';
+		console.log('Final |Data To Send', dataToSend);
 		return publish(config.rabbit_mq.mtn.subscription_postback_queue, { ...dataToSend })
 		.then(() => {
 			TerraLogger.debug('successfully pushed postback data to queue')
@@ -434,6 +437,7 @@ console.log(dataToSend)
 				message: `Unable to push postback data to queue, ${err}`,
 			}))
 	}
+
 	return publish(config.rabbit_mq.mtn.un_subscription_queue, { ...dataToSend })
 		.then(() => {
 			TerraLogger.debug('successfully pushed postback data to queue')
