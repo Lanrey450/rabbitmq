@@ -68,8 +68,9 @@ module.exports = {
 		if (username === config.userAuth.username && rawPassword === config.userAuth.password) {
 			try {
 
+				console.log('AUTH INNN')
 
-				if (channel == 'sms') {
+				if (channel.toLowerCase() == 'sms') {
 					NineMobileUtils.sendUserConsentSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 				}
 
