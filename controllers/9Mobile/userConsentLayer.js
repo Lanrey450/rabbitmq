@@ -29,7 +29,7 @@ module.exports = {
 
         console.log('CONSENT HERE', req.body);
 
-        return ResponseManager.sendResponse({
+        ResponseManager.sendResponse({
             res,
             message: 'Thank you! Now go forth',
         })
