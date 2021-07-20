@@ -27,7 +27,7 @@ module.exports = {
 
         const { msisdn, keyword, shortCode } = req.body
 
-        consiole.log('CONSENT HERE', req.body);
+        console.log('CONSENT HERE', req.body);
 
         return ResponseManager.sendResponse({
             res,
