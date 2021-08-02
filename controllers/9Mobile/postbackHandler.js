@@ -180,8 +180,10 @@ module.exports = {
 
 		const channel = 'USSD';
 
-		// if (cachedData) {
-		const consent = cachedData.split('::')[4];
+		let consent;
+		if (cachedData) {
+			consent = cachedData.split('::')[4];
+		}
 
 		console.log('consent value', consent);
 		const dataToPush = {
