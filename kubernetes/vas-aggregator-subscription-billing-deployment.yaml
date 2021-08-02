@@ -183,6 +183,11 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: NOTIFICATION_SERVICE_URL
+                      - name: SUBSCRIPTION_SERVICE_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: SUBSCRIPTION_SERVICE_URL
                       - name: SMS_USSD_IVR_ONBOARDING_SERVICE_URL 
                         valueFrom:
                           secretKeyRef:
