@@ -47,28 +47,39 @@ module.exports = {
 				}
 
 				console.log(nineMobileRequestBody, '9Mobile request body')
-				const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
+				// const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
 				console.log(data, '9Mobile response')
 
 				// format data to push to queue
-				const dataToPush = {
-					status: data.code.toLowerCase(),
-					network: '9mobile',
-					transactionId: data.responseData.transactionUUID,
-					serviceId: nineMobileRequestBody.serviceId,
-					msisdn: nineMobileRequestBody.userIdentifier,
-					// message: data.message,
-					meta: {
-						// result: data.responseData.result,
-						requestId: data.requestId,
-						code: data.code,
-						inError: data.inError,
-					},
+				// const dataToPush = {
+				// 	status: data.code.toLowerCase(),
+				// 	network: '9mobile',
+				// 	transactionId: data.responseData.transactionUUID,
+				// 	serviceId: nineMobileRequestBody.serviceId,
+				// 	msisdn: nineMobileRequestBody.userIdentifier,
+				// 	// message: data.message,
+				// 	meta: {
+				// 		// result: data.responseData.result,
+				// 		requestId: data.requestId,
+				// 		code: data.code,
+				// 		inError: data.inError,
+				// 	},
+				// }
+
+
+				// const responseStatus = data.code.toLowerCase();
+
+				if (req.body.renewal) {
+
+					console.log('RENEWAL HERE');
+
+					return ResponseManager.sendResponse({
+						res,
+						responseBody: {},
+					})
+
 				}
-
-
-				const responseStatus = data.code.toLowerCase();
 
 				if (req.body.channel.toLowerCase() === 'ussd') {
 					const consentRedisKey = `consentString::${req.body.msisdn}`;
