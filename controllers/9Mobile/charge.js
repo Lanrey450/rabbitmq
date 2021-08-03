@@ -71,20 +71,20 @@ module.exports = {
 				const responseStatus = data.code.toLowerCase();
 
 
-				if (req.body.channel.toLowerCase() === 'ussd') {
-					const consentRedisKey = `consentString::${req.body.msisdn}`;
+				// if (req.body.channel.toLowerCase() === 'ussd') {
+				// 	const consentRedisKey = `consentString::${req.body.msisdn}`;
 
-					const cachedData = await redis.getAsync(consentRedisKey);
+				// 	const cachedData = await redis.getAsync(consentRedisKey);
 
-					console.log('cached data for charge', cachedData);
+				// 	console.log('cached data for charge', cachedData);
 
-					const services = ['', 'Service Bouquet',];
-					const unsubKey = ['', 'STOP SB',];
+				// 	const services = ['', 'Service Bouquet',];
+				// 	const unsubKey = ['', 'STOP SB',];
 
-					req.body.name = services[cachedData];
-					req.body.unsubKey = unsubKey[cachedData]
+				// 	req.body.name = services[cachedData];
+				// 	req.body.unsubKey = unsubKey[cachedData]
 
-				}
+				// }
 
 				if (req.body.channel.toLowerCase() === 'sms') {
 
@@ -101,7 +101,11 @@ module.exports = {
 				}
 
 				if (responseStatus === 'success') {
-					if (req.body.channel.toLowerCase() === 'ussd' && !renew) {
+					console.log('HERE for bill')
+					if (req.body.channel.toLowerCase() === 'ussd' && !req.body.renew) {
+						console.log('HERE for bill2222')
+
+						req.body.unsubKey = req.body.unSubscriptionKeyword;
 						NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 					}
 
