@@ -70,22 +70,6 @@ module.exports = {
 
 				const responseStatus = data.code.toLowerCase();
 
-
-				// if (req.body.channel.toLowerCase() === 'ussd') {
-				// 	const consentRedisKey = `consentString::${req.body.msisdn}`;
-
-				// 	const cachedData = await redis.getAsync(consentRedisKey);
-
-				// 	console.log('cached data for charge', cachedData);
-
-				// 	const services = ['', 'Service Bouquet',];
-				// 	const unsubKey = ['', 'STOP SB',];
-
-				// 	req.body.name = services[cachedData];
-				// 	req.body.unsubKey = unsubKey[cachedData]
-
-				// }
-
 				if (req.body.channel.toLowerCase() === 'sms') {
 
 					const consentRedisKey = `consentStringSMS::${req.body.msisdn}`;
@@ -101,21 +85,19 @@ module.exports = {
 				}
 
 				if (responseStatus === 'success') {
-					console.log('HERE for bill')
 					if (req.body.channel.toLowerCase() === 'ussd' && !req.body.renew) {
-						console.log('HERE for bill2222')
 
 						req.body.unsubKey = req.body.unSubscriptionKeyword;
 						NineMobileUtils.sendUserSuccessMessageForUSSDSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 					}
 
 					if (req.body.channel.toLowerCase() === 'sms') {
-						if (req.body.consent == '1') {
-							NineMobileUtils.sendUserAutoRenewalSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+						// if (req.body.consent == '1') {
+						NineMobileUtils.sendUserSmsSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 
-						} else if (req.body.consent == '2') {
-							NineMobileUtils.sendUserOneOffSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
-						}
+						// } else if (req.body.consent == '2') {
+						// 	NineMobileUtils.sendUserOneOffSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+						// }
 					}
 
 					if (req.body.renew) {
