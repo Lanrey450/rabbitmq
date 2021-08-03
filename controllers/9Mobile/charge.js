@@ -46,12 +46,12 @@ module.exports = {
 
 				}
 
-				console.log(nineMobileRequestBody, '9Mobile request body')
+				// console.log(nineMobileRequestBody, '9Mobile request body')
 				// const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
 				// console.log(data, '9Mobile response')
 
-				// format data to push to queue
+				// // format data to push to queue
 				// const dataToPush = {
 				// 	status: data.code.toLowerCase(),
 				// 	network: '9mobile',
@@ -73,6 +73,13 @@ module.exports = {
 				if (req.body.renew) {
 
 					console.log('RENEWAL HERE');
+
+					NineMobileUtils.sendUserAutoRenewalUSSD(req.body).then(TerraLogger.debug).catch(TerraLogger.debug);
+
+					req.body.name = req.body.serviceName;
+					req.body.unsubKey = req.body.unSubscriptionKeyword;
+
+					NineMobileUtils.sendUserBillingSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug);
 
 					return ResponseManager.sendResponse({
 						res,
