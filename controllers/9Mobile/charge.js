@@ -49,7 +49,7 @@ module.exports = {
 				console.log(nineMobileRequestBody, '9Mobile request body')
 				// const data = await NineMobileChargeApi.sync(nineMobileRequestBody)
 
-				console.log(data, '9Mobile response')
+				// console.log(data, '9Mobile response')
 
 				// format data to push to queue
 				// const dataToPush = {
