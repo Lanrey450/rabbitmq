@@ -92,12 +92,7 @@ module.exports = {
 					}
 
 					if (req.body.channel.toLowerCase() === 'sms') {
-						// if (req.body.consent == '1') {
 						NineMobileUtils.sendUserSmsSub(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
-
-						// } else if (req.body.consent == '2') {
-						// 	NineMobileUtils.sendUserOneOffSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
-						// }
 					}
 
 					if (req.body.renew) {
