@@ -70,7 +70,7 @@ module.exports = {
 
 				// const responseStatus = data.code.toLowerCase();
 
-				if (req.body.renewal) {
+				if (req.body.renew) {
 
 					console.log('RENEWAL HERE');
 
