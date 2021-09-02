@@ -5,6 +5,7 @@ const redis = require('../../redis');
 const { promisify } = require("util");
 
 const NineMobileUtils = require('../../lib/9Mobile/util');
+const NineMobileChargeApi = require('../../lib/9Mobile/charging')
 const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
@@ -13,6 +14,7 @@ const config = require('../../config')
 const util = require('../../lib/utils')
 
 redis.getAsync = promisify(redis.get).bind(redis);
+
 
 module.exports = {
 
@@ -165,9 +167,10 @@ module.exports = {
 		console.log('consent request')
 		console.log(req.body)
 
-		const data = req.body
+		const data = req.body;
 
-		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL::${data.serviceId}::${data.userIdentifier}`
+		const redisKeyForServiceId = `USSD_SUBSCRIPTION_CALL:: ${data.serviceId
+			}:: ${data.userIdentifier} `
 
 		console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
@@ -175,38 +178,40 @@ module.exports = {
 
 		console.log('cached consent data', cachedData)
 
-		const channel = 'USSD'
+		const channel = 'USSD';
 
+		let consent;
 		if (cachedData) {
-			const consent = cachedData.split('::')[4];
-
-			console.log('consent value', consent);
-			const dataToPush = {
-
-				msisdn: data.userIdentifier,
-				status: 'success',
-				channel: channel,
-				feedbackStatus: true,
-				meta: {
-					validity: data.validity,
-					mnoDeliveryCode: data.mnoDeliveryCode,
-				},
-				network: '9mobile',
-				serviceId: data.serviceId,
-				message: data.operation,
-				consent,
-			}
-
-			try {
-				publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
-					.then(() => {
-						console.log('successfully pushed to the 9mobile postback queue')
-
-					})
-			} catch (err) {
-				console.log(`unable to push data to 9mobile postback queue :: ${err}`)
-			}
+			consent = cachedData.split('::')[4];
 		}
+
+		console.log('consent value', consent);
+		const dataToPush = {
+
+			msisdn: data.userIdentifier,
+			status: 'success',
+			channel: channel,
+			feedbackStatus: true,
+			meta: {
+				validity: data.validity,
+				mnoDeliveryCode: data.mnoDeliveryCode,
+			},
+			network: '9mobile',
+			serviceId: data.serviceId,
+			message: data.operation,
+			consent,
+		}
+
+		try {
+			publish(config.rabbit_mq.vasQueues.CONSENT_BILLING, { ...dataToPush }) // subscription feedback queue
+				.then(() => {
+					console.log('successfully pushed to the 9mobile postback queue')
+
+				})
+		} catch (err) {
+			console.log(`unable to push data to 9mobile postback queue:: ${err} `)
+		}
+		// }
 
 
 		const response = {
@@ -233,7 +238,7 @@ module.exports = {
 	// 				console.log('successfully pushed to the 9MOBILE unsubscription data queue')
 	// 			})
 	// 	} catch (err) {
-	// 		console.log(`unable to push unsubscription data to queue :: ${err}`)
+	// 		console.log(`unable to push unsubscription data to queue:: ${ err } `)
 	// 	}
 
 	// 	res.send('ok')

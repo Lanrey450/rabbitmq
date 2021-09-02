@@ -87,12 +87,12 @@ const app = express()
 
 app.use(
 	session({
-	  store: new RedisStore({ client: redisClient }),
-	  secret: `${config.redisSecret}`,
-	  resave: false,
-	  saveUninitialized: false,
+		store: new RedisStore({ client: redisClient }),
+		secret: `${config.redisSecret}`,
+		resave: false,
+		saveUninitialized: false,
 	})
-  )
+)
 // Print redis errors to the console
 redisClient.on('error', (error) => {
 	TerraLogger.debug(`Redis Client Error => ${error}`)
@@ -104,11 +104,11 @@ app.use(cors())
 app.use(TerraLogger.requestHandler)
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
 
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(express.json())
 
 
 app.get('/', (req, res) => {
@@ -128,26 +128,26 @@ const server = app.listen(config.port, () => {
 
 app.use(bodyParser.raw({
 	type() {
-	  return true
+		return true
 	},
-  }))
+}))
 
 
 function notifySmsReception(args, cb, headers) {
 	console.log('notifySmsReception')
 	console.log(args, headers)
-			const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
- message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
-})}`
+	const url = `${config.mtn.baseSmsOnboardUrl}/sms/entry?${querystring.stringify({
+		message: args.message.message, sender: args.message.smsServiceActivationNumber.substring(4), recipient: args.message.senderAddress.substring(4), network: 'mtn', smsMOID: headers.NotifySOAPHeader.serviceId
+	})}`
 
-console.log(url, 'url')
-			return axios.get(url).then((response) => {
-				console.log(response.data)
-			}).catch((err) => {
-				console.log(err.message)
-			})
+	console.log(url, 'url')
+	return axios.get(url).then((response) => {
+		console.log(response.data)
+	}).catch((err) => {
+		console.log(err.message)
+	})
 
-    // return { result: '0' }
+	// return { result: '0' }
 }
 
 
@@ -194,9 +194,9 @@ function notifySubscriberConsentResult(args, cb, headers) {
 		const response = axios({
 			method: 'get',
 			url,
-		  })
+		})
 
-		  console.log(response.data)
+		console.log(response.data)
 	} catch (err) {
 		console.log(err.message)
 	}
@@ -206,7 +206,7 @@ function notifySubscriberConsentResult(args, cb, headers) {
 	// }).catch((err) => {
 	// 	console.log(err.message)
 	// })
-    return { result: '0' }
+	return { result: '0' }
 }
 
 
@@ -224,7 +224,7 @@ function notifyUssdReception(args, cb, headers) {
 		// sessionId: headers.NotifySOAPHeader.linkid,
 		sessionId: args.senderCB[0],
 		msgType: args.msgType[0],
-	  }
+	}
 
 	console.log('-------axios body start--------')
 	console.log(axios_body)
@@ -232,82 +232,82 @@ function notifyUssdReception(args, cb, headers) {
 
 
 	return axios.post(`${config.mtn.baseSmsOnboardUrl}/ussd/entry`, axios_body)
-	  .then(async (response) => {
-		console.log('-------axios call response start--------')
-		console.log(response.data)
-		console.log('-------axios call response end--------')
+		.then(async (response) => {
+			console.log('-------axios call response start--------')
+			console.log(response.data)
+			console.log('-------axios call response end--------')
 
-		// return response.data.result
+			// return response.data.result
 
-		try {
-			const data = {
-				spId: config.mtn.spID,
-				spPwd: config.mtn.spPwd,
-				serviceId: headers.NotifySOAPHeader.serviceId,
-				msisdn: args.msIsdn[0],
-				shortcode: args.serviceCode[0],
-				ussd_string: response.data.data.string,
-				linkid: headers.NotifySOAPHeader.linkid,
-				// linkid:  args.senderCB[0],
-				receiveCB: args.senderCB[0],
-				senderCB: args.receiveCB[0],
-				option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
-				msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+			try {
+				const data = {
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
+					serviceId: headers.NotifySOAPHeader.serviceId,
+					msisdn: args.msIsdn[0],
+					shortcode: args.serviceCode[0],
+					ussd_string: response.data.data.string,
+					linkid: headers.NotifySOAPHeader.linkid,
+					// linkid:  args.senderCB[0],
+					receiveCB: args.senderCB[0],
+					senderCB: args.receiveCB[0],
+					option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
+					msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+				}
+				console.log('DATA', data)
+				const result = MTNSDPAPIHandler.sendUssd(data, true)
+
+				console.log('Result', result)
+
+				return ({ 'loc:result': '0' })
+			} catch (error) {
+				console.log('-------data catch error start--------')
+				console.log(error)
+				console.log('-------data catch error end--------')
+
+				const data = {
+					spId: config.mtn.spID,
+					spPwd: config.mtn.spPwd,
+					serviceId: headers.NotifySOAPHeader.serviceId,
+					msisdn: args.msIsdn[0],
+					shortcode: args.serviceCode[0],
+					ussd_string: 'error processing response',
+					linkid: headers.NotifySOAPHeader.linkid,
+					// linkid:  args.senderCB[0],
+					receiveCB: args.senderCB[0],
+					senderCB: args.receiveCB[0],
+					option_type: 4,
+					msgType: 2,
+				}
+				console.log('DATA', data)
+				const result = MTNSDPAPIHandler.sendUssd(data, true)
+
+				console.log('Result', result)
+
+				return ({ 'loc:result': '0' })
 			}
-			console.log('DATA', data)
-			const result = MTNSDPAPIHandler.sendUssd(data, true)
 
-			console.log('Result', result)
+			// const data = {
+			// 	spId: config.mtn.spID,
+			// 	spPwd: config.mtn.spPwd,
+			// 	serviceId: headers.NotifySOAPHeader.serviceId,
+			// 	msisdn: args.msIsdn[0],
+			// 	shortcode: args.serviceCode[0],
+			// 	ussd_string: response.data.data.string,
+			// 	linkid: headers.NotifySOAPHeader.linkid,
+			// 	receiveCB: args.senderCB[0],
+			// 	senderCB: args.receiveCB[0],
+			// 	option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
+			// 	msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
+			// }
+			// console.log('DATA', data)
+			// const result = await MTNSDPAPIHandler.sendUssd(data, true)
 
-			return ({ 'loc:result': '0' })
-		} catch (error) {
-			console.log('-------data catch error start--------')
-			console.log(error)
-			console.log('-------data catch error end--------')
+			// console.log('Result', result)
 
-			const data = {
-				spId: config.mtn.spID,
-				spPwd: config.mtn.spPwd,
-				serviceId: headers.NotifySOAPHeader.serviceId,
-				msisdn: args.msIsdn[0],
-				shortcode: args.serviceCode[0],
-				ussd_string: 'error processing response',
-				linkid: headers.NotifySOAPHeader.linkid,
-				// linkid:  args.senderCB[0],
-				receiveCB: args.senderCB[0],
-				senderCB: args.receiveCB[0],
-				option_type: 4,
-				msgType: 2,
-			}
-			console.log('DATA', data)
-			const result = MTNSDPAPIHandler.sendUssd(data, true)
-
-			console.log('Result', result)
-
-			return ({ 'loc:result': '0' })
-		}
-
-		// const data = {
-		// 	spId: config.mtn.spID,
-		// 	spPwd: config.mtn.spPwd,
-		// 	serviceId: headers.NotifySOAPHeader.serviceId,
-		// 	msisdn: args.msIsdn[0],
-		// 	shortcode: args.serviceCode[0],
-		// 	ussd_string: response.data.data.string,
-		// 	linkid: headers.NotifySOAPHeader.linkid,
-		// 	receiveCB: args.senderCB[0],
-		// 	senderCB: args.receiveCB[0],
-		// 	option_type: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 4,
-		// 	msgType: (response.data.data.command.toLowerCase() === 'continue') ? 1 : 2,
-		// }
-		// console.log('DATA', data)
-		// const result = await MTNSDPAPIHandler.sendUssd(data, true)
-
-		// console.log('Result', result)
-
-		// return ({ 'loc:result': '0' })
-	  })
-	  .catch((error) => console.log(error, 'error ------------')({ 'loc:result': '0' }))
+			// return ({ 'loc:result': '0' })
+		})
+		.catch((error) => console.log(error, 'error ------------')({ 'loc:result': '0' }))
 
 	//   return { result: '0' }
 
@@ -315,7 +315,7 @@ function notifyUssdReception(args, cb, headers) {
 }
 
 
- // handle dlr from MTN - forward to the new url on notification_url_dlr
+// handle dlr from MTN - forward to the new url on notification_url_dlr
 function notifySmsDeliveryReceipt(args, cb, headers) {
 	console.log('notifySmsDeliveryReceipt')
 	console.log(args, headers.NotifySOAPHeader, '------notifySmsDeliveryReceipt')
@@ -340,17 +340,17 @@ function notifySmsDeliveryReceipt(args, cb, headers) {
 	const redisKeyForDlrUrl = `DLR_URL::${resp.serviceId}::${resp.msisdn}`
 
 
-		console.log(redisKeyForDlrUrl, '-----------redisKeyForDlrUrl')
+	console.log(redisKeyForDlrUrl, '-----------redisKeyForDlrUrl')
 
-		return Redis.getAsync(redisKeyForDlrUrl)
+	return Redis.getAsync(redisKeyForDlrUrl)
 		.then((dlrUrl) => {
 			TerraLogger.debug(dlrUrl, 'dlrUrl from redis')
-		console.log(dlrUrl, 'dlr url')
-		return axios.get(`${dlrUrl}/?dlr=${resp.deliveryStatus}&recipient=${resp.msisdn}`).then((response) => {
-			console.log(response.data)
-		}).catch((err) => {
-			console.log(err)
-		})
+			console.log(dlrUrl, 'dlr url')
+			return axios.get(`${dlrUrl}/?dlr=${resp.deliveryStatus}&recipient=${resp.msisdn}`).then((response) => {
+				console.log(response.data)
+			}).catch((err) => {
+				console.log(err)
+			})
 		}).catch((error) => {
 			TerraLogger.debug(error, 'Error getting dlrUrl from redis')
 		})
