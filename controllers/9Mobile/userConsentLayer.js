@@ -125,7 +125,7 @@ module.exports = {
                         Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
                     }
                 } catch (error) {
-                    TerraLogger.debug(error.response)
+                    TerraLogger.debug(error)
                     Utils.sendUserErrorSMS(msisdn, '9Mobile', shortCode).then(TerraLogger.debug).catch(TerraLogger.debug)
                 }
             } else if (keyword === '2') {
