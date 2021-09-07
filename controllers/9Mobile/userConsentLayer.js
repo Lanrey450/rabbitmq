@@ -66,9 +66,9 @@ module.exports = {
             return
         }
 
-        const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
+        // const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
 
-        console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+        // console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
         // try {
             // get serviceId from keyword saved to redis (to be used for subscription request)
