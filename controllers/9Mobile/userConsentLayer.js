@@ -32,6 +32,10 @@ module.exports = {
         const validResponse = ['1','2'];
 
         try {
+
+        const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`;
+
+        console.log(redisKeyForServiceId, 'redisKeyForServiceId')
         const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
 
         const result = data.split('::')
