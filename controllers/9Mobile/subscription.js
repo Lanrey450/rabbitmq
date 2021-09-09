@@ -138,7 +138,7 @@ module.exports = {
 
 					TerraLogger.debug('unsubscription engine for 9Mobile called...')
 
-					if(!req.body.multipleUnsubscription){
+					if(req.body.multipleUnsubscription !== 'true'){
 						NineMobileUtils.sendUserUnsubSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
 					}
 
