@@ -138,8 +138,9 @@ module.exports = {
 
 					TerraLogger.debug('unsubscription engine for 9Mobile called...')
 
-					NineMobileUtils.sendUserUnsubSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
-
+					if(!req.body.multipleUnsubscription){
+						NineMobileUtils.sendUserUnsubSMS(req.body).then(TerraLogger.debug).catch(TerraLogger.debug)
+					}
 
 					// format data to push to queue
 					const dataToPush = {
