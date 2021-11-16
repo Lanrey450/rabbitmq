@@ -29,6 +29,31 @@ module.exports = {
 
         console.log('CONSENT HERE', req.body);
 
+        const validResponse = ['1','2'];
+
+        try {
+
+        const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`;
+
+        console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+        const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
+
+        const result = data.split('::')
+        const serviceId = result[0]
+        const channel = result[1]
+        result[5] = shortCode
+        result[6] = msisdn
+        result[7] = keyword
+
+        if(!validResponse.includes(keyword)){
+            await NineMobileUtils.sendUserInvalidKeywordSMS(result).then(TerraLogger.debug).catch(TerraLogger.debug)
+            return ResponseManager.sendErrorResponse({
+                res,
+                statusCode: 400,
+                message: 'Invalid keyword passed',
+            }) 
+        }
+
         ResponseManager.sendResponse({
             res,
             message: 'Thank you! Now go forth',
@@ -41,21 +66,21 @@ module.exports = {
             return
         }
 
-        const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
+        // const redisKeyForServiceId = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
 
-        console.log(redisKeyForServiceId, 'redisKeyForServiceId')
+        // console.log(redisKeyForServiceId, 'redisKeyForServiceId')
 
-        try {
+        // try {
             // get serviceId from keyword saved to redis (to be used for subscription request)
-            const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
+            // const data = await Utils.getServiceIdFromKeyword(redisKeyForServiceId)
 
 
-            const result = data.split('::')
-            const serviceId = result[0]
-            const channel = result[1]
-            result[5] = shortCode
-            result[6] = msisdn
-            result[7] = keyword
+            // const result = data.split('::')
+            // const serviceId = result[0]
+            // const channel = result[1]
+            // result[5] = shortCode
+            // result[6] = msisdn
+            // result[7] = keyword
 
 
 
