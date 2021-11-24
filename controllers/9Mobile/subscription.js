@@ -34,7 +34,7 @@ module.exports = {
 		const rawPassword = credentials[1]
 
 
-		const { msisdn, shortCode, serviceId, channel, amount, validity, name } = req.body
+		const { msisdn, shortCode, serviceId, channel, amount, validity, name, productName } = req.body
 
 		const requiredParams = ['msisdn', 'shortCode', 'serviceId', 'channel']
 		const missingFields = Utils.authenticateParams(req.body, requiredParams)
@@ -50,7 +50,7 @@ module.exports = {
 
 		const redisSubscriptionKey = `SUBSCRIPTION_CALL::${shortCode}::${msisdn}`
 		console.log("subscription call key " + redisSubscriptionKey)
-		redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${amount}::${validity}::${name}`, 'ex', 60 * 60 * 24) // save for 24 hours
+		redis.set(redisSubscriptionKey, `${serviceId}::${channel}::${amount}::${validity}::${name}::${productName}`, 'ex', 60 * 60 * 24) // save for 24 hours
 
 		let consentUrlRedisKey = `CONSENT_URL::${shortCode}::${msisdn}::${channel.toLowerCase()}`
 
