@@ -870,4 +870,12 @@ console.log(dataToSend)
 	},
 
 
+	async handleMadapiDataSync(req, res) {
+
+		return ResponseManager.sendResponse({
+			res,
+			message: `Data received`,
+		})
+
+	},
 }

@@ -85,5 +85,8 @@ route.post('/mtn/stopUSSDNotification', asyncHandler((req, res) => MTNSubscripti
 // mtn postback (INCOMING FROM TELCO)
 route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.MTNDataSyncPostBack(req, res)))
 
+route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
+
+
 
 module.exports = route
