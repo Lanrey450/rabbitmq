@@ -36,10 +36,10 @@ route.post('/nineMobile/ussd/mo', asyncHandler((req, res) => NineMOBILE_USSD_MO_
 
 
 // Nine mobile postback (INCOMING FROM TELCO)
-route.post('/nineMobile/subscription/optout/846', asyncHandler((req, res) => NineMobilePostbackController.optout(req, res)))
-route.post('/nineMobile/charge/async/846', asyncHandler((req, res) => NineMobilePostbackController.chargeAsync(req, res)))
-route.post('/nineMobile/subscription/optin/846', asyncHandler((req, res) => NineMobilePostbackController.optin(req, res)))
-route.post('/nineMobile/subscription/consent/846', asyncHandler((req, res) => NineMobilePostbackController.consent(req, res)))
+route.post('/nineMobile/subscription/optout/106', asyncHandler((req, res) => NineMobilePostbackController.optout(req, res)))
+route.post('/nineMobile/charge/async/106', asyncHandler((req, res) => NineMobilePostbackController.chargeAsync(req, res)))
+route.post('/nineMobile/subscription/optin/106', asyncHandler((req, res) => NineMobilePostbackController.optin(req, res)))
+route.post('/nineMobile/subscription/consent/106', asyncHandler((req, res) => NineMobilePostbackController.consent(req, res)))
 
 
 // postback 9Mobile (called by telco)  // duplicate
