@@ -33,6 +33,7 @@ const { wsdl_path } = config
 console.log(wsdl_path)
 
 const mtn_feedback_xml = fs.readFileSync(`${wsdl_path}/services.wsdl`, 'utf8')
+// const mtn_feedback_xml = fs.readFileSync('./wsdl/services.wsdl', 'utf8')
 
 
 const routes = require('./routes')

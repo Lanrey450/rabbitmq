@@ -44,6 +44,7 @@
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "express-session": "^1.17.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.2",
     "mtn-sdp-nodejs": "git+ssh:git@bitbucket.org:terragonengineering/mtn-sdp-nodejs%2F#staging",
     "query-string": "^6.13.1",
