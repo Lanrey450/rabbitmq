@@ -18,6 +18,7 @@ module.exports = {
       const token = await MTNMADAPIAPIHandler.generateToken();
 
       if(token){
+        console.log('token here', token)
         const result = await MTNMADAPIAPIHandler.sendSmsMT(req.body, token);
   
         return ResponseManager.sendResponse({
