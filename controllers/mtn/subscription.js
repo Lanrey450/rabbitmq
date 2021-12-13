@@ -13,14 +13,13 @@
 
 const TerraLogger = require('terra-logger')
 const uuid = require('uuid4')
-const axios = require('axios').default
 const Utils = require('../../lib/utils')
+
 const ResponseManager = require('../../commons/response')
 const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
-const { param } = require('../../routes/subscription')
-const redis = require('../../redis')
+
 
 module.exports = {
   async subscribe(req, res) {
@@ -1079,78 +1078,20 @@ module.exports = {
     })
   },
 
-  async generateToken(req, res) {
-    try {
-      const { grant_type } = req.query
-      if (grant_type === 'client_credentials') {
-        const url = config.mtn_token_endpoint
-        const params = new URLSearchParams()
-        params.append('client_id', config.mtn_client_id)
-        params.append('client_secret', config.mtn_client_secret)
-
-        let temporaryMtnToken = await new Promise((resolve, reject) => {
-          redis.get('temporaryMtnToken', (err, reply) => {
-            if (err || !reply) {
-              resolve(null)
-            } else {
-              resolve(JSON.parse(reply))
-            }
-          })
-        })
-        const currentTimeInMilliSeconds = new Date().getTime()
-        const access_token_lifeSpan = temporaryMtnToken
-          ? new Date(
-              +temporaryMtnToken.issued_at
-                + +temporaryMtnToken.expires_in * 1000,
-            ).getTime()
-          : 0
-
-        //  if access token has expired => GET NEW TOKEN FROM MTN
-        if (currentTimeInMilliSeconds >= access_token_lifeSpan) {
-          const mtnResponse = await axios
-            .post(url, params, {
-              headers: { 'content-type': 'application/x-www-form-urlencoded' },
-              responseType: 'json',
-            })
-            .catch((error) => ({ error }))
-
-          if (mtnResponse.error) {
-            const errorData = mtnResponse.error.response.data
-            return ResponseManager.sendErrorResponse({
-              res,
-              message: errorData,
-            })
-          }
-          redis.set(
-            'temporaryMtnToken',
-            JSON.stringify(mtnResponse.data),
-            (err, reply) => (reply
-                ? console.log(
-                    'new token received from mtn, old token has been updated',
-                  )
-                : console.log('old token could not be updated.')),
-          )
-          temporaryMtnToken = mtnResponse.data
-        }
-
-        const { access_token } = temporaryMtnToken
-        console.log('sending token to client.')
-        return ResponseManager.sendResponse({
-          res,
-          message: { access_token },
-        })
-      } // end of if block
-
-      return ResponseManager.sendErrorResponse({
-        res,
-        message: 'invalid parameter',
-      })
-    } catch (error) {
-      console.log(error)
-      return ResponseManager.sendErrorResponse({
-        res,
-        message: 'Server Error, Unable to complete request',
-      })
-    }
+  async getToken(req, res) {
+	try {
+		const token = await MTNSDPAPIHandler.generateToken()
+		return ResponseManager.sendResponse({
+			res,
+			message: { access_token: token },
+		})
+	} catch (error) {
+		console.log(error)
+		return ResponseManager.sendResponse({
+			res,
+			message: 'Server Error: unable to process request, please try again later.',
+		})
+	}
   },
+
 }

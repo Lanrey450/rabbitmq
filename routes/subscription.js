@@ -86,6 +86,6 @@ route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.
 
 route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
 
-route.get('/mtn/oauth/access_token/accesstoken', asyncHandler((req, res) => MTNSubscriptionController.generateToken(req, res)))
+route.get('/mtn/oauth', asyncHandler((req, res) => MTNSubscriptionController.getToken(req, res)))
 
 module.exports = route
