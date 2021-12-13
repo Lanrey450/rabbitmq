@@ -87,6 +87,6 @@ route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.
 
 route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
 
-
+route.post('/madapi-sms-outbound', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
 
 module.exports = route

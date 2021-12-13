@@ -15,7 +15,7 @@ const TerraLogger = require('terra-logger')
 const uuid = require('uuid4')
 const Utils = require('../../lib/utils')
 const ResponseManager = require('../../commons/response')
-const MTNSDPAPIHandler = require('../../lib/mtn/subscription')
+const MTNMADAPIAPIHandler = require('../../lib/mtn/madapi')
 const config = require('../../config')
 const publish = require('../../rabbitmq/producer')
 
@@ -875,6 +875,16 @@ console.log(dataToSend)
 		return ResponseManager.sendResponse({
 			res,
 			message: `Data received`,
+		})
+
+	},
+
+	async smsOutbound(req, res) {
+		const result = await MTNMADAPIAPIHandler.sendSmsMT(req.bod)
+		return ResponseManager.sendResponse({
+			res,
+			message: `SMS sent`,
+			responseBody: result,
 		})
 
 	},
