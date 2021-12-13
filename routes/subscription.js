@@ -21,7 +21,6 @@ route.get('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptio
 route.get('/nineMobile/temp', asyncHandler((req, res) => NineMOBILESubscriptionController.getIt(req, res)))
 
 
-
 // billing sync and async
 route.post('/nineMobile/billing/sync', asyncHandler((req, res) => NinemobileChargeController.chargeSync(req, res)))
 route.post('/nineMobile/billing/async', asyncHandler((req, res) => NinemobileChargeController.chargeAsync(req, res)))
@@ -64,22 +63,22 @@ route.post('/mtn/authorize/payment', asyncHandler((req, res) => MTNSubscriptionC
 route.post('/mtn/charge/token', asyncHandler((req, res) => MTNSubscriptionController.chargeToken(req, res)))
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
 
-// sms mt - manulaly initiated by application developer - done 
+// sms mt - manulaly initiated by application developer - done
 route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res)))
 
-// sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url 
+// sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url
 route.post('/mtn/startSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.startSMSNotification(req, res)))
 
-// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url 
+// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url
 route.post('/mtn/stopSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.stopSMSNotification(req, res)))
 
-// ussd mt - manually initiated 
+// ussd mt - manually initiated
 route.post('/mtn/sendUssd', asyncHandler((req, res) => MTNSubscriptionController.sendUssd(req, res)))
 
-// ussd mo start-- endpoint to call to register the notify soap url in the config with the telco to start receiving DRL/webhook (notifyUssdReceptionRequest) - handles user initiated part 
+// ussd mo start-- endpoint to call to register the notify soap url in the config with the telco to start receiving DRL/webhook (notifyUssdReceptionRequest) - handles user initiated part
 route.post('/mtn/startUSSDNotificationRequest', asyncHandler((req, res) => MTNSubscriptionController.startUssdMo(req, res)))
 
-// ussd mo stop -- endpoint to call to stop receiving DRL webhook for the registered soap-url - done 
+// ussd mo stop -- endpoint to call to stop receiving DRL webhook for the registered soap-url - done
 route.post('/mtn/stopUSSDNotification', asyncHandler((req, res) => MTNSubscriptionController.stopUssdMo(req, res)))
 
 // mtn postback (INCOMING FROM TELCO)
@@ -87,6 +86,6 @@ route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.
 
 route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
 
-
+route.get('/mtn/oauth/access_token/accesstoken', asyncHandler((req, res) => MTNSubscriptionController.generateToken(req, res)))
 
 module.exports = route

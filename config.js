@@ -129,4 +129,8 @@ module.exports = {
 		unsub: 'unsubscription',
 		renew: 'renew',
 	},
+
+	mtn_client_id: env.MTN_CLIENT_ID,
+	mtn_client_secret: env.MTN_CLIENT_SECRET,
+	mtn_token_endpoint: env.MTN_TOKEN_ENDPOINT,
 }
