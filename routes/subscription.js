@@ -7,6 +7,7 @@ const asyncHandler = require('express-async-handler')
 const NineMOBILESubscriptionController = require('../controllers/9Mobile/subscription')
 const AirtelSubscriptionController = require('../controllers/airtel/subscription')
 const MTNSubscriptionController = require('../controllers/mtn/subscription')
+const MTNMadapiController = require('../controllers/mtn/madapi');
 const NineMobilePostbackController = require('../controllers/9Mobile/postbackHandler')
 const NineMOBILE_MO_Controller = require('../controllers/9Mobile/userConsentLayer')
 
@@ -19,7 +20,6 @@ route.post('/nineMobile/subscribe', asyncHandler((req, res) => NineMOBILESubscri
 route.post('/nineMobile/unsubscribe', asyncHandler((req, res) => NineMOBILESubscriptionController.unsubscribe(req, res)))
 route.get('/nineMobile/status', asyncHandler((req, res) => NineMOBILESubscriptionController.status(req, res)))
 route.get('/nineMobile/temp', asyncHandler((req, res) => NineMOBILESubscriptionController.getIt(req, res)))
-
 
 
 // billing sync and async
@@ -64,22 +64,22 @@ route.post('/mtn/authorize/payment', asyncHandler((req, res) => MTNSubscriptionC
 route.post('/mtn/charge/token', asyncHandler((req, res) => MTNSubscriptionController.chargeToken(req, res)))
 route.get('/mtn/status', asyncHandler((req, res) => MTNSubscriptionController.status(req, res)))
 
-// sms mt - manulaly initiated by application developer - done 
+// sms mt - manulaly initiated by application developer - done
 route.post('/mtn/sendSms', asyncHandler((req, res) => MTNSubscriptionController.sendSms(req, res)))
 
-// sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url 
+// sms mo stop  -- endpoint to call to start receiving DRL webhook for the registered soap-url
 route.post('/mtn/startSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.startSMSNotification(req, res)))
 
-// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url 
+// sms mo stop  -- endpoint to call to stop receiving DRL webhook for the registered soap-url
 route.post('/mtn/stopSMSNotification', asyncHandler((req, res) => MTNSubscriptionController.stopSMSNotification(req, res)))
 
-// ussd mt - manually initiated 
+// ussd mt - manually initiated
 route.post('/mtn/sendUssd', asyncHandler((req, res) => MTNSubscriptionController.sendUssd(req, res)))
 
-// ussd mo start-- endpoint to call to register the notify soap url in the config with the telco to start receiving DRL/webhook (notifyUssdReceptionRequest) - handles user initiated part 
+// ussd mo start-- endpoint to call to register the notify soap url in the config with the telco to start receiving DRL/webhook (notifyUssdReceptionRequest) - handles user initiated part
 route.post('/mtn/startUSSDNotificationRequest', asyncHandler((req, res) => MTNSubscriptionController.startUssdMo(req, res)))
 
-// ussd mo stop -- endpoint to call to stop receiving DRL webhook for the registered soap-url - done 
+// ussd mo stop -- endpoint to call to stop receiving DRL webhook for the registered soap-url - done
 route.post('/mtn/stopUSSDNotification', asyncHandler((req, res) => MTNSubscriptionController.stopUssdMo(req, res)))
 
 // mtn postback (INCOMING FROM TELCO)
@@ -87,6 +87,8 @@ route.post('/mtnPostBack', asyncHandler((req, res) => MTNSubscriptionController.
 
 route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
 
-route.post('/madapi-sms-outbound', asyncHandler((req, res) => MTNSubscriptionController.handleMadapiDataSync(req, res)))
+route.post('/madapi-sms-outbound', asyncHandler((req, res) => MTNMadapiController.smsOutbound(req, res)))
+
+route.get('/mtn/oauth', asyncHandler((req, res) => MTNMadapiController.getToken(req, res)));
 
 module.exports = route

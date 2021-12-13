@@ -25,6 +25,7 @@ const defaultConfig = {
 
 // switch when deploying for production envs
 const defaultUrl = `mongodb://${defaultConfig.username}:${defaultConfig.password}@${defaultConfig.host}:${defaultConfig.port}/${defaultConfig.db_name}?retryWrites=true`
+// const defaultUrl = 'mongodb://127.0.0.1:27017/mtn_subscription'
 
 //  local dev
 // const defaultUrl = defaultConfig.url
