@@ -63,7 +63,7 @@ module.exports = {
         console.log('token here', token)
         const payload = {
           data: req.body,
-          shortCode: req.params.shortCode,
+          shortCode: req.params.shortcode,
         }
         const result = await MTNMADAPIAPIHandler.registerShortcode(payload, token);
   
