@@ -53,7 +53,66 @@ module.exports = {
         message: 'Server Error: unable to process request, please try again later.',
       })
     }
-    },
+  },
 
+  async subscribeShortcode(req, res){
+    try {
+      const token = await MTNMADAPIAPIHandler.generateToken();
+
+      if(token){
+        console.log('token here', token)
+        const payload = {
+          data: req.body,
+          shortCode: req.params.shortCode,
+        }
+        const result = await MTNMADAPIAPIHandler.registerShortcode(payload, token);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: `Shortcode registered`,
+          responseBody: result,
+        });
+  
+      }
+    } catch (error){
+      console.log('Error subscribing shortcode', error)
+      return ResponseManager.sendErrorResponse({
+        res,
+        message: `Error subscribing shortcode`,
+      })
+    }
+  },
+
+  async unSbscribeShortcode(req, res){
+    try {
+      const token = await MTNMADAPIAPIHandler.generateToken();
+
+      if(token){
+        console.log('token here', token);
+
+        // get subscriptionId
+
+        const payload = {
+          subscriptionId: '',
+          shortCode: req.params.shortCode,
+        }
+
+        const result = await MTNMADAPIAPIHandler.unRegisterShortcode(payload, token);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: `Shortcode unregistered`,
+          responseBody: result,
+        });
+  
+      }
+    } catch (error){
+      console.log('Error unregistering shortcode', error)
+      return ResponseManager.sendErrorResponse({
+        res,
+        message: `Error unregistering shortcode`,
+      })
+    }
+  }
   
 }

@@ -89,6 +89,12 @@ route.post('/dataSync', asyncHandler((req, res) => MTNSubscriptionController.han
 
 route.post('/madapi-sms-outbound', asyncHandler((req, res) => MTNMadapiController.smsOutbound(req, res)))
 
+route.post('/subscribe/:shortcode', asyncHandler((req, res) => MTNMadapiController.subscribeShortcode(req, res)))
+
+route.get('/unsubscribe/:shortcode', asyncHandler((req, res) => MTNMadapiController.unSbscribeShortcode(req, res)));
+
 route.get('/mtn/oauth', asyncHandler((req, res) => MTNMadapiController.getToken(req, res)));
+
+
 
 module.exports = route
