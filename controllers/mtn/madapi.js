@@ -75,7 +75,7 @@ module.exports = {
   
       }
     } catch (error){
-      console.log('Error subscribing shortcode', error)
+      console.log('Error subscribing shortcode', error.response)
       return ResponseManager.sendErrorResponse({
         res,
         message: `Error subscribing shortcode`,
