@@ -27,7 +27,7 @@ try {
             checkout scm
         }
         stage ('Install Dependencies') {
-            sh 'npm install --production'
+            sh 'eval \$(ssh-agent); ssh-add /var/lib/jenkins/.ssh/terra-bot; npm install --production'
         }
         stage("test deployment") {
             try {
