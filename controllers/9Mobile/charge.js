@@ -170,41 +170,14 @@ module.exports = {
 				}
 
 				// console.log(nineMobileRequestBody, 'req.body to 9Mobile')
-				const data = await NineMobileChargeApi.async(nineMobileRequestBody)
+				const data = await NineMobileChargeApi.async(nineMobileRequestBody);
 
-				// console.log(data, 'response from 9Mobile')
+				console.log('9mobile asyn charge response', data)
 
-				//  format data to push to queue
-				// const dataToPush = {
-				// 	status: 'success',
-				// 	network: '9mobile',
-				// 	transactionId: data.responseData.transactionUUID,
-				// 	serviceId: nineMobileRequestBody.serviceId,
-				// 	msisdn: nineMobileRequestBody.userIdentifier,
-				// 	message: data.message,
-				// 	meta: {
-				// 		result: data.responseData.result,
-				// 		requestId: data.requestId,
-				// 		code: data.code,
-				// 		inError: data.inError,
-				// 	},
-				// }
-
-
-				// console.log(dataToPush, 'dataToPush')
-
-				// return publish(config.rabbit_mq.nineMobile.charge_postback_queue, { ...dataToPush })
-				// 	.then(() => {
-				// 		TerraLogger.debug('successfully pushed charging data to queue')
 				return ResponseManager.sendResponse({
 					res,
 					responseBody: data,
 				})
-				// })
-				// .catch((err) => ResponseManager.sendErrorResponse({
-				// 	res,
-				// 	message: err.message,
-				// }))
 			} catch (error) {
 				TerraLogger.debug(error)
 				return ResponseManager.sendErrorResponse({ res, message: `Unable to reach 9mobile server - ${error}` })
