@@ -99,4 +99,4 @@ route.get('/mtn/delivery-status/:shortCode/:requestId', asyncHandler((req, res) 
 
 
 
-module.exports = route
+module.exports = route;

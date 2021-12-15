@@ -26,5 +26,4 @@ route.delete('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiC
 route.delete('/subscriptions/:customerId/subscriptionId', asyncHandler((req, res) => MTNMadapiController.deleteSubscription(req, res)));
 
 
-
-
+module.exports = route;
