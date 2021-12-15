@@ -91,9 +91,8 @@ module.exports = {
         console.log('token here', token);
 
         // get subscriptionId
-
         const payload = {
-          subscriptionId: '61b9a55d63644234bd70da9b',
+          subscriptionId: req.params.requestId,
           shortCode: req.params.shortcode,
         }
 
@@ -113,6 +112,35 @@ module.exports = {
         message: `Error unregistering shortcode`,
       })
     }
-  }
+  },
+
+  async getDeliveryStatus(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+			const { requestId, shortCode } = req.params// 'a29285c1-bcb7-467d-bc85-b574c276bc29'
+
+      if(token){
+        const deliveryStatus = await MTNMADAPIAPIHandler.deliveryStatus(token, shortCode, requestId);
+        if (deliveryStatus.error) {
+          return ResponseManager.sendErrorResponse({
+            res,
+            message: { error: deliveryStatus.error },
+          })
+        }
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: { deliveryStatus },
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
   
 }

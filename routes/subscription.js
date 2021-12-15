@@ -91,9 +91,11 @@ route.post('/madapi-sms-outbound', asyncHandler((req, res) => MTNMadapiControlle
 
 route.post('/subscribe/:shortcode', asyncHandler((req, res) => MTNMadapiController.subscribeShortcode(req, res)))
 
-route.get('/unsubscribe/:shortcode', asyncHandler((req, res) => MTNMadapiController.unSbscribeShortcode(req, res)));
+route.get('/unsubscribe/:shortcode/:requestId', asyncHandler((req, res) => MTNMadapiController.unSbscribeShortcode(req, res)));
 
 route.get('/mtn/oauth', asyncHandler((req, res) => MTNMadapiController.getToken(req, res)));
+
+route.get('/mtn/delivery-status/:shortCode/:requestId', asyncHandler((req, res) => MTNMadapiController.getDeliveryStatus(req, res)))
 
 
 
