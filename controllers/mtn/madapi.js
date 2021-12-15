@@ -142,5 +142,127 @@ module.exports = {
 			})
 		}
 	},
+
+  async getCustomerSubscriptions(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+			const { customerId } = req.params;
+
+      if(token){
+        const subscriptions = await MTNMADAPIAPIHandler.getSubscriptions(token, customerId);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: 'subscriptions fetched successfully',
+          responseBody: subscriptions,
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
+
+  async subscribeUser(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+			const { customerId } = req.params;
+
+      if(token){
+
+        const payload = {
+          customerId,
+          body: req.body,
+        }
+
+        const subscription = await MTNMADAPIAPIHandler.subscribe(token, payload);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: 'User successfully subscribed',
+          responseBody: subscription,
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
+
+  async deleteAllSubscriptions(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+			const { customerId } = req.params;
+
+      if(token){
+        const subscription = await MTNMADAPIAPIHandler.deleteSubscriptions(token, customerId);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: 'User successfully subscribed',
+          responseBody: subscription,
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
+
+  async getCustomerSubscription(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+      if(token){
+        const subscriptions = await MTNMADAPIAPIHandler.getSubscription(token, req.params);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: 'subscription fetched successfully',
+          responseBody: subscriptions,
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
+
+  async deleteSubscription(req, res) {
+	  try {
+			const token = await MTNMADAPIAPIHandler.generateToken();
+
+      if(token){
+        const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
+  
+        return ResponseManager.sendResponse({
+          res,
+          message: 'subscription fetched successfully',
+          responseBody: subscriptions,
+        })
+      }
+		
+		} catch (error) {
+			return ResponseManager.sendErrorResponse({
+				res,
+				message: 'Server Error: unable to process delivery status',
+			})
+		}
+	},
   
 }
