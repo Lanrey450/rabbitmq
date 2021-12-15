@@ -93,7 +93,7 @@ module.exports = {
         // get subscriptionId
 
         const payload = {
-          subscriptionId: '',
+          subscriptionId: '61b9a55d63644234bd70da9b',
           shortCode: req.params.shortCode,
         }
 
