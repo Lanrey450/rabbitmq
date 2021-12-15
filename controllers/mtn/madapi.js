@@ -94,7 +94,7 @@ module.exports = {
 
         const payload = {
           subscriptionId: '61b9a55d63644234bd70da9b',
-          shortCode: req.params.shortCode,
+          shortCode: req.params.shortcode,
         }
 
         const result = await MTNMADAPIAPIHandler.unRegisterShortcode(payload, token);
