@@ -10,7 +10,6 @@ const publish = require('../../rabbitmq/producer')
 const config = require('../../config')
 
 
-
 const util = require('../../lib/utils')
 
 redis.getAsync = promisify(redis.get).bind(redis);
@@ -99,6 +98,7 @@ module.exports = {
 			productName: cachedData[4]
 
 		}
+
 		NineMobileUtils.sendUserUnsubSMS(smsData).then(TerraLogger.debug).catch(TerraLogger.debug)
 
 		try {
@@ -141,7 +141,27 @@ module.exports = {
 			message: data.operation,
 			transactionId: data.transactionUUID,
 		}
+
+		const renewalKey = `RENEW::${data.userIdentifier}::${data.serviceId}`;
+		const cachedData = await redis.getAsync(renewalKey);
+
+		console.log('CACHED DATA CHARGE ASYN', cachedData);
+
+		const smsData = {
+			amount: cachedData[0],
+			validity: cachedData[1],
+			serviceName: cachedData[2],
+			shortCode: cachedData[3],
+			msisdn: data.userIdentifier,
+			unSubscriptionKeyword: cachedData[4]
+		}
+
 		try {
+			if (data.mnoDeliveryCode.toLowerCase() === 'success') {
+				//send renewal sms
+				NineMobileUtils.sendUserAutoRenewal(smsData).then(TerraLogger.debug).catch(TerraLogger.debug)
+
+			}
 			publish(config.rabbit_mq.nineMobile.charge_postback_queue, { ...dataToPush }) // charge feedback
 				.then(() => {
 					console.log('successfully pushed to the 9mobile postback queue')
