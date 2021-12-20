@@ -142,6 +142,7 @@ module.exports = {
 
 
 	async chargeAsync(req, res) {
+		console.log('Charge async request payload')
 		const auth = req.headers.authorization
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
@@ -169,6 +170,8 @@ module.exports = {
 					serviceId: req.body.serviceId,
 					context: 'RENEW',
 				}
+
+				console.log('9mobile asyn charge request', nineMobileRequestBody);
 
 				// console.log(nineMobileRequestBody, 'req.body to 9Mobile')
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody);
