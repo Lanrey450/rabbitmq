@@ -142,6 +142,7 @@ module.exports = {
 
 
 	async chargeAsync(req, res) {
+		console.log('Charge async request payload')
 		const auth = req.headers.authorization
 		if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
 			return ResponseManager.sendErrorResponse({ res, message: 'No Authentication header provided!' })
