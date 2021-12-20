@@ -171,6 +171,8 @@ module.exports = {
 					context: 'RENEW',
 				}
 
+				console.log('9mobile asyn charge request', nineMobileRequestBody);
+
 				// console.log(nineMobileRequestBody, 'req.body to 9Mobile')
 				const data = await NineMobileChargeApi.async(nineMobileRequestBody);
 
