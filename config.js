@@ -133,4 +133,5 @@ module.exports = {
 	mtn_client_id: env.MTN_MADAPI_CLIENT_ID,
 	mtn_client_secret: env.MTN_MADAPI_CLIENT_SECRET,
 	mtn_base_url: env.MTN_MADAPI_BAS_URL,
+	mtn_madapi_xApiKey: env.MTN_MADAPI_X_API_KEY,
 }

@@ -15,9 +15,9 @@ route.get('/mtn/oauth', asyncHandler((req, res) => MTNMadapiController.getToken(
 
 route.get('/mtn/delivery-status/:shortCode/:requestId', asyncHandler((req, res) => MTNMadapiController.getDeliveryStatus(req, res)));
 
-route.get('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.getCustomerSubscriptions(req, res)));
+route.get('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.getCustomerSubscriptionProfile(req, res)));
 
-route.get('/subscriptions/:customerId/subscriptionId', asyncHandler((req, res) => MTNMadapiController.getCustomerSubscription(req, res)));
+route.get('/subscriptions/:customerId/subscriptionId', asyncHandler((req, res) => MTNMadapiController.getCustomerSubscriptionHistory(req, res)));
 
 route.post('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.subscribeUser(req, res)));
 
