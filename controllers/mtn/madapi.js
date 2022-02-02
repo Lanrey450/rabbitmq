@@ -9,6 +9,8 @@
 const MTNMADAPIAPIHandler = require('../../lib/mtn/madapi');
 const ResponseManager = require('../../commons/response');
 
+const config = require('../../config')
+
 
 module.exports = {
 
@@ -143,9 +145,9 @@ module.exports = {
 		}
 	},
 
-  async getCustomerSubscriptions(req, res) {
+  async getCustomerSubscriptionProfile(req, res) {
 	  try {
-			const token = await MTNMADAPIAPIHandler.generateToken();
+			const token = config.mtn_madapi_getprofile_xApiKey;
 
 			const { customerId } = req.params;
 
@@ -169,7 +171,7 @@ module.exports = {
 
   async subscribeUser(req, res) {
 	  try {
-			const token = await MTNMADAPIAPIHandler.generateToken();
+			const token = config.mtn_madapi_subscribe_xApiKey;
 
 			const { customerId } = req.params;
 
@@ -221,12 +223,12 @@ module.exports = {
 		}
 	},
 
-  async getCustomerSubscription(req, res) {
+  async getCustomerSubscriptionHistory(req, res) {
 	  try {
-			const token = await MTNMADAPIAPIHandler.generateToken();
+			const token = config.mtn_madapi_getprofile_xApiKey;
 
       if(token){
-        const subscriptions = await MTNMADAPIAPIHandler.getSubscription(token, req.params);
+        const subscriptions = await MTNMADAPIAPIHandler.getSubscriptionHistory(token, req.params);
   
         return ResponseManager.sendResponse({
           res,
@@ -245,7 +247,7 @@ module.exports = {
 
   async deleteSubscription(req, res) {
 	  try {
-			const token = await MTNMADAPIAPIHandler.generateToken();
+			const token = config.mtn_madapi_unsubscribe_xApiKey;
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
