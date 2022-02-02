@@ -147,7 +147,7 @@ module.exports = {
 
   async getCustomerSubscriptionProfile(req, res) {
 	  try {
-			const token = config.mtn_madapi_getprofile_xApiKey;
+			const token = config.mtn_madapi_xApiKey;
 
 			const { customerId } = req.params;
 
@@ -171,7 +171,7 @@ module.exports = {
 
   async subscribeUser(req, res) {
 	  try {
-			const token = config.mtn_madapi_subscribe_xApiKey;
+			const token = config.mtn_madapi_xApiKey;
 
 			const { customerId } = req.params;
 
@@ -225,7 +225,7 @@ module.exports = {
 
   async getCustomerSubscriptionHistory(req, res) {
 	  try {
-			const token = config.mtn_madapi_getprofile_xApiKey;
+			const token = config.mtn_madapi_xApiKey;
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.getSubscriptionHistory(token, req.params);
@@ -247,7 +247,7 @@ module.exports = {
 
   async deleteSubscription(req, res) {
 	  try {
-			const token = config.mtn_madapi_unsubscribe_xApiKey;
+			const token = config.mtn_madapi_xApiKey;
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
