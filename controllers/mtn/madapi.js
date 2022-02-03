@@ -173,6 +173,8 @@ module.exports = {
 	  try {
 			const token = config.mtn_madapi_xApiKey;
 
+      console.log("token: ", token);
+
 			const { customerId } = req.params;
 
       if(token){
@@ -183,6 +185,8 @@ module.exports = {
         }
 
         const subscription = await MTNMADAPIAPIHandler.subscribe(token, payload);
+
+        console.log("subscription: ", subscription);
   
         return ResponseManager.sendResponse({
           res,
