@@ -14,7 +14,7 @@ const INTERNAL_SECURITY_TOKEN = config.internalSecurityToken;
 (async () => {
 	const secKey = await redis.getAsync(INTERNAL_SECURITY_TOKEN)
 	TerraLogger.debug('security key', secKey)
-	// axios.defaults.headers.common['internal-security-token'] = secKey
+	axios.defaults.headers.common['internal-security-token'] = secKey
 	global.alphaToken = secKey
 	return secKey
 })().catch(TerraLogger.debug)
