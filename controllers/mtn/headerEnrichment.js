@@ -17,8 +17,6 @@ module.exports = {
 	async headerEnrichment(req, res) {
 
         try {
-
-            console.log('token here', token)
             const result = req.headers
     
             return ResponseManager.sendResponse({
