@@ -153,6 +153,8 @@ module.exports = {
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.getSubscriptions(token, customerId);
+
+        console.log("subscriptionsProfile: ", subscriptions);
   
         return ResponseManager.sendResponse({
           res,
@@ -234,6 +236,8 @@ module.exports = {
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.getSubscriptionHistory(token, req.params);
+
+        console.log("subscriptionsHistory: ", subscriptions)
   
         return ResponseManager.sendResponse({
           res,
@@ -259,7 +263,7 @@ module.exports = {
   
         return ResponseManager.sendResponse({
           res,
-          message: 'subscription fetched successfully',
+          message: 'subscription deleted successfully',
           responseBody: subscriptions,
         })
       }
