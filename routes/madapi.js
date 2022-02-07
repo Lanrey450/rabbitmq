@@ -21,6 +21,8 @@ route.get('/subscriptions/:customerId/subscriptionId', asyncHandler((req, res) =
 
 route.post('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.subscribeUser(req, res)));
 
+route.post('/mtn-mo', asyncHandler((req, res) => MTNMadapiController.mtnMo(req, res)));
+
 route.delete('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.deleteAllSubscriptions(req, res)));
 
 route.delete('/subscriptions/:customerId/subscriptionId', asyncHandler((req, res) => MTNMadapiController.deleteSubscription(req, res)));
