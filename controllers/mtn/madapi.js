@@ -209,13 +209,13 @@ module.exports = {
   async dataSync(req, res) {
 	  try {
 			console.log("request: ", req);
-      return res.status(200).send("MTN MO");
+      return res.status(200).send("MTN DATA SYNC");
 		
 		} catch (error) {
       console.log("error: ", error);
 			return ResponseManager.sendErrorResponse({
 				res,
-				message: 'Server Error: MTN MO',
+				message: 'Server Error: MTN DATA SYNC',
 			})
 		}
 	},
