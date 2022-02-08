@@ -206,7 +206,7 @@ module.exports = {
 		}
 	},
 
-  async mtnMo(req, res) {
+  async dataSync(req, res) {
 	  try {
 			console.log("request: ", req);
       return res.status(200).send("MTN MO");
