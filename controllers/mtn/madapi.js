@@ -208,7 +208,7 @@ module.exports = {
 
   async dataSync(req, res) {
 	  try {
-			console.log("request: ", req);
+			console.log("request: ", req.body);
       return res.status(200).send("MTN DATA SYNC");
 		
 		} catch (error) {
