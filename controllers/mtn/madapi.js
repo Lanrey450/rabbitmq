@@ -269,6 +269,7 @@ module.exports = {
 	},
 
   async deleteSubscription(req, res) {
+    let errorResponse;
 	  try {
 			const token = config.mtn_madapi_xApiKey;
 
@@ -276,7 +277,8 @@ module.exports = {
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
 
         if (subscriptions.error) {
-          throw subscriptions;
+          errorResponse = subscriptions
+          throw new Error(subscriptions.message);
         }
   
         return ResponseManager.sendResponse({
@@ -292,7 +294,7 @@ module.exports = {
 				res,
         statusCode: 400,
 				message: 'Unable to process unsubscription.',
-        responseBody: error,
+        responseBody: errorResponse,
 			})
 		}
 	},
