@@ -287,6 +287,7 @@ module.exports = {
       }
 		
 		} catch (error) {
+      console.log("unsubscription error: ", error)
 			return ResponseManager.sendErrorResponse({
 				res,
         statusCode: 400,
