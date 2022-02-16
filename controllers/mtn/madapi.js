@@ -274,6 +274,10 @@ module.exports = {
 
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
+
+        if (subscriptions.error) {
+          throw new Error(subscriptions.error);
+        }
   
         return ResponseManager.sendResponse({
           res,
@@ -285,7 +289,9 @@ module.exports = {
 		} catch (error) {
 			return ResponseManager.sendErrorResponse({
 				res,
-				message: 'Server Error: unable to process delivery status',
+        statusCode: 400,
+				message: 'Unable to process unsubscription.',
+        responseBody: error,
 			})
 		}
 	},
