@@ -276,7 +276,7 @@ module.exports = {
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
 
         if (subscriptions.error) {
-          throw new Error(subscriptions.error);
+          throw new Error(subscriptions);
         }
   
         return ResponseManager.sendResponse({
