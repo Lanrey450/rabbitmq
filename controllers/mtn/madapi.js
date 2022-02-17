@@ -274,7 +274,7 @@ module.exports = {
 			const token = config.mtn_madapi_xApiKey;
 
       if(token){
-        const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
+        const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.body);
 
         if (subscriptions.error) {
           errorResponse = subscriptions
