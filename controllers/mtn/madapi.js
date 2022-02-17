@@ -5,7 +5,7 @@
 /* eslint-disable no-tabs */
 // eslint-disable-next-line camelcase
 
-
+const TerraLogger = require('terra-logger')
 const MTNMADAPIAPIHandler = require('../../lib/mtn/madapi');
 const ResponseManager = require('../../commons/response');
 
