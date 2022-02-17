@@ -216,7 +216,7 @@ module.exports = {
 
       const dataToSend = {
         msisdn: data.msisdn,
-        status: data.result,
+        status: data.result.toLowerCase(),
         meta: {
           updateTime: '20220217203321',
           effectiveTime: '20220217203321',
