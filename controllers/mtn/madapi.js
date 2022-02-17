@@ -209,14 +209,64 @@ module.exports = {
   async dataSync(req, res) {
 	  try {
 			console.log("request: ", req.body);
-      return res.status(200).send("MTN DATA SYNC");
+      res.status(200).json({ data: "Ok" });
+
+      const data = req.body;
+
+      const dataToSend = {
+        msisdn: data.msisdn,
+        status: data.result,
+        meta: {
+          updateTime: '20220217203321',
+          effectiveTime: '20220217203321',
+          expiryTime: '20220224203321',
+          serviceAvailability: '0',
+          fee: data.chargeAmount,
+          keyword: data.keyword,
+          cycleEndTime: '20220224203321',
+          Starttime: '20220217203321'
+        },
+        network: "mtn",
+        serviceId: data.serviceId,
+        message: data.chargingMode,
+        transactionId: "",
+        subType: ""
+      }
+
+      if (
+        dataToSend.message.toLowerCase() === 's'
+        || dataToSend.message === 'Modification'
+      ) {
+        dataToSend.subType = dataToSend.message === 'Modification' ? 'RENEWAL' : 'NEW'
+        console.log('Final |Data To Send', dataToSend)
+        return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
+          ...dataToSend,
+        })
+          .then(() => {
+            TerraLogger.debug('successfully pushed postback data to queue')
+            return;
+          })
+          .catch((err) => {
+            console.log(`Unable to push postback data to queue, ${err}`);
+            return;
+          })
+      }
+  
+      return publish(config.rabbit_mq.mtn.un_subscription_queue, {
+        ...dataToSend,
+      })
+        .then(() => {
+          TerraLogger.debug('successfully pushed postback data to queue')
+          return
+        })
+        .catch((err) => {
+          console.log(`Unable to push postback data to queue, ${err}`);
+          return;
+        })
 		
 		} catch (error) {
       console.log("error: ", error);
-			return ResponseManager.sendErrorResponse({
-				res,
-				message: 'Server Error: MTN DATA SYNC',
-			})
+			return;
 		}
 	},
 
@@ -274,7 +324,7 @@ module.exports = {
 			const token = config.mtn_madapi_xApiKey;
 
       if(token){
-        const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.params);
+        const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.body);
 
         if (subscriptions.error) {
           errorResponse = subscriptions

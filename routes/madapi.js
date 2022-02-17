@@ -25,7 +25,6 @@ route.post('/mtn-data-sync', asyncHandler((req, res) => MTNMadapiController.data
 
 route.delete('/subscriptions/:customerId', asyncHandler((req, res) => MTNMadapiController.deleteAllSubscriptions(req, res)));
 
-route.delete('/subscriptions/:customerId/subscriptionId/:subscriptionId/description/:description', asyncHandler((req, res) => MTNMadapiController.deleteSubscription(req, res)));
-
+route.post('/subscriptions/unsubscribe', asyncHandler((req, res) => MTNMadapiController.deleteSubscription(req, res)));
 
 module.exports = route;
