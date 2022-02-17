@@ -10,6 +10,7 @@ const MTNMADAPIAPIHandler = require('../../lib/mtn/madapi');
 const ResponseManager = require('../../commons/response');
 
 const config = require('../../config')
+const publish = require('../../rabbitmq/producer')
 
 
 module.exports = {
