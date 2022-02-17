@@ -230,7 +230,7 @@ module.exports = {
         network: "mtn",
         serviceId: data.serviceId,
         message: data.chargingMode,
-        transactionId: "",
+        transactionId: generateId(),
         subType: ""
       }
 
@@ -350,4 +350,8 @@ module.exports = {
 		}
 	},
   
+}
+
+function generateId() {
+	return new Date().valueOf();
 }
