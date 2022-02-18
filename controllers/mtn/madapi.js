@@ -327,10 +327,10 @@ module.exports = {
       if(token){
         const subscriptions = await MTNMADAPIAPIHandler.deleteSubscription(token, req.body);
 
-        if (subscriptions.error) {
-          errorResponse = subscriptions
-          throw new Error(subscriptions.message);
-        }
+        // if (subscriptions.error) {
+        //   errorResponse = subscriptions
+        //   throw new Error(subscriptions.message);
+        // }
   
         return ResponseManager.sendResponse({
           res,
@@ -340,7 +340,7 @@ module.exports = {
       }
 		
 		} catch (error) {
-      console.log("unsubscription error: ", error)
+      console.log("unsubscription error: ", error.response.data)
 			return ResponseManager.sendErrorResponse({
 				res,
         statusCode: 400,
