@@ -215,7 +215,7 @@ module.exports = {
       const data = req.body;
 
       const dataToSend = {
-        msisdn: data.msisdn,
+        msisdn: data.callingParty,
         status: data.result.toLowerCase(),
         meta: {
           updateTime: '20220217203321',
