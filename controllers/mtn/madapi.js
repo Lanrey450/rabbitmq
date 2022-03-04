@@ -253,6 +253,7 @@ module.exports = {
           })
       }
   
+      dataToSend.status = 'success';
       return publish(config.rabbit_mq.mtn.un_subscription_queue, {
         ...dataToSend,
       })
