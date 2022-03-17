@@ -258,6 +258,21 @@ spec:
                           secretKeyRef:
                               name: vas-aggregator-subscription-billing-secrets
                               key: MTN_MADAPI_BAS_URL                               
+                      - name: MTN_MADAPI_BASE_PROD_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_MADAPI_BASE_PROD_URL                               
+                      - name: MTN_MADAPI_SUB_BASE_PROD_URL
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_MADAPI_SUB_BASE_PROD_URL                               
+                      - name: MTN_MADAPI_NODEID
+                        valueFrom:
+                          secretKeyRef:
+                              name: vas-aggregator-subscription-billing-secrets
+                              key: MTN_MADAPI_NODEID                               
                       - name: MTN_MADAPI_X_API_KEY
                         valueFrom:
                           secretKeyRef:
