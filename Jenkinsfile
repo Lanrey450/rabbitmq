@@ -9,7 +9,7 @@ def isStaging = env.BRANCH_NAME == 'iykejordan-staging'
 def isMaster2 = env.BRANCH_NAME == 'Terragon-deploy'
 def isStaging2 = env.BRANCH_NAME == 'terragon-staging'
 def start = new Date()
-def acr_host = "aggregator2.azurecr.io"
+def acr_host = 'aggregator2.azurecr.io'
 def err = null
 def jobInfo = "${env.JOB_NAME} ${env.BUILD_DISPLAY_NAME} \n${env.BUILD_URL}"
 def imageTag = "${env.BUILD_NUMBER}"
@@ -47,7 +47,7 @@ try {
         if(isStaging || isMaster){
             stage ('Push Docker to ACR') {
                 withCredentials([usernamePassword(credentialsId: 'azure-acr2', usernameVariable: 'ACR_USER', passwordVariable: 'ACR_PASSWD')]) {
-                    sh 'docker login -u ${ACR_USER} -p ${ACR_PASSWD} ${acr_host}'
+                    sh 'docker login ${LOGIN_SERVER} -u ${ACR_USER} -p ${ACR_PASSWD}'
                     sh "docker build -t ${acr_host}/${projectName}/${repoName}:${imageTag} ."   
                     sh "docker push ${acr_host}/${projectName}/${repoName}:${imageTag}"
                 }
