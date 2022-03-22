@@ -229,20 +229,24 @@ module.exports = {
         },
         network: "mtn",
         serviceId: data.serviceId,
-        message: data.chargingMode,
+        chargingMode: data.chargingMode,
+        operationId: data.operationId,
         transactionId: generateId(),
         subType: ""
       }
 
-      if (
-        dataToSend.message.toLowerCase() === 's'
-        || dataToSend.message === 'Modification'
-      ) {
-        dataToSend.subType = dataToSend.message === 'Modification' ? 'RENEWAL' : 'NEW'
-        console.log('Final |Data To Send', dataToSend)
-        return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
-          ...dataToSend,
-        })
+      if (dataToSend.chargingMode === 'S' || dataToSend.chargingMode === 'E') {
+
+        console.log('operationId', dataToSend.operationId)
+        console.log('chargingMode', dataToSend.chargingMode)
+        const acceptedOperationId = ['SN', 'SR', 'SAA', 'PN', 'ES', 'YR'];
+
+        if (acceptedOperationId.includes(dataToSend.operationId)) {
+          dataToSend.subType = dataToSend.operationId === 'YR' ? 'RENEWAL' : 'NEW'
+          console.log('Final |Data To Send', dataToSend)
+          return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
+            ...dataToSend,
+          })
           .then(() => {
             TerraLogger.debug('successfully pushed postback data to queue')
             return;
@@ -251,20 +255,43 @@ module.exports = {
             console.log(`Unable to push postback data to queue, ${err}`);
             return;
           })
+        }
       }
+
+      // if (
+      //   (dataToSend.chargingMode === 'S' && dataToSend.operationId === 'SN')
+      //   || (dataToSend.chargingMode === 'E' && dataToSend.operationId === 'ES')
+      //   || (dataToSend.chargingMode === 'S' && dataToSend.operationId === 'YR')
+      // ) {
+      //   dataToSend.subType = dataToSend.operationId === 'YR' ? 'RENEWAL' : 'NEW'
+      //   console.log('Final |Data To Send', dataToSend)
+      //   return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
+      //     ...dataToSend,
+      //   })
+      //     .then(() => {
+      //       TerraLogger.debug('successfully pushed postback data to queue')
+      //       return;
+      //     })
+      //     .catch((err) => {
+      //       console.log(`Unable to push postback data to queue, ${err}`);
+      //       return;
+      //     })
+      // }
   
-      dataToSend.status = 'success';
-      return publish(config.rabbit_mq.mtn.un_subscription_queue, {
-        ...dataToSend,
-      })
-        .then(() => {
-          TerraLogger.debug('successfully pushed postback data to queue')
-          return
+      if (dataToSend.operationId === 'ACI') {
+        dataToSend.status = 'success';
+        return publish(config.rabbit_mq.mtn.un_subscription_queue, {
+          ...dataToSend,
         })
-        .catch((err) => {
-          console.log(`Unable to push postback data to queue, ${err}`);
-          return;
-        })
+          .then(() => {
+            TerraLogger.debug('successfully pushed postback data to queue')
+            return
+          })
+          .catch((err) => {
+            console.log(`Unable to push postback data to queue, ${err}`);
+            return;
+          })
+      }
 		
 		} catch (error) {
       console.log("error: ", error);
