@@ -47,7 +47,7 @@ try {
         if(isStaging || isMaster){
             stage ('Push Docker to ACR') {
                 withCredentials([usernamePassword(credentialsId: 'azure-acr2', usernameVariable: 'ACR_USER', passwordVariable: 'ACR_PASSWD')]) {
-                    sh "docker login -u ${ACR_USER} -p ${ACR_PASSWD} ${acr_host}"
+                    sh 'docker login -u ${ACR_USER} -p ${ACR_PASSWD} ${acr_host}'
                     sh "docker build -t ${acr_host}/${projectName}/${repoName}:${imageTag} ."   
                     sh "docker push ${acr_host}/${projectName}/${repoName}:${imageTag}"
                 }
