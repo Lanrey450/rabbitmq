@@ -259,7 +259,7 @@ module.exports = {
         }
       }
   
-      const unsubOperationId = ['ACI', 'SAC', 'YD', 'GD', 'RD', 'PCI', 'GCI', 'SCI', 'BCI', 'ACE'];
+      const unsubOperationId = ['ACI', 'SAC', 'YD', 'GD', 'RD', 'PCI', 'GCI', 'SCI', 'BCI', 'ACE', 'YG', 'YS'];
       if (unsubOperationId.indexOf(dataToSend.operationId)) {
         dataToSend.status = 'success';
         return publish(config.rabbit_mq.mtn.un_subscription_queue, {
