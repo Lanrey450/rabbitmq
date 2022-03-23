@@ -231,6 +231,7 @@ module.exports = {
         serviceId: data.serviceId,
         chargingMode: data.chargingMode,
         operationId: data.operationId,
+        message: data.operationId,
         transactionId: generateId(),
         subType: ""
       }
@@ -239,10 +240,10 @@ module.exports = {
 
         console.log('operationId', dataToSend.operationId)
         console.log('chargingMode', dataToSend.chargingMode)
-        const acceptedOperationId = ['SN', 'SR', 'SAA', 'PN', 'ES', 'YR'];
+        const acceptedOperationId = ['SN', 'SR', 'SAA', 'PN', 'ES', 'YR', 'GR', 'RR'];
 
         if (acceptedOperationId.includes(dataToSend.operationId)) {
-          dataToSend.subType = dataToSend.operationId === 'YR' ? 'RENEWAL' : 'NEW'
+          dataToSend.subType = dataToSend.message === ('YR' || 'GR' || 'RR') ? 'RENEWAL' : 'NEW'
           console.log('Final |Data To Send', dataToSend)
           return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
             ...dataToSend,
@@ -257,28 +258,9 @@ module.exports = {
           })
         }
       }
-
-      // if (
-      //   (dataToSend.chargingMode === 'S' && dataToSend.operationId === 'SN')
-      //   || (dataToSend.chargingMode === 'E' && dataToSend.operationId === 'ES')
-      //   || (dataToSend.chargingMode === 'S' && dataToSend.operationId === 'YR')
-      // ) {
-      //   dataToSend.subType = dataToSend.operationId === 'YR' ? 'RENEWAL' : 'NEW'
-      //   console.log('Final |Data To Send', dataToSend)
-      //   return publish(config.rabbit_mq.mtn.subscription_postback_queue, {
-      //     ...dataToSend,
-      //   })
-      //     .then(() => {
-      //       TerraLogger.debug('successfully pushed postback data to queue')
-      //       return;
-      //     })
-      //     .catch((err) => {
-      //       console.log(`Unable to push postback data to queue, ${err}`);
-      //       return;
-      //     })
-      // }
   
-      if (dataToSend.operationId === 'ACI') {
+      const unsubOperationId = ['ACI', 'SAC', 'YD', 'GD', 'RD', 'PCI', 'GCI', 'SCI', 'BCI', 'ACE'];
+      if (unsubOperationId.indexOf(dataToSend.operationId)) {
         dataToSend.status = 'success';
         return publish(config.rabbit_mq.mtn.un_subscription_queue, {
           ...dataToSend,
