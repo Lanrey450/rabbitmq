@@ -121,18 +121,18 @@ function consumeHandler(feedbackQueue, consumerQueue, model) {
 					}
 	
 					console.log("data to search", data)
-				const result = await model.findOne(data)
+					const result = await model.findOne(data)
 
-				console.log("result",result)
+					console.log("result",result)
 
 
-				if(!result) {
-					await model.create(msg)
-					await publish(feedbackQueue, msg)
-					TerraLogger.debug('Successfully pushed to feedback queue')
-					msg.feedbackStatus = true
-				}
-				return
+					if(!result) {
+						await model.create(msg)
+						await publish(feedbackQueue, msg)
+						TerraLogger.debug('Successfully pushed to feedback queue')
+						msg.feedbackStatus = true
+					}
+					return
 				}
 				await publish(feedbackQueue, msg)
 				TerraLogger.debug('Successfully pushed to feedback queue')
