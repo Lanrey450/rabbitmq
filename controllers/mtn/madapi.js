@@ -199,7 +199,7 @@ module.exports = {
       }
 		
 		} catch (error) {
-      console.log("error: ", error);
+      console.log("error: ", error.message);
 			return ResponseManager.sendErrorResponse({
 				res,
 				message: 'Server Error: unable to process delivery status',
